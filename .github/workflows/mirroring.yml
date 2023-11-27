@@ -1,0 +1,19 @@
+name: r-type
+
+on: [push, pull_request]
+
+env:
+  MIRROR_URL: "git@github.com:EpitechPromo2026/B-CPP-500-REN-5-2-rtype-lucas.iglesia.git"
+
+jobs:
+  push-to-repo:
+    name: "Push to mirror repo"
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+      - uses: pixta-dev/repository-mirroring-action@v1
+        with:
+          target_repo_url: ${{ env.MIRROR_URL }}
+          ssh_private_key: ${{ secrets.GITLAB_SSH_PRIVATE_KEY }}
