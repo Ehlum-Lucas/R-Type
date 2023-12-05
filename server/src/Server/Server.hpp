@@ -22,6 +22,7 @@
             void start_send();
             void start_server();
             void setup_registry();
+            void game();
             asio::ip::udp::socket _socket;
             asio::ip::udp::endpoint _remote_endpoint;
             std::array<char, 1024> _recv_buffer;

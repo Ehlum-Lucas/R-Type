@@ -7,7 +7,7 @@
 
 #include "Server.hpp"
 
-Server::Server(asio::io_context& io_context, short port): _socket(io_context, asio::ip::udp::endpoint(asio::ip::udp::v4(), port)), _timer(io_context, std::chrono::milliseconds(1000/30))
+Server::Server(asio::io_context& io_context, short port): _socket(io_context, asio::ip::udp::endpoint(asio::ip::udp::v4(), port)), _timer(io_context, std::chrono::milliseconds(1000/60))
 {
     std::cout << "Server starting on port " << port << std::endl;
     start_server();
@@ -39,7 +39,7 @@ void Server::setup_registry()
     std::uniform_real_distribution<float> distribution(min, max);
 
 
-    for (int i = 0; i < 10; i++) {
+    for (int i = 0; i < 100; i++) {
         _enemies.push_back(_registry.create_entity());
     }
 
@@ -49,7 +49,7 @@ void Server::setup_registry()
         _registry.add_component(player, Drawable{true});
         _registry.add_component(player, Controllable{true});
         _registry.add_component(player, Type{"p"});
-        _registry.add_component(player, Id{id});
+        _registry.add_component(player, Id{player.get_id()});
         id++;
     }
 
@@ -59,7 +59,7 @@ void Server::setup_registry()
         _registry.add_component(enemy, Drawable{true});
         _registry.add_component(enemy, Controllable{false});
         _registry.add_component(enemy, Type{"e"});
-        _registry.add_component(enemy, Id{id});
+        _registry.add_component(enemy, Id{enemy.get_id()});
         y += 200;
         if (y > 1000)
             y = 45;
@@ -71,9 +71,6 @@ void Server::setup_registry()
 void Server::start_server()
 {
     setup_registry();
-    // while (true) {
-    //     _registry.run_systems();
-    // }
 }
 
 void Server::start_receive() 
@@ -109,14 +106,20 @@ void Server::start_receive()
     });
 }
 
+void Server::game()
+{
+    control_system(_registry, _inputs);
+    _inputs = "";
+    position_system(_registry);
+}
+
 void Server::start_send() 
 {
 
     _timer.async_wait([this](std::error_code ec) {
         if (!ec) {
-            control_system(_registry, _inputs);
-            _inputs = "";
-            position_system(_registry);
+
+            game();
 
             std::vector<std::string> serialized = serialize_system(_registry);
 

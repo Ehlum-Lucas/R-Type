@@ -5,6 +5,7 @@
     #include <functional>
     #include "SparseArray.hpp"
     #include "Entity.hpp"
+    #include "Components.hpp"
     #include <unordered_map>
     #include <any>
 
@@ -39,14 +40,37 @@
             }
 
             Entity create_entity() {
-                entities.emplace_back(next_entity_id++);
+                entities.emplace_back();
                 return entities.back();
+            }
+
+            void delete_entity_by_id(size_t id) {
+                for (auto it = entities.begin(); it != entities.end(); ++it) {
+                    if (it->get_id() == id) {
+                        delete_components_by_entity_id<Position>(id);
+                        delete_components_by_entity_id<Velocity>(id);
+                        delete_components_by_entity_id<Drawable>(id);
+                        delete_components_by_entity_id<Controllable>(id);
+                        delete_components_by_entity_id<Type>(id);
+                        delete_components_by_entity_id<Id>(id);
+                        it->delete_entity();
+                        entities.erase(it);
+                        break;
+                    }
+                }
             }
 
             template <typename Component>
             void add_component(Entity entity, Component&& component) {
                 auto& components = get_components<Component>();
                 components.insert_at(entity.get_id(), std::forward<Component>(component));
+            }
+
+
+            template <typename Component>
+            void delete_components_by_entity_id(size_t id) {
+                auto& components = get_components<Component>();
+                components.erase(id);
             }
 
             void run_systems() {
@@ -65,7 +89,6 @@
         private:
             std::unordered_map<std::type_index, std::any> _components_arrays;
             std::vector<Entity> entities;
-            std::size_t next_entity_id = 1;
             std::vector<std::function<void(Registry&)>> systems;
     };
 #endif /* !REGISTRY_HPP_ */

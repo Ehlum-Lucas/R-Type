@@ -27,13 +27,13 @@ void control_system(Registry &r, std::string &inputs)
         if (pos && vel && controllable && controllable.value().controllable) {
             if (up && (pos.value().y + vel.value().vy) > 0)
                 vel.value().vy = -10;
-            else if (down && (pos.value().y + vel.value().vy + 130) < 1080)
+            else if (down && (pos.value().y + vel.value().vy + 100) < 1080)
                 vel.value().vy = 10;
             else
                 vel.value().vy = 0;
             if (left && (pos.value().x + vel.value().vx) > 0)
                 vel.value().vx = -10;
-            else if (right && (pos.value().x + vel.value().vx + 130) < 1920)
+            else if (right && (pos.value().x + vel.value().vx + 100) < 1920)
                 vel.value().vx = 10;
             else
                 vel.value().vx = 0;

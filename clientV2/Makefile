@@ -7,10 +7,13 @@
 
 INC = 		-I ./src/Menu 						\
 			-I ./src/Game 						\
+			-I ./src/Client		 				\
+			-I ./src/Object
 
 SRC = 		main.cpp							\
 			src/Menu/Menu.cpp					\
 			src/Game/Game.cpp					\
+			src/Object/Object.cpp				\
 
 OBJ = 		$(SRC:.cpp=.o)
 

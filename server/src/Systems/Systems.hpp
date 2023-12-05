@@ -8,7 +8,6 @@
 #ifndef SYSTEMS_HPP_
     #define SYSTEMS_HPP_
     #include "Registry.hpp"
-    #include "Components.hpp"
 
     void position_system (Registry &r);
     void control_system(Registry &r, std::string &inputs);
