@@ -28,6 +28,7 @@
             int getStatus() const { return _status; }
             std::string getType() const { return _type; }
 
+            bool drawed = true;
         protected:
         private:
             std::string _type;

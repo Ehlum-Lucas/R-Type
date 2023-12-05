@@ -20,6 +20,9 @@
             void update();
             void unserialize(std::string data);
             void connectToServer(std::string ip, std::string port);
+            void draw();
+            void destroyObject(int id);
+            void destroyObjectIfNotExists(std::vector<int> ids);
         private:
             std::shared_ptr<sf::RenderWindow>  _window;
             sf::Event _event;

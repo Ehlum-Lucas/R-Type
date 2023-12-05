@@ -34,12 +34,12 @@ void Server::setup_registry()
     std::mt19937 gen(rd());
 
     float min = 2000.0f;
-    float max = 20000.0f;
+    float max = 1000000.0f;
 
     std::uniform_real_distribution<float> distribution(min, max);
 
 
-    for (int i = 0; i < 100; i++) {
+    for (int i = 0; i < 30000; i++) {
         _enemies.push_back(_registry.create_entity());
     }
 
@@ -127,6 +127,7 @@ void Server::start_send()
             for (const auto& str : serialized) {
                 serializedString += str + ";";
             }
+            // std::cout << "Sending: " << serializedString << std::endl;
             // Send game update to all clients...
             for (const auto& client : _clients) {
                 _socket.send_to(asio::buffer(serializedString), client.getEndpoint());

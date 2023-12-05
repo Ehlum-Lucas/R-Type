@@ -19,11 +19,43 @@ void Game::connectToServer(std::string ip, std::string port)
     _client->connectToServer();
 }
 
+void Game::destroyObject(int id)
+{
+    for (auto it = _objects.begin(); it != _objects.end(); it++) {
+        if ((*it)->getId() == id) {
+            _objects.erase(it);
+            break;
+        }
+    }
+}
+
+void Game::destroyObjectIfNotExists(std::vector<int> ids)
+{
+    std::vector<std::vector<std::shared_ptr<Object>>::iterator> its;
+    for (auto it = _objects.begin(); it != _objects.end(); it++) {
+        bool is_object_exists = false;
+        for (auto id : ids) {
+            if ((*it)->getId() == id) {
+                is_object_exists = true;
+                break;
+            }
+        }
+        if (!is_object_exists) {
+            its.push_back(it);
+        }
+    }
+    for (auto it : its) {
+        std::cout << "destroying object" << std::endl;
+        _objects.erase(it);
+    }
+}
+
 void Game::unserialize(std::string data)
 {
     std::string type, id, x, y, status;
     std::istringstream iss(data);
     std::string message;
+    std::vector<int> ids;
 
     while (std::getline(iss, message, ';')) {
         std::istringstream iss2(message);
@@ -32,7 +64,7 @@ void Game::unserialize(std::string data)
         std::getline(iss2, x, ':');
         std::getline(iss2, y, ':');
         std::getline(iss2, status, ':');
-
+        ids.push_back(std::stoi(id));
         bool is_object_exists = false;
         for (auto &object : _objects) {
             if (object->getId() == std::stoi(id)) {
@@ -46,6 +78,7 @@ void Game::unserialize(std::string data)
             _objects.push_back(std::make_shared<Object>(type, std::stoi(id), std::stof(x), std::stof(y), std::stoi(status)));
         }
     }
+    destroyObjectIfNotExists(ids);
 
 }
 void receiveMessageThread(std::shared_ptr<Client> client) {
@@ -85,6 +118,7 @@ void Game::inputsHandler()
     }
     if (!message.empty()) {
         _client->sendMessage(message);
+        message = "";
     }
 
     if (!_client->_message.empty()) {

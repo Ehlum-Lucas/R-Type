@@ -24,8 +24,10 @@ Object::~Object() {}
 
 void Object::draw(std::shared_ptr<sf::RenderWindow> window)
 {
-    _shape.setPosition(_pos);
-    _shape.setFillColor(_color);
-    _shape.setSize(sf::Vector2f(100, 100));
-    window->draw(_shape);
+    if (drawed) {
+        _shape.setPosition(_pos);
+        _shape.setFillColor(_color);
+        _shape.setSize(sf::Vector2f(100, 100));
+        window->draw(_shape);
+    }
 }

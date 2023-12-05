@@ -24,7 +24,7 @@ void position_system (Registry &r) {
             pos.value().x += vel.value().vx;
             pos.value().y += vel.value().vy;
     
-            if (pos.value().x < 100 && type.value().type == "e") {
+            if (pos.value().x < 0  && type.value().type == "e") {
                 r.delete_entity_by_id(id.value().id);
             }
         }
