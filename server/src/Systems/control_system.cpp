@@ -37,8 +37,6 @@ void control_system(Registry &r, std::string &inputs)
             vel.value().vy = 0;
         }
         if (pos && vel && controllable && controllable.value().controllable && type && type.value().type == received_type) {
-            std::cout << "received_type: " << received_type << std::endl;
-            std::cout << "type: " << type.value().type << std::endl;
             if (up && (pos.value().y + vel.value().vy) > 0)
                 vel.value().vy = -10;
             else if (down && (pos.value().y + vel.value().vy + 100) < 1080)

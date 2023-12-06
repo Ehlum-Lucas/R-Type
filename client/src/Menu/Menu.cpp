@@ -12,7 +12,7 @@ Menu::Menu()
     _window = std::make_shared<sf::RenderWindow>(sf::VideoMode::getFullscreenModes()[0], "SFML Window", sf::Style::Fullscreen);
     _game = std::make_shared<Game>(_window, _event);
     _game->loadAssets();
-    _game->connectToServer("localhost", "4080");
+    _game->connectToServer("10.19.254.77", "4080");
     _game->start();
     // loadMenu();
 }

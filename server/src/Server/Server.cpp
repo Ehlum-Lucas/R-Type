@@ -11,7 +11,6 @@ Server::Server(asio::io_context& io_context, short port): _socket(io_context, as
 {
     std::cout << "Server starting on port " << port << std::endl;
     start_server();
-    std::cout << "Server is started on port " << port << std::endl;
     start_receive();
     start_send();
 }
@@ -25,7 +24,6 @@ void Server::setup_registry()
     _registry.register_component<Type>();
     _registry.register_component<Id>();
 
-
     int id = 1;
     float y = 45;
     float x = 300;
@@ -36,17 +34,6 @@ void Server::setup_registry()
     float max = 1000000.0f;
 
     std::uniform_real_distribution<float> distribution(min, max);
-
-    // _players.push_back(_registry.create_entity());
-    // for (auto& player : _players) {
-    //     _registry.add_component(player, Position{100, 100});
-    //     _registry.add_component(player, Velocity{0.0, 0.0});
-    //     _registry.add_component(player, Drawable{true});
-    //     _registry.add_component(player, Controllable{true});
-    //     _registry.add_component(player, Type{"p"});
-    //     _registry.add_component(player, Id{player.get_id()});
-    //     id++;
-    // }
 
     for (int i = 0; i < 0; i++) {
         _enemies.push_back(_registry.create_entity());
