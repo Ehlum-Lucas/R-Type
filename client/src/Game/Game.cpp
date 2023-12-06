@@ -123,13 +123,13 @@ void Game::inputsHandler()
         _client->_server_know = true;
         unserialize(_client->_message);
         _client->_message = "";
+        if (!message.empty() && _client->_server_know) {
+            message =  _client->_playerId + ':' + message;
+            _client->sendMessage(message);
+            message = "";
+        }
     }
 
-    if (!message.empty() && _client->_server_know) {
-        message =  _client->_playerId + ':' + message;
-        _client->sendMessage(message);
-        message = "";
-    }
 }
 
 void Game::update()
