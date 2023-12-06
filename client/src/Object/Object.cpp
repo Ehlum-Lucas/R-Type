@@ -11,12 +11,14 @@ Object::Object(std::string type, int id, float x, float y, int status) : _type(t
 {
     _pos = sf::Vector2f(x, y);
 
-    if (_type == "p") {
+    if (_type == "p1") {
         setColor(sf::Color::Green);
+    } else if (_type == "p2") {
+        setColor(sf::Color::Blue);
     } else if (_type == "e") {
         setColor(sf::Color::Red);
     } else if (_type == "b") {
-        setColor(sf::Color::Blue);
+        setColor(sf::Color::Yellow);
     }
 }
 

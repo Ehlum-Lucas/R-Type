@@ -116,14 +116,17 @@ void Game::inputsHandler()
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right)) {
         message += "r";
     }
-    if (!message.empty()) {
-        _client->sendMessage(message);
-        message = "";
-    }
-
-    if (!_client->_message.empty()) {
+    if (!_client->_server_know)
+        _client->sendMessage("OK");
+    if (!_client->_message.empty() && _client->_message.substr(0, 8) != "YOU ARE ") {
+        _client->_server_know = true;
         unserialize(_client->_message);
         _client->_message = "";
+        if (!message.empty() && _client->_server_know) {
+            message =  _client->_playerId + ':' + message;
+            _client->sendMessage(message);
+            message = "";
+        }
     }
 }
 

@@ -25,7 +25,6 @@ void Server::setup_registry()
     _registry.register_component<Type>();
     _registry.register_component<Id>();
 
-    _players.push_back(_registry.create_entity());
 
     int id = 1;
     float y = 45;
@@ -38,19 +37,19 @@ void Server::setup_registry()
 
     std::uniform_real_distribution<float> distribution(min, max);
 
+    // _players.push_back(_registry.create_entity());
+    // for (auto& player : _players) {
+    //     _registry.add_component(player, Position{100, 100});
+    //     _registry.add_component(player, Velocity{0.0, 0.0});
+    //     _registry.add_component(player, Drawable{true});
+    //     _registry.add_component(player, Controllable{true});
+    //     _registry.add_component(player, Type{"p"});
+    //     _registry.add_component(player, Id{player.get_id()});
+    //     id++;
+    // }
 
-    for (int i = 0; i < 30000; i++) {
+    for (int i = 0; i < 0; i++) {
         _enemies.push_back(_registry.create_entity());
-    }
-
-    for (auto& player : _players) {
-        _registry.add_component(player, Position{100, 100});
-        _registry.add_component(player, Velocity{0.0, 0.0});
-        _registry.add_component(player, Drawable{true});
-        _registry.add_component(player, Controllable{true});
-        _registry.add_component(player, Type{"p"});
-        _registry.add_component(player, Id{player.get_id()});
-        id++;
     }
 
     for (auto& enemy : _enemies) {
@@ -79,8 +78,15 @@ void Server::start_receive()
         if (!ec) {
             std::string message(_recv_buffer.data(), bytes_transferred);
             std::cout << "Received: " << message << " from " << _remote_endpoint.address().to_string() << ":" << _remote_endpoint.port() << std::endl;
-            
 
+            for (auto& client : _clients) {
+                if (client.getEndpoint() == _remote_endpoint) {
+                    if (message == "OK") {
+                        client.connected = true;
+                        std::cout << "CLIENT CONNECTED" << std::endl;
+                    }
+                }
+            }
             _inputs = message;
 
             // Check if the client is already in the list
@@ -108,6 +114,23 @@ void Server::start_receive()
 
 void Server::game()
 {
+
+    for (auto &client : _clients) {
+        if (client.connected == false) {
+            if (!client.created) {
+                Entity player = _registry.create_entity();
+                _players.push_back(player);
+                _registry.add_component(player, Position{100, 100});
+                _registry.add_component(player, Velocity{0.0, 0.0});
+                _registry.add_component(player, Drawable{true});
+                _registry.add_component(player, Controllable{true});
+                _registry.add_component(player, Type{"p" + std::to_string(get_client_type())});
+                _registry.add_component(player, Id{player.get_id()});
+                client.created = true;
+            }
+        }
+    }
+
     control_system(_registry, _inputs);
     _inputs = "";
     position_system(_registry);
@@ -129,8 +152,18 @@ void Server::start_send()
             }
             // std::cout << "Sending: " << serializedString << std::endl;
             // Send game update to all clients...
-            for (const auto& client : _clients) {
-                _socket.send_to(asio::buffer(serializedString), client.getEndpoint());
+            for (auto& client : _clients) {
+                if (client.connected) {
+                    // std::cout << "SERIALIZED STRING: " << serializedString << std::endl;
+                    _socket.send_to(asio::buffer(serializedString), client.getEndpoint());
+                } else {
+                    std::string id = "YOU ARE p" + std::to_string(_clients.size());
+                    std::string client_type = "p" + std::to_string(_clients.size());
+                    client.type = client_type;
+
+                    std::cout << "Sending: " << id << std::endl;
+                    _socket.send_to(asio::buffer(id), client.getEndpoint());
+                }
             }
 
             // Reset the timer
