@@ -24,7 +24,7 @@ if (NOT Asio_FOUND)
 endif()
 
 #Install SFML
-find_package(SFML)
+find_package(SFML 2.5 COMPONENTS graphics window system audio REQUIRED)
 
 if (NOT SFML_FOUND)
     message(STATUS "SFML not found, downloading...")
@@ -39,7 +39,7 @@ endif()
 
 set (INCLUDE_DIRS
     ./src/Client
-    ./src/Object    
+    ./src/Object
 )
 
 include_directories(${INCLUDE_DIRS})
