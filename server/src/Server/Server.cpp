@@ -74,7 +74,8 @@ void Server::start_receive()
                     }
                 }
             }
-            _inputs = message;
+
+            _inputs_list.push_back(message);
 
             // Check if the client is already in the list
             auto it = std::find_if(_clients.begin(), _clients.end(), [this](const Client& client) {
@@ -118,9 +119,11 @@ void Server::game()
         }
     }
 
-    control_system(_registry, _inputs);
-    _inputs = "";
-    position_system(_registry);
+    for (auto &input : _inputs_list) {
+        control_system(_registry, input);
+        position_system(_registry);
+    }
+    _inputs_list.clear();
 }
 
 void Server::start_send() 

@@ -32,7 +32,7 @@
             Registry _registry;
             std::vector<Entity> _players;
             std::vector<Entity> _enemies;
-            std::string _inputs;
+            std::vector<std::string> _inputs_list;
             int next_client_type = 1;
     };
 
