@@ -18,12 +18,11 @@ SRC = 		src/main.cpp						\
 			src/Systems/position_system.cpp		\
 			src/Systems/control_system.cpp		\
 			src/Systems/serialize_system.cpp	\
+			src/Entity/Entity.cpp				\
 
 OBJ = 		$(SRC:.cpp=.o)
 
 NAME = 		server
-
-LDFLAGS = 	-L /path/to/SFML/lib -lsfml-graphics -lsfml-window -lsfml-system
 
 CXXFLAGS =  -Wall -std=c++17 $(INC)
 

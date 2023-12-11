@@ -32,5 +32,5 @@ struct Type {
 };
 
 struct Id {
-    int id;
+    size_t id;
 };

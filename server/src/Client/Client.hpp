@@ -16,6 +16,9 @@
 
             asio::ip::udp::endpoint getEndpoint() const { return endpoint_; }
 
+            bool connected = false;
+            bool created = false;
+            std::string type;
         private:
             asio::ip::udp::endpoint endpoint_;
 };

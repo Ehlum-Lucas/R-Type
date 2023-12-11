@@ -22,6 +22,8 @@
             void start_send();
             void start_server();
             void setup_registry();
+            void game();
+            int get_client_type() { return next_client_type++; };
             asio::ip::udp::socket _socket;
             asio::ip::udp::endpoint _remote_endpoint;
             std::array<char, 1024> _recv_buffer;
@@ -30,7 +32,8 @@
             Registry _registry;
             std::vector<Entity> _players;
             std::vector<Entity> _enemies;
-            std::string _inputs;
+            std::vector<std::string> _inputs_list;
+            int next_client_type = 1;
     };
 
 #endif /* !SERVER_HPP_ */

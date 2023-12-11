@@ -7,11 +7,10 @@
 
 #include "Server.hpp"
 
-Server::Server(asio::io_context& io_context, short port): _socket(io_context, asio::ip::udp::endpoint(asio::ip::udp::v4(), port)), _timer(io_context, std::chrono::milliseconds(1000/30))
+Server::Server(asio::io_context& io_context, short port): _socket(io_context, asio::ip::udp::endpoint(asio::ip::udp::v4(), port)), _timer(io_context, std::chrono::milliseconds(1000/60))
 {
     std::cout << "Server starting on port " << port << std::endl;
     start_server();
-    std::cout << "Server is started on port " << port << std::endl;
     start_receive();
     start_send();
 }
@@ -25,8 +24,6 @@ void Server::setup_registry()
     _registry.register_component<Type>();
     _registry.register_component<Id>();
 
-    _players.push_back(_registry.create_entity());
-
     int id = 1;
     float y = 45;
     float x = 300;
@@ -34,23 +31,12 @@ void Server::setup_registry()
     std::mt19937 gen(rd());
 
     float min = 2000.0f;
-    float max = 20000.0f;
+    float max = 1000000.0f;
 
     std::uniform_real_distribution<float> distribution(min, max);
 
-
-    for (int i = 0; i < 10; i++) {
+    for (int i = 0; i < 0; i++) {
         _enemies.push_back(_registry.create_entity());
-    }
-
-    for (auto& player : _players) {
-        _registry.add_component(player, Position{100, 100});
-        _registry.add_component(player, Velocity{0.0, 0.0});
-        _registry.add_component(player, Drawable{true});
-        _registry.add_component(player, Controllable{true});
-        _registry.add_component(player, Type{"p"});
-        _registry.add_component(player, Id{id});
-        id++;
     }
 
     for (auto& enemy : _enemies) {
@@ -59,7 +45,7 @@ void Server::setup_registry()
         _registry.add_component(enemy, Drawable{true});
         _registry.add_component(enemy, Controllable{false});
         _registry.add_component(enemy, Type{"e"});
-        _registry.add_component(enemy, Id{id});
+        _registry.add_component(enemy, Id{enemy.get_id()});
         y += 200;
         if (y > 1000)
             y = 45;
@@ -71,9 +57,6 @@ void Server::setup_registry()
 void Server::start_server()
 {
     setup_registry();
-    // while (true) {
-    //     _registry.run_systems();
-    // }
 }
 
 void Server::start_receive() 
@@ -82,9 +65,17 @@ void Server::start_receive()
         if (!ec) {
             std::string message(_recv_buffer.data(), bytes_transferred);
             std::cout << "Received: " << message << " from " << _remote_endpoint.address().to_string() << ":" << _remote_endpoint.port() << std::endl;
-            
 
-            _inputs = message;
+            for (auto& client : _clients) {
+                if (client.getEndpoint() == _remote_endpoint) {
+                    if (message == "OK") {
+                        client.connected = true;
+                        std::cout << "CLIENT CONNECTED" << std::endl;
+                    }
+                }
+            }
+
+            _inputs_list.push_back(message);
 
             // Check if the client is already in the list
             auto it = std::find_if(_clients.begin(), _clients.end(), [this](const Client& client) {
@@ -109,14 +100,39 @@ void Server::start_receive()
     });
 }
 
+void Server::game()
+{
+
+    for (auto &client : _clients) {
+        if (client.connected == false) {
+            if (!client.created) {
+                Entity player = _registry.create_entity();
+                _players.push_back(player);
+                _registry.add_component(player, Position{100, 100});
+                _registry.add_component(player, Velocity{0.0, 0.0});
+                _registry.add_component(player, Drawable{true});
+                _registry.add_component(player, Controllable{true});
+                _registry.add_component(player, Type{"p" + std::to_string(get_client_type())});
+                _registry.add_component(player, Id{player.get_id()});
+                client.created = true;
+            }
+        }
+    }
+
+    for (auto &input : _inputs_list) {
+        control_system(_registry, input);
+        position_system(_registry);
+    }
+    _inputs_list.clear();
+}
+
 void Server::start_send() 
 {
 
     _timer.async_wait([this](std::error_code ec) {
         if (!ec) {
-            control_system(_registry, _inputs);
-            _inputs = "";
-            position_system(_registry);
+
+            game();
 
             std::vector<std::string> serialized = serialize_system(_registry);
 
@@ -124,9 +140,20 @@ void Server::start_send()
             for (const auto& str : serialized) {
                 serializedString += str + ";";
             }
+            // std::cout << "Sending: " << serializedString << std::endl;
             // Send game update to all clients...
-            for (const auto& client : _clients) {
-                _socket.send_to(asio::buffer(serializedString), client.getEndpoint());
+            for (auto& client : _clients) {
+                if (client.connected) {
+                    // std::cout << "SERIALIZED STRING: " << serializedString << std::endl;
+                    _socket.send_to(asio::buffer(serializedString), client.getEndpoint());
+                } else {
+                    std::string id = "YOU ARE p" + std::to_string(_clients.size());
+                    std::string client_type = "p" + std::to_string(_clients.size());
+                    client.type = client_type;
+
+                    std::cout << "Sending: " << id << std::endl;
+                    _socket.send_to(asio::buffer(id), client.getEndpoint());
+                }
             }
 
             // Reset the timer

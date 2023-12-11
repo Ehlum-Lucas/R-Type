@@ -19,7 +19,7 @@ std::vector<std::string> serialize_system (Registry &r)
         auto const &vel = types[i];
         auto const &id = ids[i];
     
-        if (pos && vel && id) {
+        if (pos && vel && id && pos.value().x > -100 && pos.value().x < 1920) {
             std::string serialized_entity = vel.value().type + ":" + std::to_string(id.value().id) + ":" + std::to_string(pos.value().x) + ":" + std::to_string(pos.value().y) + ":" + "1";
             serialized.push_back(serialized_entity);
         }

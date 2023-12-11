@@ -7,25 +7,29 @@
 
 #include "Object.hpp"
 
-Object::Object(std::string type, std::string id, std::string x, std::string y, std::string status) : _type("default"), _status(std::stoi(status)), _id(std::stoi(id)), _position(sf::Vector2f(std::stoi(x), std::stoi(y))), _shape(sf::Vector2f(100, 100)), _color(sf::Color::White)
+Object::Object(std::string type, int id, float x, float y, int status) : _type(type), _id(id), _status(status), _color(sf::Color::White)
 {
-    if (type == "p") {
-        _color = sf::Color::Green;
-    } else if (type == "e") {
-        _color = sf::Color::Red;
-    } else if (type == "b") {
-        _color = sf::Color::Blue;
+    _pos = sf::Vector2f(x, y);
+
+    if (_type == "p1") {
+        setColor(sf::Color::Green);
+    } else if (_type == "p2") {
+        setColor(sf::Color::Blue);
+    } else if (_type == "e") {
+        setColor(sf::Color::Red);
+    } else if (_type == "b") {
+        setColor(sf::Color::Yellow);
     }
 }
 
-Object::~Object()
-{
-}
+Object::~Object() {}
 
-void Object::draw(sf::RenderWindow &window)
+void Object::draw(std::shared_ptr<sf::RenderWindow> window)
 {
-    _shape.setPosition(_position);
-    _shape.setFillColor(_color);
-    window.draw(_shape);
+    if (drawed) {
+        _shape.setPosition(_pos);
+        _shape.setFillColor(_color);
+        _shape.setSize(sf::Vector2f(100, 100));
+        window->draw(_shape);
+    }
 }
-
