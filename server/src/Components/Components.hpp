@@ -25,6 +25,7 @@ struct Drawable {
 // controllable component
 struct Controllable {
     bool controllable;   
+    int shoot;
 };
 
 struct Type {
@@ -33,4 +34,9 @@ struct Type {
 
 struct Id {
     size_t id;
+};
+
+struct Size {
+    float height;
+    float width;
 };

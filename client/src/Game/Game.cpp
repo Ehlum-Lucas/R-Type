@@ -52,7 +52,7 @@ void Game::destroyObjectIfNotExists(std::vector<int> ids)
 
 void Game::unserialize(std::string data)
 {
-    std::string type, id, x, y, status;
+    std::string type, id, x, y, status, height, width;
     std::istringstream iss(data);
     std::string message;
     std::vector<int> ids;
@@ -61,6 +61,8 @@ void Game::unserialize(std::string data)
         std::istringstream iss2(message);
         std::getline(iss2, type, ':');
         std::getline(iss2, id, ':');
+        std::getline(iss2, height, ':');
+        std::getline(iss2, width, ':');
         std::getline(iss2, x, ':');
         std::getline(iss2, y, ':');
         std::getline(iss2, status, ':');
@@ -75,7 +77,7 @@ void Game::unserialize(std::string data)
         }
 
         if (!is_object_exists) {
-            _objects.push_back(std::make_shared<Object>(type, std::stoi(id), std::stof(x), std::stof(y), std::stoi(status)));
+            _objects.push_back(std::make_shared<Object>(type, std::stoi(id), std::stof(x), std::stof(y), std::stoi(status), std::stof(height), std::stof(width)));
         }
     }
     destroyObjectIfNotExists(ids);
@@ -115,6 +117,9 @@ void Game::inputsHandler()
     }
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right)) {
         message += "r";
+    }
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space)) {
+        message += "s";
     }
     if (!_client->_server_know)
         _client->sendMessage("OK");

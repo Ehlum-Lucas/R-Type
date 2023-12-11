@@ -15,7 +15,7 @@
 
     class Object {
         public:
-            Object(std::string type, int id, float x, float y, int status);
+            Object(std::string type, int id, float x, float y, int status, float height, float width);
             ~Object();
             void draw(std::shared_ptr<sf::RenderWindow> window);
             int getId() const { return _id; }

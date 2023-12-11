@@ -23,6 +23,7 @@ void Server::setup_registry()
     _registry.register_component<Controllable>();
     _registry.register_component<Type>();
     _registry.register_component<Id>();
+    _registry.register_component<Size>();
 
     int id = 1;
     float y = 45;
@@ -46,6 +47,7 @@ void Server::setup_registry()
         _registry.add_component(enemy, Controllable{false});
         _registry.add_component(enemy, Type{"e"});
         _registry.add_component(enemy, Id{enemy.get_id()});
+        _registry.add_component(enemy, Size{50, 50});
         y += 200;
         if (y > 1000)
             y = 45;
@@ -114,6 +116,7 @@ void Server::game()
                 _registry.add_component(player, Controllable{true});
                 _registry.add_component(player, Type{"p" + std::to_string(get_client_type())});
                 _registry.add_component(player, Id{player.get_id()});
+                _registry.add_component(player, Size{50, 100});
                 client.created = true;
             }
         }
@@ -121,8 +124,8 @@ void Server::game()
 
     for (auto &input : _inputs_list) {
         control_system(_registry, input);
-        position_system(_registry);
     }
+    position_system(_registry);
     _inputs_list.clear();
 }
 
@@ -157,7 +160,7 @@ void Server::start_send()
             }
 
             // Reset the timer
-            _timer.expires_after(std::chrono::milliseconds(1000/30));
+            _timer.expires_after(std::chrono::milliseconds(1000/60));
             start_send();
         }
     });

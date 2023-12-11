@@ -7,9 +7,11 @@
 
 #include "Object.hpp"
 
-Object::Object(std::string type, int id, float x, float y, int status) : _type(type), _id(id), _status(status), _color(sf::Color::White)
+Object::Object(std::string type, int id, float x, float y, int status, float height, float width) : _type(type), _id(id), _status(status), _color(sf::Color::White)
 {
     _pos = sf::Vector2f(x, y);
+
+    _shape.setSize(sf::Vector2f(width, height));
 
     if (_type == "p1") {
         setColor(sf::Color::Green);
@@ -29,7 +31,6 @@ void Object::draw(std::shared_ptr<sf::RenderWindow> window)
     if (drawed) {
         _shape.setPosition(_pos);
         _shape.setFillColor(_color);
-        _shape.setSize(sf::Vector2f(100, 100));
         window->draw(_shape);
     }
 }

@@ -13,14 +13,10 @@ void control_system(Registry &r, std::string &inputs)
     bool down = (inputs.find("d") != std::string::npos);
     bool left = (inputs.find("l") != std::string::npos);
     bool right = (inputs.find("r") != std::string::npos);
-    bool space = (inputs.find("s") != std::string::npos);
+    bool shoot = (inputs.find("s") != std::string::npos);
     bool enter = (inputs.find("e") != std::string::npos);
 
     std::string received_type = inputs.substr(0, 2);
-
-    // if (received_type.empty()) {
-    //     return;
-    // }
 
     auto &positions = r.get_components<Position>();
     auto &velocities = r.get_components<Velocity>();
@@ -49,7 +45,20 @@ void control_system(Registry &r, std::string &inputs)
                 vel.value().vx = 10;
             else
                 vel.value().vx = 0;
+            
+            pos.value().x += vel.value().vx;
+            pos.value().y += vel.value().vy;
 
+            if (shoot) {
+                Entity bullet = r.create_entity();
+                r.add_component(bullet, Position{pos.value().x + 100, pos.value().y + 50});
+                r.add_component(bullet, Velocity{30, 0});
+                r.add_component(bullet, Drawable{true});
+                r.add_component(bullet, Controllable{false});
+                r.add_component(bullet, Type{"b"});
+                r.add_component(bullet, Id{bullet.get_id()});
+                r.add_component(bullet, Size{10, 10});
+            }
         }
     }
 }
