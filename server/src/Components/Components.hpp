@@ -40,3 +40,10 @@ struct Size {
     float height;
     float width;
 };
+
+struct Shoot {
+    bool shoot;
+    float delay;
+    float time;
+    bool shooted;
+};

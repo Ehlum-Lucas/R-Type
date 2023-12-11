@@ -1,0 +1,43 @@
+/*
+** EPITECH PROJECT, 2023
+** shoot_system.cpp
+** File description:
+** shoot_system
+*/
+
+#include "Systems.hpp"
+
+void shoot_system (Registry &r, std::string &inputs) {
+
+    bool shooting = (inputs.find("s") != std::string::npos);
+
+    std::string received_type = inputs.substr(0, 2);
+
+    auto &positions = r.get_components<Position>();
+    auto &ids = r.get_components<Id>();
+    auto &types = r.get_components<Type>();
+    auto &shoots = r.get_components<Shoot>();
+
+    for (size_t i = 0; i < positions.size() && i < ids.size() && i < types.size() && i < shoots.size(); ++i) {
+        auto &pos = positions[i];
+        auto const &id = ids[i];
+        auto &type = types[i];
+        auto &shoot = shoots[i];
+
+        if (pos && id && shoot && shooting && shoot.value().shoot && (shoot.value().time >= shoot.value().delay || shoot.value().shooted == false) && type.value().type == received_type) {
+            shoot.value().time = 0;
+            shoot.value().shooted = true;
+            Entity bullet = r.create_entity();
+            r.add_component(bullet, Position{pos.value().x + 100, pos.value().y + 50});
+            r.add_component(bullet, Velocity{30, 0});
+            r.add_component(bullet, Drawable{true});
+            r.add_component(bullet, Controllable{false});
+            r.add_component(bullet, Type{"b"});
+            r.add_component(bullet, Id{bullet.get_id()});
+            r.add_component(bullet, Size{10, 10});
+        }
+        if (type && type.value().type == received_type && shoot && shoot.value().time < shoot.value().delay) {
+            shoot.value().time += 1;    
+        }
+    }
+}

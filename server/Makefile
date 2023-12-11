@@ -18,6 +18,7 @@ SRC = 		src/main.cpp						\
 			src/Systems/position_system.cpp		\
 			src/Systems/control_system.cpp		\
 			src/Systems/serialize_system.cpp	\
+			src/Systems/shoot_system.cpp		\
 			src/Entity/Entity.cpp				\
 
 OBJ = 		$(SRC:.cpp=.o)
