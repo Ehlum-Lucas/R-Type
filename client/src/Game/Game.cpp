@@ -98,6 +98,7 @@ void receiveMessageThread(std::shared_ptr<Client> client) {
 void Game::start()
 {
     _client->_thread = std::thread(receiveMessageThread, this->_client);
+
     while (_window->isOpen()) {
         inputsHandler();
         update();
@@ -131,7 +132,7 @@ void Game::inputsHandler()
     if (!_client->_server_know)
         _client->sendMessage("OK");
 
-    if (!_client->_message.empty() && _client->_message.substr(0, 8) != "YOU ARE ") {
+    if (!_client->_message.empty() && _client->_message.substr(0, 8) != "YOU ARE " && _game_is_runnging) {
         _client->_server_know = true;
         unserialize(_client->_message);
         _client->_message = "";
@@ -144,22 +145,262 @@ void Game::inputsHandler()
 
 }
 
+
+void Game::loadRoom(sf::Texture starTexture, sf::Texture planetTexture, sf::Texture saturnTexture, sf::Texture rocksTexture, sf::Texture backgroundTexture, sf::Vector2f backgroundPosition, sf::Vector2f starPosition, sf::Vector2f planetPosition, sf::Vector2f saturnPosition, sf::Vector2f rocksPosition, sf::RectangleShape backgroundRect, sf::RectangleShape starRect, sf::RectangleShape planetRect, sf::RectangleShape saturnRect, sf::RectangleShape rocksRect, float diagonalSpeedBackground, float diagonalSpeedStar, float diagonalSpeedPlanet, float diagonalSpeedSaturn, float diagonalSpeedRocks, sf::Clock clock)
+{
+    _backgroundTexture = backgroundTexture;
+    _backgroundPosition = backgroundPosition;
+    _backgroundRect = backgroundRect;
+
+    _starTexture = starTexture;
+    _starPosition = starPosition;
+    _starRect = starRect;
+
+    _planetTexture = planetTexture;
+    _planetPosition = planetPosition;
+    _planetRect = planetRect;
+
+    _saturnTexture = saturnTexture;
+    _saturnPosition = saturnPosition;
+    _saturnRect = saturnRect;
+
+    _rocksTexture = rocksTexture;
+    _rocksPosition = rocksPosition;
+    _rocksRect = rocksRect;
+    
+    _clock = clock;
+
+    _diagonalSpeedBackground = diagonalSpeedBackground;
+    _diagonalSpeedStar = diagonalSpeedStar;
+    _diagonalSpeedPlanet = diagonalSpeedPlanet;
+    _diagonalSpeedSaturn = diagonalSpeedSaturn;
+    _diagonalSpeedRocks = diagonalSpeedRocks;
+
+    _roomBox.setSize(sf::Vector2f(900, 600));
+
+    _roomBox.setOutlineColor(sf::Color::White);
+    _roomBox.setOutlineThickness(10);
+    _roomBox.setFillColor(sf::Color::Transparent);
+    sf::Vector2u windowSize = _window->getSize();
+    sf::Vector2f boxLevelSize = _roomBox.getSize();
+    float posX = (windowSize.x - boxLevelSize.x) / 2;
+    float posY = (windowSize.y - boxLevelSize.y) / 2;
+    _roomBox.setPosition(posX, posY);
+    _font.loadFromFile("assets/fonts/arcade_ya/ARCADE_R.ttf");
+
+    _welcome.setFont(_font);
+    _welcome.setCharacterSize(50);
+    _welcome.setFillColor(sf::Color::White);
+    _welcome.setPosition(posX, 100);
+    _welcome.setString("Welcome to the room");
+
+    _chooseLevel.setFont(_font);
+    _chooseLevel.setCharacterSize(30);
+    _chooseLevel.setFillColor(sf::Color::White);
+    _chooseLevel.setPosition(500, posY + 15);
+    _chooseLevel.setString("Choose your level:");
+
+    for (int i = 0; i < 8; i++) {
+        _box.push_back(sf::RectangleShape(sf::Vector2f(300, 75)));
+        _box[i].setOutlineColor(sf::Color::White);
+        _box[i].setOutlineThickness(5);
+        _box[i].setFillColor(sf::Color::Transparent);
+        _box[i].setPosition(1075, posY + i * 75);
+    }
+
+    _loadingDotsTexture.loadFromFile("assets/images/LoadingDots.png");
+    for (int i = 0; i < 8; i++) {
+        _loadingDots.push_back(sf::RectangleShape(sf::Vector2f(115, 52)));
+        _loadingDots[i].setTexture(&_loadingDotsTexture);
+        _loadingDots[i].setTextureRect(sf::IntRect(0, 0, 115, 52));
+        _loadingDots[i].setPosition(1175, posY + (i * 75) + 10);
+    }
+
+}
+
+void::Game::drawRoom()
+{
+    _window->draw(_backgroundRect);
+    _window->draw(_saturnRect);
+    _window->draw(_starRect);
+    _window->draw(_rocksRect);
+    _window->draw(_planetRect);
+    _window->draw(_roomBox);
+    _window->draw(_welcome);
+    _window->draw(_chooseLevel);
+    for (auto box : _box) {
+        _window->draw(box);
+    }
+    for (auto text : _textPlayers) {
+        _window->draw(text);
+    }
+    for (auto text : _textLevels) {
+        _window->draw(text);
+    }
+    for (int i = _nbPlayers; i < _loadingDots.size(); i++) {
+        _window->draw(_loadingDots[i]);
+    }
+}
+
+void::Game::updateRoom(sf::Time deltaTime)
+{
+    float ratio = 762.5 / 1080;
+    float speedY = _diagonalSpeedBackground;
+    float speedX = _diagonalSpeedBackground * ratio;
+
+    _backgroundPosition.y += speedY * deltaTime.asSeconds();
+    _backgroundPosition.x += (- speedX * deltaTime.asSeconds());
+    _backgroundRect.setPosition(_backgroundPosition);
+
+    if (_backgroundPosition.y >= 0)
+    {
+        _backgroundPosition.y = -1080;
+        _backgroundPosition.x = 0;
+    }
+
+    float ratioStar =  1920.0 / 1080.0;
+    float starSpeedY = _diagonalSpeedStar;
+    float starSpeedX = _diagonalSpeedStar * ratioStar;
+
+    _starPosition.x += (-starSpeedX * deltaTime.asSeconds());
+    _starPosition.y += starSpeedY * deltaTime.asSeconds();
+    _starRect.setPosition(_starPosition);
+
+    if (_starPosition.y >= 0)
+    {
+        _starPosition.x = 0;
+        _starPosition.y = -1080;
+    }
+
+    float ratioPlanet =  1920.0 / 1080.0;
+    float planetSpeedY = _diagonalSpeedPlanet;
+    float planetSpeedX = _diagonalSpeedPlanet * ratioPlanet;
+
+    _planetPosition.x += (-planetSpeedX * deltaTime.asSeconds());
+    _planetPosition.y += planetSpeedY * deltaTime.asSeconds();
+    _planetRect.setPosition(_planetPosition);
+
+    if (_planetPosition.y >= 0)
+    {
+        _planetPosition.x = 0;
+        _planetPosition.y = -1080;
+    }
+
+    float ratioSaturn =  1920.0 / 1080.0;
+    float saturnSpeedY = _diagonalSpeedSaturn;
+    float saturnSpeedX = _diagonalSpeedSaturn * ratioSaturn;
+
+    _saturnPosition.x += (-saturnSpeedX * deltaTime.asSeconds());
+    _saturnPosition.y += saturnSpeedY * deltaTime.asSeconds();
+    _saturnRect.setPosition(_saturnPosition);
+
+    if (_saturnPosition.y >= 0)
+    {
+        _saturnPosition.x = 0;
+        _saturnPosition.y = -1080;
+    }
+
+    float ratioRocks =  1920.0 / 1080.0;
+    float rocksSpeedY = _diagonalSpeedRocks;
+    float rocksSpeedX = _diagonalSpeedRocks * ratioRocks;
+
+    _rocksPosition.x += (-rocksSpeedX * deltaTime.asSeconds());
+    _rocksPosition.y += rocksSpeedY * deltaTime.asSeconds();
+    _rocksRect.setPosition(_rocksPosition);
+
+    if (_rocksPosition.y >= 0)
+    {
+        _rocksPosition.x = 0;
+        _rocksPosition.y = -1080;
+    }
+
+
+    sf::Time elapsdTime = _dotClock.getElapsedTime();
+    const float interval = 0.1f;
+
+    if (elapsdTime.asSeconds() >= interval) {
+    for (auto& dot : _loadingDots) {
+        sf::IntRect textureRect = dot.getTextureRect();
+        textureRect.left += 115;
+        if (textureRect.left >= 115 * 6) {
+            textureRect.left = 0;
+        }
+        dot.setTextureRect(textureRect);
+    }
+    _dotClock.restart();
+}
+}
+
+void Game::EventRoom()
+{
+    while (_window->pollEvent(_event)) {
+        if (_event.type == sf::Event::Closed)
+            _window->close();
+        if (_event.type == sf::Event::KeyPressed)
+        {
+            if (_event.key.code == sf::Keyboard::Up && _selectedLevel > 0) {
+                _selectedLevel--;
+            } else if (_event.key.code == sf::Keyboard::Down && _selectedLevel < _nbLevels - 1) {
+                _selectedLevel++;
+            }
+            if (_event.key.code == sf::Keyboard::Enter) {
+                _client->sendMessage("MASTER:LEVEL" + std::to_string(_selectedLevel + 1) + ";");
+            }
+        }
+    }
+    for (int i = 0; i < _textLevels.size(); i++)
+    {
+        if (i == _selectedLevel) {
+            _textLevels[i].setFillColor(sf::Color::Red);
+        } else {
+            _textLevels[i].setFillColor(sf::Color::White);
+        }
+    }
+}
+
+void Game::parseMessageRoom(std::string message)
+{
+    std::size_t levelsPos = message.find("LEVELS:");
+    std::size_t clientsPos = message.find("CLIENTS:");
+
+    if (levelsPos != std::string::npos && clientsPos != std::string::npos) {
+        std::string levelsStr = message.substr(levelsPos + 7, clientsPos - levelsPos - 7);
+        std::string clientsStr = message.substr(clientsPos + 8);
+
+        _nbLevels = std::count(levelsStr.begin(), levelsStr.end(), ';');
+        _nbPlayers = std::count(clientsStr.begin(), clientsStr.end(), ';');
+
+        for (int i = _textPlayers.size(); i < _nbPlayers; i++) {
+            sf::Text text;
+            text.setFont(_font);
+            text.setCharacterSize(30);
+            text.setFillColor(sf::Color::White);
+            text.setPosition(1110, 225 + i * 75);
+            text.setString("Player " + std::to_string(i + 1));
+            _textPlayers.push_back(text);
+        }
+        for (int i = _textLevels.size(); i < _nbLevels; i++) {
+            sf::Text text;
+            text.setFont(_font);
+            text.setCharacterSize(30);
+            text.setFillColor(sf::Color::White);
+            text.setPosition(500, 300 + i * 85);
+            text.setString("Level " + std::to_string(i + 1));
+            _textLevels.push_back(text);
+        }
+    }
+}
+
 void Game::update()
 {
     _window->clear(sf::Color::Black);
     if (!_game_is_runnging) {
-        sf::Font font;
-        sf::Text text;
-        font.loadFromFile("assets/fonts/arcade_ya/ARCADE_R.ttf");
-        text.setFont(font);
-        text.setString("YOU ARE IN THE WAITING ROOM");
-        text.setCharacterSize(24);
-        text.setFillColor(sf::Color::White);
-        text.setPosition(100, 100);
-        _window->draw(text);
-        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Enter)) {
-            _client->sendMessage("MASTER:LEVEL1;");
-        }
+        sf::Time deltaTime = _clock.restart();
+
+        EventRoom();
+        parseMessageRoom(_client->_message);
+        updateRoom(deltaTime);
+        drawRoom();
     } else {
         for (auto object : _objects) {
             object->draw(_window);

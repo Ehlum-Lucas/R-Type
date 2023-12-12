@@ -48,7 +48,7 @@
             }
             std::string getMessage() { return _message; }
             void sendMessage(std::string message) {
-                std::cout << "SENDING " << message << std::endl;
+                // std::cout << "SENDING " << message << std::endl;
                 _socket.send_to(asio::buffer(message), _receiver_endpoint);
             }
             std::string receiveMessage() {
