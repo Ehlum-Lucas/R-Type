@@ -7,11 +7,7 @@
 
 #include "Systems.hpp"
 
-void shoot_system (Registry &r, std::string &inputs) {
-
-    bool shooting = (inputs.find("s") != std::string::npos);
-
-    std::string received_type = inputs.substr(0, 2);
+void shoot_system (Registry &r) {
 
     auto &positions = r.get_components<Position>();
     auto &ids = r.get_components<Id>();
@@ -24,7 +20,7 @@ void shoot_system (Registry &r, std::string &inputs) {
         auto &type = types[i];
         auto &shoot = shoots[i];
 
-        if (pos && id && shoot && shooting && shoot.value().shoot && (shoot.value().time >= shoot.value().delay || shoot.value().shooted == false) && type.value().type == received_type) {
+        if (pos && id && shoot && shoot.value().shoot && shoot.value().is_shooting) {
             shoot.value().time = 0;
             shoot.value().shooted = true;
             Entity bullet = r.create_entity();
@@ -36,8 +32,10 @@ void shoot_system (Registry &r, std::string &inputs) {
             r.add_component(bullet, Id{bullet.get_id()});
             r.add_component(bullet, Size{10, 10});
         }
-        if (type && type.value().type == received_type && shoot && shoot.value().time < shoot.value().delay) {
+        if (shoot && shoot.value().time < shoot.value().delay) {
             shoot.value().time += 1;    
+        } else if (shoot && shoot.value().time >= shoot.value().delay) {
+            shoot.value().is_shooting = false;
         }
     }
 }

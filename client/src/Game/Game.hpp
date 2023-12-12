@@ -28,6 +28,7 @@
             sf::Event _event;
             std::vector<std::shared_ptr<Object>> _objects;
             std::shared_ptr<Client> _client;
+            bool _game_is_runnging = false;
     };
 
 #endif /* !GAME_HPP_ */

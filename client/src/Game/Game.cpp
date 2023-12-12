@@ -52,6 +52,13 @@ void Game::destroyObjectIfNotExists(std::vector<int> ids)
 
 void Game::unserialize(std::string data)
 {
+    
+    if (data.find("CLIENTS") == std::string::npos && data.find("LEVELS") == std::string::npos) {
+        _game_is_runnging = true;
+    } else {
+        return;
+    }
+
     std::string type, id, x, y, status, height, width;
     std::istringstream iss(data);
     std::string message;
@@ -140,8 +147,20 @@ void Game::inputsHandler()
 void Game::update()
 {
     _window->clear(sf::Color::Black);
-    for (auto object : _objects) {
-        object->draw(_window);
+    if (!_game_is_runnging) {
+        sf::Font font;
+        sf::Text text;
+        font.loadFromFile("assets/fonts/arcade_ya/ARCADE_R.ttf");
+        text.setFont(font);
+        text.setString("YOU ARE IN THE WAITING ROOM");
+        text.setCharacterSize(24);
+        text.setFillColor(sf::Color::White);
+        text.setPosition(100, 100);
+        _window->draw(text);
+    } else {
+        for (auto object : _objects) {
+            object->draw(_window);
+        }
     }
     _window->display();
 }

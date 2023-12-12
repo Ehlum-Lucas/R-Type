@@ -46,4 +46,5 @@ struct Shoot {
     float delay;
     float time;
     bool shooted;
+    bool is_shooting;
 };

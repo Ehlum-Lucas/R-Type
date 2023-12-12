@@ -49,7 +49,7 @@ void Server::setup_registry()
         _registry.add_component(enemy, Type{"e"});
         _registry.add_component(enemy, Id{enemy.get_id()});
         _registry.add_component(enemy, Size{50, 50});
-        _registry.add_component(enemy, Shoot{false, 0.0, 0.0, false});
+        _registry.add_component(enemy, Shoot{false, 0.0, 0.0, false, false});
         y += 200;
         if (y > 1000)
             y = 45;
@@ -119,18 +119,16 @@ void Server::game()
                 _registry.add_component(player, Type{"p" + std::to_string(get_client_type())});
                 _registry.add_component(player, Id{player.get_id()});
                 _registry.add_component(player, Size{50, 100});
-                _registry.add_component(player, Shoot{true, 30.0, 0.0, false});
+                _registry.add_component(player, Shoot{true, 30.0, 0.0, false, false});
                 client.created = true;
             }
         }
     }
 
-    bool have_input = false;
     for (auto &input : _inputs_list) {
         control_system(_registry, input);
-        shoot_system(_registry, input);
-        have_input = true;
     }
+    shoot_system(_registry);
     position_system(_registry);
     _inputs_list.clear();
 }
