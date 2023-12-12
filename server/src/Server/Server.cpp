@@ -10,57 +10,9 @@
 Server::Server(asio::io_context& io_context, short port): _socket(io_context, asio::ip::udp::endpoint(asio::ip::udp::v4(), port)), _timer(io_context, std::chrono::milliseconds(1000/60))
 {
     std::cout << "Server starting on port " << port << std::endl;
-    start_server();
+    _game.setup();
     start_receive();
     start_send();
-}
-
-void Server::setup_registry()
-{
-    _registry.register_component<Position>();
-    _registry.register_component<Velocity>();
-    _registry.register_component<Drawable>();
-    _registry.register_component<Controllable>();
-    _registry.register_component<Type>();
-    _registry.register_component<Id>();
-    _registry.register_component<Size>();
-    _registry.register_component<Shoot>();
-
-    int id = 1;
-    float y = 45;
-    float x = 300;
-    std::random_device rd;
-    std::mt19937 gen(rd());
-
-    float min = 2000.0f;
-    float max = 1000000.0f;
-
-    std::uniform_real_distribution<float> distribution(min, max);
-
-    for (int i = 0; i < 0; i++) {
-        _enemies.push_back(_registry.create_entity());
-    }
-
-    for (auto& enemy : _enemies) {
-        _registry.add_component(enemy, Position{distribution(gen), y});
-        _registry.add_component(enemy, Velocity{-10, 0.0});
-        _registry.add_component(enemy, Drawable{true});
-        _registry.add_component(enemy, Controllable{false});
-        _registry.add_component(enemy, Type{"e"});
-        _registry.add_component(enemy, Id{enemy.get_id()});
-        _registry.add_component(enemy, Size{50, 50});
-        _registry.add_component(enemy, Shoot{false, 0.0, 0.0, false, false});
-        y += 200;
-        if (y > 1000)
-            y = 45;
-        x += 110;
-        id++;
-    }
-}
-
-void Server::start_server()
-{
-    setup_registry();
 }
 
 void Server::start_receive() 
@@ -76,6 +28,16 @@ void Server::start_receive()
                         client.connected = true;
                         std::cout << "CLIENT CONNECTED" << std::endl;
                     }
+                }
+            }
+
+            if (message.find("MASTER") != std::string::npos) {
+                std::size_t colonPos = message.find(":");
+                std::size_t semicolonPos = message.find(";");
+
+                if (colonPos != std::string::npos && semicolonPos != std::string::npos && semicolonPos > colonPos + 1) {
+                    std::string level = message.substr(colonPos + 1, semicolonPos - colonPos - 1);
+                    _game.run_level(level);
                 }
             }
 
@@ -110,27 +72,12 @@ void Server::game()
     for (auto &client : _clients) {
         if (client.connected == false) {
             if (!client.created) {
-                Entity player = _registry.create_entity();
-                _players.push_back(player);
-                _registry.add_component(player, Position{100, 100});
-                _registry.add_component(player, Velocity{0.0, 0.0});
-                _registry.add_component(player, Drawable{true});
-                _registry.add_component(player, Controllable{true});
-                _registry.add_component(player, Type{"p" + std::to_string(get_client_type())});
-                _registry.add_component(player, Id{player.get_id()});
-                _registry.add_component(player, Size{50, 100});
-                _registry.add_component(player, Shoot{true, 30.0, 0.0, false, false});
+                _game.create_player(get_client_type());
                 client.created = true;
             }
         }
     }
-
-    for (auto &input : _inputs_list) {
-        control_system(_registry, input);
-    }
-    shoot_system(_registry);
-    position_system(_registry);
-    _inputs_list.clear();
+    _game.update(_inputs_list);
 }
 
 void Server::start_send() 
@@ -141,7 +88,7 @@ void Server::start_send()
 
             game();
 
-            std::vector<std::string> serialized = serialize_system(_registry);
+            std::vector<std::string> serialized = _game.get_serialized();
 
             std::string serializedString;
             for (const auto& str : serialized) {

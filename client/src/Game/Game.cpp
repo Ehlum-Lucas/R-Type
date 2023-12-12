@@ -157,6 +157,9 @@ void Game::update()
         text.setFillColor(sf::Color::White);
         text.setPosition(100, 100);
         _window->draw(text);
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Enter)) {
+            _client->sendMessage("MASTER:LEVEL1;");
+        }
     } else {
         for (auto object : _objects) {
             object->draw(_window);
