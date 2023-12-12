@@ -29,6 +29,7 @@
             std::vector<std::shared_ptr<Object>> _objects;
             std::shared_ptr<Client> _client;
             bool _game_is_runnging = false;
+            bool _game = true;
     };
 
 #endif /* !GAME_HPP_ */

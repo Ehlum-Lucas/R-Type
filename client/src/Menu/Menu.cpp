@@ -306,6 +306,7 @@ void Menu::EventMouse()
             std::cout << "Port: " << _inputPort << std::endl;
             _game->connectToServer(_inputIp, _inputPort);
             _game->start();
+            std::cout << "ICI" << std::endl;
         }
         if (_textboxIp.getGlobalBounds().contains(mousePos)) {
             _isFocusedIp = true;

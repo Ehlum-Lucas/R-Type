@@ -90,27 +90,31 @@ void Game::unserialize(std::string data)
     destroyObjectIfNotExists(ids);
 
 }
-void receiveMessageThread(std::shared_ptr<Client> client) {
-    while (true) {
+void receiveMessageThread(std::shared_ptr<Client> client, bool &run) {
+    while (run) {
         client->_message = client->receiveMessage();
     }
 }
 void Game::start()
 {
-    _client->_thread = std::thread(receiveMessageThread, this->_client);
-    while (_window->isOpen()) {
+    _client->_thread = std::thread(receiveMessageThread, this->_client, std::ref(this->_game));
+    while (_window->isOpen() && _game) {
         inputsHandler();
         update();
     }
     _client->_thread.join();
+    _game = true;
 }
+
 void Game::inputsHandler()
 {
     while (_window->pollEvent(_event)) {
         if (_event.type == sf::Event::Closed 
         || (_event.type == sf::Event::KeyPressed 
-        && _event.key.code == sf::Keyboard::Escape))
-            _window->close();
+        && _event.key.code == sf::Keyboard::Escape)) {
+            _game = false;
+            // _window->close();
+        }
     }
     std::string message = "";
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up)) {
@@ -141,7 +145,6 @@ void Game::inputsHandler()
             message = "";
         }
     }
-
 }
 
 void Game::update()
@@ -155,7 +158,7 @@ void Game::update()
         text.setString("YOU ARE IN THE WAITING ROOM");
         text.setCharacterSize(24);
         text.setFillColor(sf::Color::White);
-        text.setPosition(100, 100);
+        text.setPosition(650, 500);
         _window->draw(text);
         if (sf::Keyboard::isKeyPressed(sf::Keyboard::Enter)) {
             _client->sendMessage("MASTER:LEVEL1;");

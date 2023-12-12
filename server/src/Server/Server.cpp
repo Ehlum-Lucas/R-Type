@@ -43,7 +43,7 @@ void Server::start_receive()
 
             _inputs_list.push_back(message);
 
-            // Check if the client is already in the list
+            // Check if th1e client is already in the list
             auto it = std::find_if(_clients.begin(), _clients.end(), [this](const Client& client) {
                 return client.getEndpoint() == _remote_endpoint;
             });
