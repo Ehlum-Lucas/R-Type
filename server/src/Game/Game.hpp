@@ -17,10 +17,12 @@
         public:
             Game();
             ~Game();
-            void create_player(int client_type);
+            size_t create_player(int client_type);
+            void delete_player(int entity_id);
             void update(std::vector<std::string> &_inputs_list);
             void setup();
             void run_level(std::string level);
+            void reset();
             std::vector<std::string> get_serialized();
         private:
             std::vector<Entity> _players;

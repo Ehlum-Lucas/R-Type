@@ -86,6 +86,12 @@
                 });
             }
 
+            void reset() {
+                _components_arrays.clear();
+                entities.clear();
+                systems.clear();
+            }
+
         private:
             std::unordered_map<std::type_index, std::any> _components_arrays;
             std::vector<Entity> entities;

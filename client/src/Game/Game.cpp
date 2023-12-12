@@ -103,7 +103,10 @@ void Game::start()
         update();
     }
     _client->_thread.join();
+    _client->sendMessage("QUIT");
+    _objects.clear();
     _game = true;
+    _game_is_runnging = false;
 }
 
 void Game::inputsHandler()
