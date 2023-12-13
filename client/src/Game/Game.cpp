@@ -90,28 +90,34 @@ void Game::unserialize(std::string data)
     destroyObjectIfNotExists(ids);
 
 }
-void receiveMessageThread(std::shared_ptr<Client> client) {
-    while (true) {
+void receiveMessageThread(std::shared_ptr<Client> client, bool &run) {
+    while (run) {
         client->_message = client->receiveMessage();
     }
 }
 void Game::start()
 {
-    _client->_thread = std::thread(receiveMessageThread, this->_client);
-
-    while (_window->isOpen()) {
+    _client->_thread = std::thread(receiveMessageThread, this->_client, std::ref(this->_game));
+    while (_window->isOpen() && _game) {
         inputsHandler();
         update();
     }
     _client->_thread.join();
+    _client->sendMessage("QUIT");
+    _objects.clear();
+    _game = true;
+    _game_is_runnging = false;
 }
+
 void Game::inputsHandler()
 {
     while (_window->pollEvent(_event)) {
         if (_event.type == sf::Event::Closed 
         || (_event.type == sf::Event::KeyPressed 
-        && _event.key.code == sf::Keyboard::Escape))
-            _window->close();
+        && _event.key.code == sf::Keyboard::Escape)) {
+            _game = false;
+            // _window->close();
+        }
     }
     std::string message = "";
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up)) {
@@ -142,7 +148,96 @@ void Game::inputsHandler()
             message = "";
         }
     }
+}
 
+void::Game::drawRoom()
+{
+    _window->draw(_backgroundRect);
+    _window->draw(_saturnRect);
+    _window->draw(_starRect);
+    _window->draw(_rocksRect);
+    _window->draw(_planetRect);
+    _window->draw(_roomBox);
+    _window->draw(_welcome);
+    _window->draw(_chooseLevel);
+    for (auto box : _box) {
+        _window->draw(box);
+    }
+    for (auto text : _textPlayers) {
+        _window->draw(text);
+    }
+    for (auto text : _textLevels) {
+        _window->draw(text);
+    }
+    for (int i = _nbPlayers; i < _loadingDots.size(); i++) {
+        _window->draw(_loadingDots[i]);
+    }
+}
+
+void Game::EventRoom()
+{
+    while (_window->pollEvent(_event)) {
+        if (_event.type == sf::Event::Closed)
+            _window->close();
+        if (_event.type == sf::Event::KeyPressed)
+        {
+            if (_event.key.code == sf::Keyboard::Up && _selectedLevel > 0) {
+                _selectedLevel--;
+            } else if (_event.key.code == sf::Keyboard::Down && _selectedLevel < _nbLevels - 1) {
+                _selectedLevel++;
+            }
+            if (_event.key.code == sf::Keyboard::Enter) {
+                std::cout << "MASTER:LEVEL" + std::to_string(_selectedLevel + 1) + ";" << std::endl;
+                _client->sendMessage("MASTER:LEVEL" + std::to_string(_selectedLevel + 1) + ";");
+            }
+        }
+    }
+    for (int i = 0; i < _textLevels.size(); i++)
+    {
+        if (i == _selectedLevel) {
+            _textLevels[i].setFillColor(sf::Color::Red);
+        } else {
+            _textLevels[i].setFillColor(sf::Color::White);
+        }
+    }
+}
+
+void Game::parseMessageRoom(std::string message)
+{
+    std::size_t levelsPos = message.find("LEVELS:");
+    std::size_t clientsPos = message.find("CLIENTS:");
+
+    if (levelsPos != std::string::npos && clientsPos != std::string::npos) {
+        std::string levelsStr = message.substr(levelsPos + 7, clientsPos - levelsPos - 7);
+        std::string clientsStr = message.substr(clientsPos + 8);
+
+        _nbLevels = std::count(levelsStr.begin(), levelsStr.end(), ';');
+        _nbPlayers = std::count(clientsStr.begin(), clientsStr.end(), ';');
+
+        sf::Vector2u windowSize = _window->getSize();
+        sf::Vector2f boxLevelSize = _roomBox.getSize();
+        float posX = (windowSize.x - boxLevelSize.x) / 2;
+        float posY = (windowSize.y - boxLevelSize.y) / 2;
+
+        for (int i = _textPlayers.size(); i < _nbPlayers; i++) {
+            sf::Text text;
+            text.setFont(_font);
+            text.setCharacterSize(30);
+            text.setFillColor(sf::Color::White);
+            text.setPosition(1145, 257 + i * 75);
+            text.setString("Player " + std::to_string(i + 1));
+            _textPlayers.push_back(text);
+        }
+        for (int i = _textLevels.size(); i < _nbLevels; i++) {
+            sf::Text text;
+            text.setFont(_font);
+            text.setCharacterSize(30);
+            text.setFillColor(sf::Color::White);
+            text.setPosition(posX + 25, 310 + i * 85);
+            text.setString("Level " + std::to_string(i + 1));
+            _textLevels.push_back(text);
+        }
+    }
 }
 
 
@@ -216,30 +311,6 @@ void Game::loadRoom(sf::Texture starTexture, sf::Texture planetTexture, sf::Text
         _loadingDots[i].setPosition(1195, posY + (i * 75) + 10);
     }
 
-}
-
-void::Game::drawRoom()
-{
-    _window->draw(_backgroundRect);
-    _window->draw(_saturnRect);
-    _window->draw(_starRect);
-    _window->draw(_rocksRect);
-    _window->draw(_planetRect);
-    _window->draw(_roomBox);
-    _window->draw(_welcome);
-    _window->draw(_chooseLevel);
-    for (auto box : _box) {
-        _window->draw(box);
-    }
-    for (auto text : _textPlayers) {
-        _window->draw(text);
-    }
-    for (auto text : _textLevels) {
-        _window->draw(text);
-    }
-    for (int i = _nbPlayers; i < _loadingDots.size(); i++) {
-        _window->draw(_loadingDots[i]);
-    }
 }
 
 void::Game::updateRoom(sf::Time deltaTime)
@@ -319,81 +390,15 @@ void::Game::updateRoom(sf::Time deltaTime)
     const float interval = 0.1f;
 
     if (elapsdTime.asSeconds() >= interval) {
-    for (auto& dot : _loadingDots) {
-        sf::IntRect textureRect = dot.getTextureRect();
-        textureRect.left += 115;
-        if (textureRect.left >= 115 * 6) {
-            textureRect.left = 0;
-        }
-        dot.setTextureRect(textureRect);
-    }
-    _dotClock.restart();
-}
-}
-
-void Game::EventRoom()
-{
-    while (_window->pollEvent(_event)) {
-        if (_event.type == sf::Event::Closed)
-            _window->close();
-        if (_event.type == sf::Event::KeyPressed)
-        {
-            if (_event.key.code == sf::Keyboard::Up && _selectedLevel > 0) {
-                _selectedLevel--;
-            } else if (_event.key.code == sf::Keyboard::Down && _selectedLevel < _nbLevels - 1) {
-                _selectedLevel++;
+        for (auto& dot : _loadingDots) {
+            sf::IntRect textureRect = dot.getTextureRect();
+            textureRect.left += 115;
+            if (textureRect.left >= 115 * 6) {
+                textureRect.left = 0;
             }
-            if (_event.key.code == sf::Keyboard::Enter) {
-                std::cout << "MASTER:LEVEL" + std::to_string(_selectedLevel + 1) + ";" << std::endl;
-                _client->sendMessage("MASTER:LEVEL" + std::to_string(_selectedLevel + 1) + ";");
-            }
+            dot.setTextureRect(textureRect);
         }
-    }
-    for (int i = 0; i < _textLevels.size(); i++)
-    {
-        if (i == _selectedLevel) {
-            _textLevels[i].setFillColor(sf::Color::Red);
-        } else {
-            _textLevels[i].setFillColor(sf::Color::White);
-        }
-    }
-}
-
-void Game::parseMessageRoom(std::string message)
-{
-    std::size_t levelsPos = message.find("LEVELS:");
-    std::size_t clientsPos = message.find("CLIENTS:");
-
-    if (levelsPos != std::string::npos && clientsPos != std::string::npos) {
-        std::string levelsStr = message.substr(levelsPos + 7, clientsPos - levelsPos - 7);
-        std::string clientsStr = message.substr(clientsPos + 8);
-
-        _nbLevels = std::count(levelsStr.begin(), levelsStr.end(), ';');
-        _nbPlayers = std::count(clientsStr.begin(), clientsStr.end(), ';');
-
-        sf::Vector2u windowSize = _window->getSize();
-        sf::Vector2f boxLevelSize = _roomBox.getSize();
-        float posX = (windowSize.x - boxLevelSize.x) / 2;
-        float posY = (windowSize.y - boxLevelSize.y) / 2;
-
-        for (int i = _textPlayers.size(); i < _nbPlayers; i++) {
-            sf::Text text;
-            text.setFont(_font);
-            text.setCharacterSize(30);
-            text.setFillColor(sf::Color::White);
-            text.setPosition(1145, 257 + i * 75);
-            text.setString("Player " + std::to_string(i + 1));
-            _textPlayers.push_back(text);
-        }
-        for (int i = _textLevels.size(); i < _nbLevels; i++) {
-            sf::Text text;
-            text.setFont(_font);
-            text.setCharacterSize(30);
-            text.setFillColor(sf::Color::White);
-            text.setPosition(posX + 25, 310 + i * 85);
-            text.setString("Level " + std::to_string(i + 1));
-            _textLevels.push_back(text);
-        }
+        _dotClock.restart();
     }
 }
 

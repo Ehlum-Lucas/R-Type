@@ -32,7 +32,7 @@ void Game::setup()
     _registry.register_component<Shoot>();
 }
 
-void Game::create_player(int client_type)
+size_t Game::create_player(int client_type)
 {
     Entity player = _registry.create_entity();
     _players.push_back(player);
@@ -45,6 +45,12 @@ void Game::create_player(int client_type)
     _registry.add_component(player, Id{player.get_id()});
     _registry.add_component(player, Size{50, 100});
     _registry.add_component(player, Shoot{true, 30.0, 0.0, false, false});
+    return player.get_id();
+}
+
+void Game::delete_player(int entity_id)
+{
+    _registry.delete_entity_by_id(entity_id);
 }
 
 void Game::update(std::vector<std::string> &_inputs_list)
@@ -55,6 +61,16 @@ void Game::update(std::vector<std::string> &_inputs_list)
     shoot_system(_registry);
     position_system(_registry);
     _inputs_list.clear();
+}
+
+void Game::reset()
+{
+    _registry.reset();
+    _players.clear();
+    _enemies.clear();
+    _levels.clear();
+    _clients_in_room.clear();
+    _game_is_running = false;
 }
 
 void Game::run_level(std::string level)

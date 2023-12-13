@@ -90,6 +90,7 @@
             int _nbLevels;
             int _selectedLevel = 0;
             
+            bool _game = true;
     };
 
 #endif /* !GAME_HPP_ */

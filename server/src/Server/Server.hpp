@@ -24,8 +24,9 @@
             std::vector<Client> _clients;
             asio::steady_timer _timer;
             std::vector<std::string> _inputs_list;
-            int next_client_type = 1;
             Game _game;
+            bool _in_room = true;
+            int next_client_type = 1;
     };
 
 #endif /* !SERVER_HPP_ */
