@@ -22,32 +22,6 @@ void Server::start_receive()
             std::string message(_recv_buffer.data(), bytes_transferred);
             std::cout << "Received: " << message << " from " << _remote_endpoint.address().to_string() << ":" << _remote_endpoint.port() << std::endl;
 
-            /// +++
-
-            // for (auto& client : _clients) {
-            //     if (client.getEndpoint() == _remote_endpoint) {
-            //         if (message == "OK") {
-            //             client.connected = true;
-            //             std::cout << "CLIENT CONNECTED" << std::endl;
-            //         }
-            //         if (message == "QUIT") {
-            //             std::cout << "CLIENT QUIT" << std::endl;
-            //             _game.delete_player(client.entity_id);
-            //         }
-            //     }
-            // }
-
-            if (message.find("MASTER") != std::string::npos) {
-                std::size_t colonPos = message.find(":");
-                std::size_t semicolonPos = message.find(";");
-
-                if (colonPos != std::string::npos && semicolonPos != std::string::npos && semicolonPos > colonPos + 1) {
-                    std::string level = message.substr(colonPos + 1, semicolonPos - colonPos - 1);
-                    _in_room = false;
-                    _game.run_level(level);
-                }
-            }
-
             _inputs_list.push_back(message);
 
             // Check if th1e client is already in the list
@@ -65,8 +39,6 @@ void Server::start_receive()
                     std::cout << client.getEndpoint().address().to_string() << ":" << client.getEndpoint().port() << "\n";
                 }
             }
-
-            /// +++
 
             for (auto it = _clients.begin(); it != _clients.end();) {
                 if (it->getEndpoint() == _remote_endpoint) {
@@ -90,6 +62,17 @@ void Server::start_receive()
                 std::cout << "RESET" << std::endl;
                 next_entity_id = 1;
                 next_client_type = 1;
+            }
+
+            if (message.find("MASTER") != std::string::npos) {
+                std::size_t colonPos = message.find(":");
+                std::size_t semicolonPos = message.find(";");
+
+                if (colonPos != std::string::npos && semicolonPos != std::string::npos && semicolonPos > colonPos + 1) {
+                    std::string level = message.substr(colonPos + 1, semicolonPos - colonPos - 1);
+                    _in_room = false;
+                    _game.run_level(level);
+                }
             }
 
             // Reset the timer for the client

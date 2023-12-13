@@ -93,6 +93,7 @@ void Game::unserialize(std::string data)
 void receiveMessageThread(std::shared_ptr<Client> client, bool &run) {
     while (run) {
         client->_message = client->receiveMessage();
+        std::cout << client->_message << std::endl;
     }
 }
 void Game::start()
@@ -107,6 +108,16 @@ void Game::start()
     _objects.clear();
     _game = true;
     _game_is_runnging = false;
+    _client->_server_know = false;
+    _isLevelSelected = false;
+    _nbPlayers = 0;
+    _nbLevels = 0;
+    _selectedLevel = 0;
+    _clients.clear();
+    _levels.clear();
+    _loadingDots.clear();
+    _textPlayers.clear();
+    _textLevels.clear();
 }
 
 void Game::inputsHandler()
@@ -207,7 +218,12 @@ void Game::parseMessageRoom(std::string message)
     std::size_t levelsPos = message.find("LEVELS:");
     std::size_t clientsPos = message.find("CLIENTS:");
 
-    if (levelsPos != std::string::npos && clientsPos != std::string::npos) {
+    if (_client->_message.substr(0, 8) != "YOU ARE " && message.find("LEVELS:") == std::string::npos && message.find("CLIENTS:") == std::string::npos && _client->_server_know) {
+        _game_is_runnging = true;
+    }
+
+    if (levelsPos != std::string::npos && clientsPos != std::string::npos && _client->_message.substr(0, 8) != "YOU ARE " ) {
+        _client->_server_know = true;
         std::string levelsStr = message.substr(levelsPos + 7, clientsPos - levelsPos - 7);
         std::string clientsStr = message.substr(clientsPos + 8);
 

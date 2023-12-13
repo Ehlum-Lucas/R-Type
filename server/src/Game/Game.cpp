@@ -68,7 +68,7 @@ void Game::reset()
     _registry.reset();
     _players.clear();
     _enemies.clear();
-    _levels.clear();
+    // _levels.clear();
     _clients_in_room.clear();
     _game_is_running = false;
 }
