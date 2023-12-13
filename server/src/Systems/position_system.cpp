@@ -14,13 +14,14 @@ void position_system (Registry &r) {
     auto &ids = r.get_components<Id>();
     auto &types = r.get_components<Type>();
 
-    for ( size_t i = 0; i < positions.size() && i < velocities.size() && i < ids.size() && i < types.size(); ++i) {
+    for ( size_t i = 0; i < positions.size() && i < velocities.size() && i < ids.size() && i < types.size() && i < controllables.size(); ++i) {
         auto &pos = positions[i];
         auto const &vel = velocities[i];
         auto const &id = ids[i];
         auto const &type = types[i];
+        auto const &controllable = controllables[i];
 
-        if (pos && vel && id) {
+        if (pos && vel && id && controllable && controllable.value().controllable == false) {
             pos.value().x += vel.value().vx;
             pos.value().y += vel.value().vy;
     

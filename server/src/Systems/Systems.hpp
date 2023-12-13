@@ -12,5 +12,6 @@
     void position_system (Registry &r);
     void control_system(Registry &r, std::string &inputs);
     std::vector<std::string> serialize_system (Registry &r);
+    void shoot_system (Registry &r);
 
 #endif /* !SYSTEMS_HPP_ */

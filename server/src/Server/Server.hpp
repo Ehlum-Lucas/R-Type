@@ -8,11 +8,7 @@
 #ifndef SERVER_HPP_
     #define SERVER_HPP_
     #include "Client.hpp"
-    #include <array>
-    #include <iostream>
-    #include <vector>
-    #include "Systems.hpp"
-    #include <random>
+    #include "Game.hpp"
 
     class Server {
         public:
@@ -20,8 +16,6 @@
         private:
             void start_receive();
             void start_send();
-            void start_server();
-            void setup_registry();
             void game();
             int get_client_type() { return next_client_type++; };
             asio::ip::udp::socket _socket;
@@ -29,10 +23,9 @@
             std::array<char, 1024> _recv_buffer;
             std::vector<Client> _clients;
             asio::steady_timer _timer;
-            Registry _registry;
-            std::vector<Entity> _players;
-            std::vector<Entity> _enemies;
             std::vector<std::string> _inputs_list;
+            Game _game;
+            bool _in_room = true;
             int next_client_type = 1;
     };
 

@@ -10,7 +10,7 @@ INC = 		-I ./src/Menu 						\
 			-I ./src/Client		 				\
 			-I ./src/Object
 
-SRC = 		main.cpp							\
+SRC = 		src/main.cpp						\
 			src/Menu/Menu.cpp					\
 			src/Game/Game.cpp					\
 			src/Object/Object.cpp				\

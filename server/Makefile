@@ -12,13 +12,16 @@ INC = 		-I ./src/Server 					\
 			-I ./src/Systems 					\
 			-I ./src/Registry 					\
 			-I ./src/SparseArray 				\
+			-I ./src/Game
 
 SRC = 		src/main.cpp						\
 			src/Server/Server.cpp				\
 			src/Systems/position_system.cpp		\
 			src/Systems/control_system.cpp		\
 			src/Systems/serialize_system.cpp	\
+			src/Systems/shoot_system.cpp		\
 			src/Entity/Entity.cpp				\
+			src/Game/Game.cpp					\
 
 OBJ = 		$(SRC:.cpp=.o)
 

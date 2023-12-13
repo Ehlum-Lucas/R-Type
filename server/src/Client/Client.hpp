@@ -8,7 +8,7 @@
 #ifndef CLIENT_HPP_
     #define CLIENT_HPP_
     #include <asio.hpp>
-
+    #include <chrono>
 
     class Client {
         public:
@@ -18,7 +18,10 @@
 
             bool connected = false;
             bool created = false;
+            bool quit = false;
             std::string type;
+            std::chrono::steady_clock::time_point lastMessageTime;
+            size_t entity_id;
         private:
             asio::ip::udp::endpoint endpoint_;
 };
