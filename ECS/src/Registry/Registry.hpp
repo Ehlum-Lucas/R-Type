@@ -1,0 +1,104 @@
+#ifndef REGISTRY_HPP_
+    #define REGISTRY_HPP_
+
+    #include <typeindex>
+    #include <functional>
+    #include "SparseArray.hpp"
+    #include "Entity.hpp"
+    #include "Components.hpp"
+    #include <unordered_map>
+    #include <any>
+
+    class Registry {
+        public:
+
+            Registry(std::string const &title, std::string const &mode, int framerate, bool fullscreen, int width = 800, int height = 800) {
+                if (fullscreen) {
+                    sf::VideoMode fullscreenMode = sf::VideoMode::getFullscreenModes()[0];
+                    _window = std::make_shared<sf::RenderWindow>(fullscreenMode, title, sf::Style::Fullscreen);
+                } else {
+                    _window = std::make_shared<sf::RenderWindow>(sf::VideoMode(width, height), title);
+                }
+                _window->setFramerateLimit(framerate);
+            }
+            template <class Component>
+            SparseArray<Component>& register_component() {
+                std::type_index type = typeid(Component);
+                if (_components_arrays.find(type) == _components_arrays.end()) {
+                    _components_arrays[type] = SparseArray<Component>();
+                }
+                return std::any_cast<SparseArray<Component>&>(_components_arrays[type]);
+            }
+
+            template <class Component>
+            SparseArray<Component>& get_components() {
+                std::type_index type = typeid(Component);
+                if (_components_arrays.find(type) == _components_arrays.end()) {
+                    _components_arrays[type] = SparseArray<Component>();
+                }
+                return std::any_cast<SparseArray<Component>&>(_components_arrays[type]);
+            }
+
+            template <class Component>
+            SparseArray<Component> const & get_components() const {
+                std::type_index type = typeid(Component);
+                if (_components_arrays.find(type) == _components_arrays.end()) {
+                    _components_arrays.emplace(type, SparseArray<Component>());
+                }
+                return std::any_cast<SparseArray<Component> const &>(_components_arrays.at(type));
+            }
+
+            Entity create_entity() {
+                entities.emplace_back();
+                return entities.back();
+            }
+
+            void delete_entity_by_id(size_t id) {
+                for (auto it = entities.begin(); it != entities.end(); ++it) {
+                    if (it->get_id() == id) {
+                        delete_components_by_entity_id<Position>(id);
+                        delete_components_by_entity_id<Velocity>(id);
+                        delete_components_by_entity_id<Drawable>(id);
+                        it->delete_entity();
+                        entities.erase(it);
+                        break;
+                    }
+                }
+            }
+
+            template <typename Component>
+            void add_component(Entity entity, Component&& component) {
+                auto& components = get_components<Component>();
+                components.insert_at(entity.get_id(), std::forward<Component>(component));
+            }
+
+
+            template <typename Component>
+            void delete_components_by_entity_id(size_t id) {
+                auto& components = get_components<Component>();
+                components.erase(id);
+            }
+
+            void run_systems() {
+                while (_window->isOpen()) {
+                    for (auto& system : systems) {
+                        system(*this);
+                    }
+                }
+            }
+
+            template <typename Function, typename... Args>
+            void add_system(Function&& f, Args&&... args) {
+                systems.emplace_back([=](Registry& registry) {
+                    f(registry, std::forward<Args>(args)...);
+                });
+            }
+        public:
+            std::shared_ptr<sf::RenderWindow> _window;
+            sf::Event _event;
+        private:
+            std::unordered_map<std::type_index, std::any> _components_arrays;
+            std::vector<Entity> entities;
+            std::vector<std::function<void(Registry&)>> systems;
+    };
+#endif /* !REGISTRY_HPP_ */
