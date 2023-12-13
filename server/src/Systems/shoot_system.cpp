@@ -20,9 +20,9 @@ void shoot_system (Registry &r) {
         auto &type = types[i];
         auto &shoot = shoots[i];
 
-        if (pos && id && shoot && shoot.value().shoot && shoot.value().is_shooting) {
+        if (pos && id && shoot && shoot.value().shoot && shoot.value().is_shooting && shoot.value().time >= shoot.value().delay) {
             shoot.value().time = 0;
-            shoot.value().shooted = true;
+            shoot.value().is_shooting = false;
             Entity bullet = r.create_entity();
             r.add_component(bullet, Position{pos.value().x + 100, pos.value().y + 50});
             r.add_component(bullet, Velocity{30, 0});
@@ -35,7 +35,8 @@ void shoot_system (Registry &r) {
         if (shoot && shoot.value().time < shoot.value().delay) {
             shoot.value().time += 1;    
         } else if (shoot && shoot.value().time >= shoot.value().delay) {
-            shoot.value().is_shooting = false;
+            // shoot.value().is_shooting = false;
+            // shoot.value().shooted = false;
         }
     }
 }

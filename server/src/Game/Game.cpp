@@ -44,7 +44,7 @@ size_t Game::create_player(int client_type)
     _clients_in_room.push_back("player " + std::to_string(client_type));
     _registry.add_component(player, Id{player.get_id()});
     _registry.add_component(player, Size{50, 100});
-    _registry.add_component(player, Shoot{true, 30.0, 0.0, false, false});
+    _registry.add_component(player, Shoot{true, 30.0, 30.0, false, false});
     return player.get_id();
 }
 
