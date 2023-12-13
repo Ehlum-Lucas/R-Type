@@ -305,6 +305,7 @@ void Menu::EventMouse()
             std::cout << "Ip: " << _inputIp << std::endl;
             std::cout << "Port: " << _inputPort << std::endl;
             _game->connectToServer(_inputIp, _inputPort);
+            _game->loadRoom(_starTexture, _planetTexture, _saturnTexture, _rocksTexture, _backgroundTexture, _backgroundPosition, _starPosition, _planetPosition, _saturnPosition, _rocksPosition, _backgroundRect, _starRect, _planetRect, _saturnRect, _rocksRect, _diagonalSpeedBackground, _diagonalSpeedStar, _diagonalSpeedPlanet, _diagonalSpeedSaturn, _diagonalSpeedRocks, _clock);
             _game->start();
         }
         if (_textboxIp.getGlobalBounds().contains(mousePos)) {

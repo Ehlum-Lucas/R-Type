@@ -101,13 +101,14 @@ std::vector<std::string> Game::get_serialized()
         for (auto &level : _levels) {
             levels += level + ";";
         }
+        
         std::string clients = "CLIENTS:";
         for (auto &client : _clients_in_room) {
             clients += client + ";";
         }
         std::vector<std::string> serialized;
-        serialized.push_back(levels);
-        serialized.push_back(clients);
+        serialized.push_back(levels.substr(0, levels.size() - 1)); // Remove the last character
+        serialized.push_back(clients.substr(0, clients.size() - 1)); // Remove the last character
         return serialized;
     } else {
         return serialize_system(_registry);
