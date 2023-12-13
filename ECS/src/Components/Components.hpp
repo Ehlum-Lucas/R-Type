@@ -241,11 +241,13 @@
     // shoot component
     class Shoot {
         public:
-            Shoot(float angle, float speed, std::string _input, std::string _texture_path, float _width, float _height, float _rotate = 0.0) : angle(angle), speed(speed) {
+            Shoot(float angle, float speed, std::string _input, std::string _texture_path, float _width, float _height, float _delay, float _rotate = 0.0) : angle(angle), speed(speed) {
                 this->input = inputGestion.get_key(_input);
                 texture_path = _texture_path;
                 width = _width;
                 height = _height;
+                timer = delay;
+                delay = _delay;
             };
             float angle;
             float speed;
@@ -254,6 +256,8 @@
             float width;
             float height;
             float rotate;
+            float timer;
+            float delay;
         private:
             InputGestion inputGestion;
     };

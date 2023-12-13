@@ -20,7 +20,7 @@ int main()
     ecs.registry->add_component(e, Speed(5.0));
     ecs.registry->add_component(e, Size(0.2, 0.2));
     ecs.registry->add_component(e, Sprite("assets/player.png", 90.0));
-    ecs.registry->add_component(e, Shoot(0.0, 50.0, "space", "assets/bullet.png", 0.05, 0.05));
+    ecs.registry->add_component(e, Shoot(0.0, 50.0, "space", "assets/bullet.png", 0.05, 0.05, 60.0));
 
     ecs.update();
     return 0;

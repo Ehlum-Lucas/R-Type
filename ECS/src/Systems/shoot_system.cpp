@@ -18,17 +18,21 @@ void shoot_system(Registry &r)
         auto &pos = positions[i];
 
         if (shoot && pos) {
-            if (sf::Keyboard::isKeyPressed(shoot.value().input)) {
-                Entity bullet = r.create_entity();
-                r.add_component(bullet, Position(pos.value().x, pos.value().y));
-                float angleInRadians = shoot.value().angle * M_PI / 180.0f;
-                float velocityX = shoot.value().speed * cos(angleInRadians);
-                float velocityY = shoot.value().speed * sin(angleInRadians);
-                r.add_component(bullet, Velocity(velocityX, velocityY));
-                r.add_component(bullet, Size(shoot.value().width, shoot.value().height));
-                r.add_component(bullet, Sprite(shoot.value().texture_path, shoot.value().rotate));
-                r.add_component(bullet, Drawable());
+            if (shoot.value().timer >= shoot.value().delay) {
+                if (sf::Keyboard::isKeyPressed(shoot.value().input)) {
+                    Entity bullet = r.create_entity();
+                    r.add_component(bullet, Position(pos.value().x, pos.value().y));
+                    float angleInRadians = shoot.value().angle * M_PI / 180.0f;
+                    float velocityX = shoot.value().speed * cos(angleInRadians);
+                    float velocityY = shoot.value().speed * sin(angleInRadians);
+                    r.add_component(bullet, Velocity(velocityX, velocityY));
+                    r.add_component(bullet, Size(shoot.value().width, shoot.value().height));
+                    r.add_component(bullet, Sprite(shoot.value().texture_path, shoot.value().rotate));
+                    r.add_component(bullet, Drawable());
+                    shoot.value().timer = 0;
+                }
             }
+            shoot.value().timer++;
         }
     }
 }

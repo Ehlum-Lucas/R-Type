@@ -36,8 +36,8 @@ void GameEngine::update()
         while (registry->_window->pollEvent(registry->_event)) {
             quit_system(*registry.get());
             controller_system(*registry.get());
-            shoot_system(*registry.get());
         }
+        shoot_system(*registry.get());
         position_system(*registry.get());
         gravity_system(*registry.get());
         draw_system(*registry.get());
