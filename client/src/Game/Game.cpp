@@ -118,45 +118,65 @@ void Game::start()
     _loadingDots.clear();
     _textPlayers.clear();
     _textLevels.clear();
+    _box.clear();
 }
 
 void Game::inputsHandler()
 {
     while (_window->pollEvent(_event)) {
-        if (_event.type == sf::Event::Closed 
-        || (_event.type == sf::Event::KeyPressed 
-        && _event.key.code == sf::Keyboard::Escape)) {
+        if (_event.type == sf::Event::Closed || (_event.type == sf::Event::KeyPressed && _event.key.code == sf::Keyboard::Escape)) {
             _game = false;
             // _window->close();
         }
-    }
-    std::string message = "";
-    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up)) {
-        message += "u";
-    }
-    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down)) {
-        message += "d";
-    }
-    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left)) {
-        message += "l";
-    }
-    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right)) {
-        message += "r";
-    }
-    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space)) {
-        message += "s";
+        EventRoom();
     }
     if (!_client->_server_know)
         _client->sendMessage("OK");
+    
+    if (_game_is_runnging) {
+        std::string message = "";
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up)) {
+            message += "u";
+        }
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down)) {
+            message += "d";
+        }
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left)) {
+            message += "l";
+        }
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right)) {
+            message += "r";
+        }
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space)) {
+            message += "s";
+        }
+        if (!_client->_message.empty() && _client->_message.substr(0, 8) != "YOU ARE " && _game_is_runnging) {
+            _client->_server_know = true;
+            unserialize(_client->_message);
+            _client->_message = "";
+            if (!message.empty() && _client->_server_know) {
+                message =  _client->_playerId + ':' + message;
+                _client->sendMessage(message);
+                message = "";
+            }
+        }
+    }
+}
 
-    if (!_client->_message.empty() && _client->_message.substr(0, 8) != "YOU ARE " && _game_is_runnging) {
-        _client->_server_know = true;
-        unserialize(_client->_message);
-        _client->_message = "";
-        if (!message.empty() && _client->_server_know) {
-            message =  _client->_playerId + ':' + message;
-            _client->sendMessage(message);
-            message = "";
+void Game::EventRoom()
+{
+    if (!_game_is_runnging) {
+        if (_event.type == sf::Event::KeyPressed)
+        {
+            if (_event.key.code == sf::Keyboard::Up && _selectedLevel > 0) {
+                _selectedLevel--;
+            } else if (_event.key.code == sf::Keyboard::Down && _selectedLevel < _nbLevels - 1) {
+                _selectedLevel++;
+            }
+            if (_event.key.code == sf::Keyboard::Enter) {
+                std::cout << "MASTER:LEVEL" + std::to_string(_selectedLevel + 1) + ";" << std::endl;
+                _client->sendMessage("MASTER:LEVEL" + std::to_string(_selectedLevel + 1) + ";");
+            }
         }
     }
 }
@@ -182,34 +202,6 @@ void::Game::drawRoom()
     }
     for (int i = _nbPlayers; i < _loadingDots.size(); i++) {
         _window->draw(_loadingDots[i]);
-    }
-}
-
-void Game::EventRoom()
-{
-    while (_window->pollEvent(_event)) {
-        if (_event.type == sf::Event::Closed)
-            _window->close();
-        if (_event.type == sf::Event::KeyPressed)
-        {
-            if (_event.key.code == sf::Keyboard::Up && _selectedLevel > 0) {
-                _selectedLevel--;
-            } else if (_event.key.code == sf::Keyboard::Down && _selectedLevel < _nbLevels - 1) {
-                _selectedLevel++;
-            }
-            if (_event.key.code == sf::Keyboard::Enter) {
-                std::cout << "MASTER:LEVEL" + std::to_string(_selectedLevel + 1) + ";" << std::endl;
-                _client->sendMessage("MASTER:LEVEL" + std::to_string(_selectedLevel + 1) + ";");
-            }
-        }
-    }
-    for (int i = 0; i < _textLevels.size(); i++)
-    {
-        if (i == _selectedLevel) {
-            _textLevels[i].setFillColor(sf::Color::Red);
-        } else {
-            _textLevels[i].setFillColor(sf::Color::White);
-        }
     }
 }
 
@@ -416,6 +408,17 @@ void::Game::updateRoom(sf::Time deltaTime)
         }
         _dotClock.restart();
     }
+
+    if (!_game_is_runnging) {
+        for (int i = 0; i < _textLevels.size(); i++)
+        {
+            if (i == _selectedLevel) {
+                _textLevels[i].setFillColor(sf::Color::Red);
+            } else {
+                _textLevels[i].setFillColor(sf::Color::White);
+            }
+        }
+    }
 }
 
 void Game::update()
@@ -423,8 +426,6 @@ void Game::update()
     _window->clear(sf::Color::Black);
     if (!_game_is_runnging) {
         sf::Time deltaTime = _clock.restart();
-
-        EventRoom();
         parseMessageRoom(_client->_message);
         updateRoom(deltaTime);
         drawRoom();
