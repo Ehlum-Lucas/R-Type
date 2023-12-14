@@ -52,7 +52,6 @@ void collide_system(Registry &r)
                         check = true;
                         break;
                     }
-
                 }
             }
             if (check) {

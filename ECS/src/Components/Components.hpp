@@ -246,8 +246,8 @@
                 texture_path = _texture_path;
                 width = _width;
                 height = _height;
-                timer = delay;
                 delay = _delay;
+                timer = delay;
             };
             float angle;
             float speed;
