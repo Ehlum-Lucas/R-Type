@@ -16,6 +16,11 @@
 
             void update();
 
+            Entity create_entity() {
+                Entity e = registry->create_entity();
+                registry->add_component(e, Id(e.get_id()));
+                return e;
+            }
             std::shared_ptr<Registry> registry;
         private:
     };

@@ -15,5 +15,6 @@
     void quit_system(Registry &r);
     void gravity_system(Registry &r);
     void shoot_system(Registry &r);
+    void collide_system(Registry &r);
 
 #endif /* !SYSTEMS_HPP_ */

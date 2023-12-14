@@ -16,7 +16,6 @@ void draw_system(Registry &r)
     auto &sprites = r.get_components<Sprite>();
     auto &sizes = r.get_components<Size>();
 
-    r._window->clear(sf::Color::Black);
     for (size_t i = 0; i < drawables.size() && i < positions.size() && i < rectangle_shapes.size() && i < colors.size(); ++i) {
         auto &drawable = drawables[i];
         auto &position = positions[i];
@@ -30,7 +29,7 @@ void draw_system(Registry &r)
         }
     }
 
-    for (size_t i = 0; i < sprites.size() && i < sizes.size() && i < positions.size(); ++i) {
+    for (size_t i = 0; i < drawables.size() &&  i < sprites.size() && i < sizes.size() && i < positions.size(); ++i) {
         auto &sprite = sprites[i];
         auto &size = sizes[i];
         auto &position = positions[i];
@@ -42,5 +41,4 @@ void draw_system(Registry &r)
             r._window->draw(sprite.value().sprite);
         }
     }
-    r._window->display();
 }

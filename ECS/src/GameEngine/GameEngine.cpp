@@ -11,6 +11,8 @@ GameEngine::GameEngine(std::string const &title, std::string const &mode, int fr
 {
     registry = std::make_shared<Registry>(title, mode, framerate, fullscreen, width, height);
 
+    registry->register_component<Id>();
+
     registry->register_component<Position>();
     registry->register_component<Velocity>();
     registry->register_component<CircleShape>();
@@ -20,19 +22,22 @@ GameEngine::GameEngine(std::string const &title, std::string const &mode, int fr
     registry->register_component<Gravity>();
     registry->register_component<Controller>();
     registry->register_component<Speed>();
-    registry->register_component<Gravity>();
     registry->register_component<Sprite>();
     registry->register_component<Size>();
     registry->register_component<Shoot>();
+    registry->register_component<BoxCollider>();
 }
 
 GameEngine::~GameEngine()
 {
 }
 
+
+
 void GameEngine::update()
 {
     while (registry->_window->isOpen()) {
+        registry->_window->clear(sf::Color::Black);
         while (registry->_window->pollEvent(registry->_event)) {
             quit_system(*registry.get());
             controller_system(*registry.get());
@@ -40,6 +45,9 @@ void GameEngine::update()
         shoot_system(*registry.get());
         position_system(*registry.get());
         gravity_system(*registry.get());
+        collide_system(*registry.get());
         draw_system(*registry.get());
+        registry->_window->display();
+
     }
 }

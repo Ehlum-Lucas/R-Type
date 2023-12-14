@@ -262,4 +262,21 @@
             InputGestion inputGestion;
     };
 
+    // box collider component
+    class BoxCollider {
+        public:
+            BoxCollider(std::string _tag, bool _draw = false) {
+                tag = _tag;
+                draw = _draw;
+            };
+            bool draw;
+            std::string tag;
+    };
+
+    class Id {
+        public:
+            Id(size_t id) : id(id) {};
+            size_t id;
+    };
+
 #endif //COMPONENTS_HPP

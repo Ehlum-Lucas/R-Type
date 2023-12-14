@@ -29,6 +29,8 @@ void shoot_system(Registry &r)
                     r.add_component(bullet, Size(shoot.value().width, shoot.value().height));
                     r.add_component(bullet, Sprite(shoot.value().texture_path, shoot.value().rotate));
                     r.add_component(bullet, Drawable());
+                    r.add_component(bullet, BoxCollider("bullet", true));
+                    r.add_component(bullet, Id(bullet.get_id()));
                     shoot.value().timer = 0;
                 }
             }

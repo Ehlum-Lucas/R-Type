@@ -59,6 +59,18 @@
                         delete_components_by_entity_id<Position>(id);
                         delete_components_by_entity_id<Velocity>(id);
                         delete_components_by_entity_id<Drawable>(id);
+                        delete_components_by_entity_id<CircleShape>(id);
+                        delete_components_by_entity_id<RectangleShape>(id);
+                        delete_components_by_entity_id<Color>(id);
+                        delete_components_by_entity_id<Gravity>(id);
+                        delete_components_by_entity_id<Controller>(id);
+                        delete_components_by_entity_id<Speed>(id);
+                        delete_components_by_entity_id<Sprite>(id);
+                        delete_components_by_entity_id<Size>(id);
+                        delete_components_by_entity_id<Shoot>(id);
+                        delete_components_by_entity_id<BoxCollider>(id);
+                        
+                        delete_components_by_entity_id<Id>(id);
                         it->delete_entity();
                         entities.erase(it);
                         break;

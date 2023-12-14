@@ -20,6 +20,7 @@ SRC = 		src/main.cpp						\
 			src/Systems/quit_system.cpp			\
 			src/Systems/gravity_system.cpp		\
 			src/Systems/shoot_system.cpp		\
+			src/Systems/collide_system.cpp		\
 			src/GameEngine/GameEngine.cpp		\
 
 OBJ = 		$(SRC:.cpp=.o)
