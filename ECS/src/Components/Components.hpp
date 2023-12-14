@@ -9,6 +9,20 @@
     #define COMPONENTS_HPP
     #include <SFML/Graphics.hpp>
 
+    #define COLOR_RED sf::Color(255, 0, 0)
+    #define COLOR_GREEN sf::Color(0, 255, 0)
+    #define COLOR_BLUE sf::Color(0, 0, 255)
+    #define COLOR_YELLOW sf::Color(255, 255, 0)
+    #define COLOR_MAGENTA sf::Color(255, 0, 255)
+    #define COLOR_CYAN sf::Color(0, 255, 255)
+    #define COLOR_WHITE sf::Color(255, 255, 255)
+    #define COLOR_BLACK sf::Color(0, 0, 0)
+    #define COLOR_ORANGE sf::Color(255, 165, 0)
+    #define COLOR_PINK sf::Color(255, 192, 203)
+    #define COLOR_GREY sf::Color(128, 128, 128)
+    #define COLOR_BROWN sf::Color(165, 42, 42)
+    #define COLOR_TRANSPARENT sf::Color(0, 0, 0, 0)
+
     class InputGestion {
         public:
             sf::Keyboard::Key get_key(std::string key)
@@ -265,18 +279,33 @@
     // box collider component
     class BoxCollider {
         public:
-            BoxCollider(std::string _tag, bool _draw = false) {
+            BoxCollider(std::string _tag, bool _draw = false, sf::Color _color = COLOR_RED) {
                 tag = _tag;
                 draw = _draw;
+                color = _color;
             };
             bool draw;
             std::string tag;
+            sf::Color color;
     };
 
     class Id {
         public:
             Id(size_t id) : id(id) {};
             size_t id;
+    };
+
+    class Shootable {
+        public:
+            Shootable() {};
+    };
+
+    class OnClickLoadScene {
+        public:
+            OnClickLoadScene(std::string _scene_name) {
+                scene_name = _scene_name;
+            };
+            std::string scene_name;
     };
 
 #endif //COMPONENTS_HPP

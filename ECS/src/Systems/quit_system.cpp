@@ -9,7 +9,8 @@
 
 void quit_system(Registry &r)
 {
-    if (r._event.type == sf::Event::Closed || (r._event.type == sf::Event::KeyPressed && r._event.key.code == sf::Keyboard::Escape)) {
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape)) {
+        std::cout << "quit" << std::endl;
         r._window->close();
     }
 }

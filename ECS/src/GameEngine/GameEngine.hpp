@@ -7,7 +7,8 @@
 
 #ifndef GAMEENGINE_HPP_
     #define GAMEENGINE_HPP_
-    #include "Systems.hpp"
+    #include "Scene.hpp"
+    #define scene get_scene_by_name
 
     class GameEngine {
         public:
@@ -16,13 +17,31 @@
 
             void update();
 
-            Entity create_entity() {
-                Entity e = registry->create_entity();
-                registry->add_component(e, Id(e.get_id()));
-                return e;
+            void create_scene(std::string const &name) {_scenes.push_back(std::make_shared<Scene>(name, _window, _event));}
+            void load_scene(std::string const &name) {
+                for (auto it = _scenes.begin(); it != _scenes.end(); ++it) {
+                    if ((*it)->name == name) {
+                        current_scene = *it;
+                        return;
+                    }
+                }
             }
-            std::shared_ptr<Registry> registry;
+            std::shared_ptr<Scene> get_scene_by_name(std::string const &name) {
+                for (auto it = _scenes.begin(); it != _scenes.end(); ++it) {
+                    if ((*it)->name == name) {
+                        return *it;
+                    }
+                }
+                return current_scene;
+            }
+
         private:
+            std::shared_ptr<sf::RenderWindow> _window;
+            sf::Event _event;
+            std::vector<std::shared_ptr<Scene>> _scenes;
+        public:
+            std::shared_ptr<Scene> current_scene;
+
     };
 
 #endif /* !GAMEENGINE_HPP_ */

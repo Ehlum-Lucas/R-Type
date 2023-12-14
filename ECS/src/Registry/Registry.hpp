@@ -12,14 +12,9 @@
     class Registry {
         public:
 
-            Registry(std::string const &title, std::string const &mode, int framerate, bool fullscreen, int width = 800, int height = 800) {
-                if (fullscreen) {
-                    sf::VideoMode fullscreenMode = sf::VideoMode::getFullscreenModes()[0];
-                    _window = std::make_shared<sf::RenderWindow>(fullscreenMode, title, sf::Style::Fullscreen);
-                } else {
-                    _window = std::make_shared<sf::RenderWindow>(sf::VideoMode(width, height), title);
-                }
-                _window->setFramerateLimit(framerate);
+            Registry(std::shared_ptr<sf::RenderWindow> window, sf::Event &event) {
+                _window = window;
+                _event = event;
             }
             template <class Component>
             SparseArray<Component>& register_component() {

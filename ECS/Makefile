@@ -10,7 +10,8 @@ INC = 		-I ./src/Registry/  				\
 			-I ./src/Entity/					\
 			-I ./src/Components/				\
 			-I ./src/Systems/					\
-			-I ./src/GameEngine					\
+			-I ./src/GameEngine/					\
+			-I ./src/Scene/
 
 SRC = 		src/main.cpp						\
 			src/Entity/Entity.cpp				\
@@ -21,7 +22,9 @@ SRC = 		src/main.cpp						\
 			src/Systems/gravity_system.cpp		\
 			src/Systems/shoot_system.cpp		\
 			src/Systems/collide_system.cpp		\
+			src/Systems/onclickloadscene_system.cpp		\
 			src/GameEngine/GameEngine.cpp		\
+			src/Scene/Scene.cpp					\
 
 OBJ = 		$(SRC:.cpp=.o)
 
