@@ -17,5 +17,6 @@
     void shoot_system(Registry &r);
     void collide_system(Registry &r);
     std::string onclickloadscene_system(Registry &r);
+    std::vector<std::string> serialize_components(Registry &r);
 
 #endif /* !SYSTEMS_HPP_ */

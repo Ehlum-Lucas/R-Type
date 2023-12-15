@@ -295,6 +295,12 @@
             size_t id;
     };
 
+    class ClientId {
+        public:
+            ClientId(size_t id) : id(id) {};
+            size_t id;
+    };
+
     class Shootable {
         public:
             Shootable() {};

@@ -64,6 +64,7 @@
                         delete_components_by_entity_id<Size>(id);
                         delete_components_by_entity_id<Shoot>(id);
                         delete_components_by_entity_id<BoxCollider>(id);
+                        delete_components_by_entity_id<ClientId>(id);
                         
                         delete_components_by_entity_id<Id>(id);
                         it->delete_entity();
