@@ -20,6 +20,7 @@ jobs:
   push-to-repo:
     name: "Push to mirror repo"
     runs-on: ubuntu-latest
+    needs: compilation
     steps:
       - uses: actions/checkout@v2
         with:

@@ -1,8 +1,40 @@
 cmake_minimum_required(VERSION 3.10)
 project(GameEngine)
 
+#Install Asio
+find_package(Asio)
+
+if (NOT Asio_FOUND)
+    message(STATUS "Asio not found, downloading...")
+    include(FetchContent)
+    FetchContent_Declare(
+        asio
+        GIT_REPOSITORY https://github.com/chriskohlhoff/asio.git
+        GIT_TAG asio-1-18-1
+    )
+    FetchContent_GetProperties(asio)
+    if (NOT asio_POPULATED)
+        FetchContent_Populate(asio)
+        include_directories(${asio_SOURCE_DIR}/asio/include)
+    endif()
+endif()
+
+#Install SFML
+find_package(SFML 2.5 COMPONENTS graphics window system audio REQUIRED)
+
+if (NOT SFML_FOUND)
+    message(STATUS "SFML not found, downloading...")
+    include(FetchContent)
+    FetchContent_Declare(
+        SFML
+        GIT_REPOSITORY https://github.com/SFML/SFML.git
+        GIT_TAG        2.6.x
+    )
+    FetchContent_MakeAvailable(SFML)
+endif()
+
 # Spécifiez les fichiers source
-set(SOURCES 
+set(SOURCES
             src/collide_system.cpp
             src/controller_system.cpp
             src/draw_system.cpp
@@ -40,3 +72,4 @@ add_executable(server server.cpp)
 # Liez l'exécutable à la bibliothèque
 target_link_libraries(client gameEngineLib)
 target_link_libraries(server gameEngineLib)
+target_link_libraries(server sfml-graphics sfml-window sfml-system sfml-audio)
