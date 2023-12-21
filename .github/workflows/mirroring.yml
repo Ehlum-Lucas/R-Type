@@ -6,6 +6,17 @@ env:
   MIRROR_URL: "git@github.com:EpitechPromo2026/B-CPP-500-REN-5-2-rtype-lucas.iglesia.git"
 
 jobs:
+  compilation:
+    name: "Compilation"
+    runs-on: ubuntu-latest
+    container: epitechcontent/epitest-docker:latest
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+      - run: mkdir PLEASE/build
+      - run: cd PLEASE/build && cmake .. && make
+
   push-to-repo:
     name: "Push to mirror repo"
     runs-on: ubuntu-latest
