@@ -16,12 +16,12 @@
 
             asio::ip::udp::endpoint getEndpoint() const { return endpoint_; }
 
-            bool connected = false;
             bool created = false;
-            bool quit = false;
+            bool connected = false;
             std::string type;
             std::chrono::steady_clock::time_point lastMessageTime;
             size_t entity_id;
+            // bool quit = false;
         private:
             asio::ip::udp::endpoint endpoint_;
 };

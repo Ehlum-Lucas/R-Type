@@ -8,6 +8,9 @@
 #ifndef COMPONENTS_HPP
     #define COMPONENTS_HPP
     #include <SFML/Graphics.hpp>
+    #include "Registry.hpp"
+    #include <any>
+
 
     #define COLOR_RED sf::Color(255, 0, 0)
     #define COLOR_GREEN sf::Color(0, 255, 0)
@@ -252,31 +255,6 @@
             float height;
     };
 
-    // shoot component
-    class Shoot {
-        public:
-            Shoot(float angle, float speed, std::string _input, std::string _texture_path, float _width, float _height, float _delay, float _rotate = 0.0) : angle(angle), speed(speed) {
-                this->input = inputGestion.get_key(_input);
-                texture_path = _texture_path;
-                width = _width;
-                height = _height;
-                delay = _delay;
-                timer = delay;
-                rotate = _rotate;
-            };
-            float angle;
-            float speed;
-            sf::Keyboard::Key input;
-            std::string texture_path;
-            float width;
-            float height;
-            float rotate;
-            float timer;
-            float delay;
-        private:
-            InputGestion inputGestion;
-    };
-
     // spawn component
     class SpawnWithInput {
         public:
@@ -318,12 +296,6 @@
             size_t id;
     };
 
-    class ClientId {
-        public:
-            ClientId(size_t id) : id(id) {};
-            size_t id;
-    };
-
     class Shootable {
         public:
             Shootable() {};
@@ -337,12 +309,65 @@
             std::string scene_name;
     };
 
-    class Prefab {
+    class Type {
         public:
-            Prefab(std::string _name) {
-                name = _name;
-            };
-            std::string name;
+            Type(std::string _type) {type = _type;};
+            std::string type;
     };
+
+    class Sendable {
+        public:
+            Sendable() {};
+    };
+
+
+
+
+    // class ComponentFactory {
+    //     public:
+    //         void add_any_component_to_registry(Entity e, std::any component, Registry &r)
+    //         {
+    //             if (component.type() == typeid(Sprite)) {
+    //                 auto &sprite = std::any_cast<Sprite&>(component);
+    //                 r.add_component_from_prefab(e, sprite);
+    //             } else if (component.type() == typeid(Position)) {
+    //                 auto &position = std::any_cast<Position&>(component);
+    //                 r.add_component_from_prefab(e, position);
+    //             } else if (component.type() == typeid(Velocity)) {
+    //                 auto &veclocity = std::any_cast<Velocity&>(component);
+    //                 r.add_component_from_prefab(e, veclocity);
+    //             } else if (component.type() == typeid(Size)) {
+    //                 auto &size = std::any_cast<Size&>(component);
+    //                 r.add_component_from_prefab(e, size);
+    //             } else if (component.type() == typeid(Drawable)) {
+    //                 auto &drawable = std::any_cast<Drawable&>(component);
+    //                 r.add_component_from_prefab(e, drawable);
+    //             } else if (component.type() == typeid(BoxCollider)) {
+    //                 auto &boxCollider = std::any_cast<BoxCollider&>(component);
+    //                 r.add_component_from_prefab(e, boxCollider);
+    //             } else if (component.type() == typeid(OnClickLoadScene)) {
+    //                 auto &comp = std::any_cast<OnClickLoadScene&>(component);
+    //                 r.add_component_from_prefab(e, comp);
+    //             } else if (component.type() == typeid(Speed)) {
+    //                 auto &comp = std::any_cast<Speed&>(component);
+    //                 r.add_component_from_prefab(e, comp);
+    //             } else if (component.type() == typeid(Controller)) {
+    //                 auto &comp = std::any_cast<Controller&>(component);
+    //                 r.add_component_from_prefab(e, comp);
+    //             } else if (component.type() == typeid(Gravity)) {
+    //                 auto &comp = std::any_cast<Gravity&>(component);
+    //                 r.add_component_from_prefab(e, comp);
+    //             } else if (component.type() == typeid(Color)) {
+    //                 auto &comp = std::any_cast<Color&>(component);
+    //                 r.add_component_from_prefab(e, comp);
+    //             } else if (component.type() == typeid(RectangleShape)) {
+    //                 auto &comp = std::any_cast<RectangleShape&>(component);
+    //                 r.add_component_from_prefab(e, comp);
+    //             } else if (component.type() == typeid(CircleShape)) {
+    //                 auto &comp = std::any_cast<CircleShape&>(component);
+    //                 r.add_component_from_prefab(e, comp);
+    //             }
+    //         }
+    // };
 
 #endif //COMPONENTS_HPP
