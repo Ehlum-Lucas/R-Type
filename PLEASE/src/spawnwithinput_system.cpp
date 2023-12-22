@@ -47,6 +47,27 @@ void spawn_with_input_system(Registry &r)
                         } else if (component.type() == typeid(BoxCollider)) {
                             auto &boxCollider = std::any_cast<BoxCollider&>(component);
                             r.add_component_from_prefab(e, boxCollider);
+                        } else if (component.type() == typeid(OnClickLoadScene)) {
+                            auto &comp = std::any_cast<OnClickLoadScene&>(component);
+                            r.add_component_from_prefab(e, comp);
+                        } else if (component.type() == typeid(Speed)) {
+                            auto &comp = std::any_cast<Speed&>(component);
+                            r.add_component_from_prefab(e, comp);
+                        } else if (component.type() == typeid(Controller)) {
+                            auto &comp = std::any_cast<Controller&>(component);
+                            r.add_component_from_prefab(e, comp);
+                        } else if (component.type() == typeid(Gravity)) {
+                            auto &comp = std::any_cast<Gravity&>(component);
+                            r.add_component_from_prefab(e, comp);
+                        } else if (component.type() == typeid(Color)) {
+                            auto &comp = std::any_cast<Color&>(component);
+                            r.add_component_from_prefab(e, comp);
+                        } else if (component.type() == typeid(RectangleShape)) {
+                            auto &comp = std::any_cast<RectangleShape&>(component);
+                            r.add_component_from_prefab(e, comp);
+                        } else if (component.type() == typeid(CircleShape)) {
+                            auto &comp = std::any_cast<CircleShape&>(component);
+                            r.add_component_from_prefab(e, comp);
                         }
                     }
                     spawnwithinput.value().timer = 0;

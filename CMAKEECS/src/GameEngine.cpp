@@ -20,7 +20,7 @@ GameEngine::GameEngine(std::string const &title, std::string const &mode, int fr
     if (_mode == "SERVER") {
         _server = std::make_shared<Server>(_io_context, 4080);
     } else if (_mode == "CLIENT") {
-        _client = std::make_shared<Client>("10.0.8.15", "4080");
+        _client = std::make_shared<Client>("10.19.254.187", "4080");
         _client->_thread = std::thread(receiveMessageThread, _client);
         _client->connectToServer();
         if (fullscreen) {

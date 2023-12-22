@@ -26,13 +26,12 @@ Scene::Scene(std::string _name, std::shared_ptr<sf::RenderWindow> window, sf::Ev
     registry->register_component<Speed>();
     registry->register_component<Sprite>();
     registry->register_component<Size>();
-    registry->register_component<Shoot>();
     registry->register_component<BoxCollider>();
     registry->register_component<Shootable>();
     registry->register_component<OnClickLoadScene>();
     registry->register_component<SpawnWithInput>();
-    registry->register_component<Prefab>();
-
+    registry->register_component<Type>();
+    registry->register_component<Sendable>();
 }
 
 Scene::~Scene()

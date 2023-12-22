@@ -64,9 +64,8 @@
                         delete_components_by_entity_id<Speed>(id);
                         delete_components_by_entity_id<Sprite>(id);
                         delete_components_by_entity_id<Size>(id);
-                        delete_components_by_entity_id<Shoot>(id);
                         delete_components_by_entity_id<BoxCollider>(id);
-                        delete_components_by_entity_id<ClientId>(id);
+                        delete_components_by_entity_id<SpawnWithInput>(id);
                         
                         delete_components_by_entity_id<Id>(id);
                         it->delete_entity();
@@ -119,7 +118,6 @@
             std::unordered_map<std::string, std::vector<std::any>> _prefabs;
         private:
             std::unordered_map<std::type_index, std::any> _components_arrays;
-            std::unordered_map<std::type_index, std::any> _prefabs_arrays;
             std::vector<Entity> entities;
             std::vector<std::function<void(Registry&)>> systems;
     };

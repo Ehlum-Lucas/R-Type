@@ -7,48 +7,124 @@
 
 #include "GameEngine.hpp"
 
-// void receiveMessageThread(std::shared_ptr<Client> client) {
-//     while (1) {
-//         client->_message = client->receiveMessage();
-//         std::cout << client->_message << std::endl;
-//     }
-// }
-
-GameEngine::~GameEngine()
+void GameEngine::start_send_host()
 {
+    _timer->async_wait([this](std::error_code ec) {
+        if (!ec) {
+            for (auto& client : _clients) {
+                std::cout << "I SEND SOMETHING TO " << client.getEndpoint().address().to_string() << ":" << client.getEndpoint().port() << std::endl;
+                _socket->send_to(asio::buffer("OK BRO"), client.getEndpoint());
+            }
+            _timer->expires_after(std::chrono::milliseconds(1000/60));
+            start_send_host();
+        } else {
+            std::cerr << "Error: " << ec.message() << std::endl;
+        }
+    });
 }
 
-GameEngine::GameEngine(std::string const &title, int const& mode, int framerate, bool fullscreen, int width, int height)
+void GameEngine::start_receive_host()
 {
-    _mode = mode;
-    if (_mode == ONLINE) {
-        // _server = std::make_shared<Server>(_io_context, 4080);
-    } else if (_mode == OFFLINE) {
-        if (fullscreen) {
-            sf::VideoMode fullscreenMode = sf::VideoMode::getFullscreenModes()[0];
-            _window = std::make_shared<sf::RenderWindow>(fullscreenMode, title, sf::Style::Fullscreen);
+    _socket->async_receive_from(asio::buffer(_recv_buffer), _remote_endpoint, [this](std::error_code ec, std::size_t bytes_transferred) {
+        if (!ec) {
+            std::string message(_recv_buffer.data(), bytes_transferred);
+            std::cout << "Received_server: " << message << " from " << _remote_endpoint.address().to_string() << ":" << _remote_endpoint.port() << std::endl;
+
+            // Check if th1e client is already in the list
+            auto cl = std::find_if(_clients.begin(), _clients.end(), [this](const ServerClient& client) {
+                return client.getEndpoint() == _remote_endpoint;
+            });
+
+            if (cl == _clients.end()) {
+                _clients.push_back(ServerClient(_remote_endpoint));
+
+                // // Print all client endpoints
+                // std::cout << "Current client endpoints:\n";
+                // for (const ServerClient& client : _clients) {
+                //     std::cout << client.getEndpoint().address().to_string() << ":" << client.getEndpoint().port() << "\n";
+                // }
+            }
+            for (auto it = _clients.begin(); it != _clients.end();) {
+                if (it->getEndpoint() == _remote_endpoint) {
+                    if (message == "133") {
+                        // it->connected = true;
+                        std::cout << "CLIENT CONNECTED" << std::endl;
+                    }
+                }
+                ++it;
+            }
+
+            auto it = std::find_if(_clients.begin(), _clients.end(), [this](const ServerClient& client) {
+                return client.getEndpoint() == _remote_endpoint;
+            });
+            if (it != _clients.end()) {
+                it->lastMessageTime = std::chrono::steady_clock::now();
+            }
+
+            start_receive_host();
         } else {
-            _window = std::make_shared<sf::RenderWindow>(sf::VideoMode(width, height), title);
+            std::cerr << "Error: " << ec.message() << std::endl;
         }
-        _window->setFramerateLimit(framerate);
-    }
+    });
+}
+
+void GameEngine::start_send_join()
+{
+    _timer->async_wait([this](std::error_code ec) {
+        if (!ec) {
+            _socket->send_to(asio::buffer("133"), _server_endpoint);
+            _timer->expires_after(std::chrono::milliseconds(1000/60));
+            start_send_join();
+        } else {
+            std::cerr << "Error: " << ec.message() << std::endl;
+        }
+    });
+}
+
+void GameEngine::start_receive_join()
+{
+    _socket->async_receive_from(asio::buffer(_recv_buffer), _server_endpoint, [this](std::error_code ec, std::size_t bytes_transferred) {
+        if (!ec) {
+            std::string message(_recv_buffer.data(), bytes_transferred);
+            std::cout << "Received_client: " << message << " from " << _server_endpoint.address().to_string() << ":" << _server_endpoint.port() << std::endl;
+
+            // _lastMessageTime = std::chrono::steady_clock::now();
+        } else {
+            std::cerr << "Error: " << ec.message() << std::endl;
+        }
+        start_receive_join();
+    });
 }
 
 void GameEngine::update()
 {
-    if (_mode == ONLINE) {
-        // while (true) {
-        //     std::vector<std::string> serializes = serialize_components(*current_scene->registry.get());
-        //     std::string msg = "";
-
-        //     for (auto& serialize : serializes) {
-        //         msg += serialize;
-        //     }
-
-        //     _server->message = msg;
-        //     _io_context.run();
-        // }
-    } else if (_mode == OFFLINE) {
+    if (_online) {
+        if (_host) {
+            _io_context.run();
+        } else {
+            while (_window->isOpen()) {
+                _window->clear(sf::Color::Black);
+                while (_window->pollEvent(_event)) {
+                    if (_event.type == sf::Event::Closed) {
+                        _window->close();
+                    }
+                    quit_system(*current_scene->registry.get());
+                    controller_system(*current_scene->registry.get());
+                    std::string scene_name = onclickloadscene_system(*current_scene->registry.get());
+                    if (scene_name != "") {
+                        load_scene(scene_name);
+                        continue;
+                    }
+                }
+                spawn_with_input_system(*current_scene->registry.get());
+                position_system(*current_scene->registry.get());
+                gravity_system(*current_scene->registry.get());
+                collide_system(*current_scene->registry.get());
+                draw_system(*current_scene->registry.get());
+                _window->display();
+            }
+        }
+    } else if (!_online) {
         while (_window->isOpen()) {
             _window->clear(sf::Color::Black);
             while (_window->pollEvent(_event)) {
@@ -63,7 +139,6 @@ void GameEngine::update()
                     continue;
                 }
             }
-            // shoot_system(*current_scene->registry.get());
             spawn_with_input_system(*current_scene->registry.get());
             position_system(*current_scene->registry.get());
             gravity_system(*current_scene->registry.get());
