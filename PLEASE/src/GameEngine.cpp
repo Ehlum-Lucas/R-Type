@@ -13,7 +13,7 @@ void GameEngine::start_send_host()
         if (!ec) {
             for (auto& client : _clients) {
                 std::cout << "I SEND SOMETHING TO " << client.getEndpoint().address().to_string() << ":" << client.getEndpoint().port() << std::endl;
-                _socket->send_to(asio::buffer("TA GRAND MERE LA REINE DES PUTES"), client.getEndpoint());
+                _socket->send_to(asio::buffer("OK BRO"), client.getEndpoint());
             }
             _timer->expires_after(std::chrono::milliseconds(1000/60));
             start_send_host();
@@ -92,7 +92,7 @@ void GameEngine::start_receive_join()
         } else {
             std::cerr << "Error: " << ec.message() << std::endl;
         }
-        start_receive_host();
+        start_receive_join();
     });
 }
 

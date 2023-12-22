@@ -21,10 +21,10 @@
                 if (_online) {
                     _socket->close();
                     if (!_host) {
-                        _io_context.stop();
                         if (io_context_thread_.joinable()) {
                             io_context_thread_.join();
                         }
+                        _io_context_c.stop();
                     }
                 }
             }
