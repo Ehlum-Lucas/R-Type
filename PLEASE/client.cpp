@@ -7,12 +7,18 @@
 
 #include "GameEngine.hpp"
 
-int main(void)
+int main(int ac, char **av)
 {
     GameEngine ecs;
+    std::string ip = "";
+
+    if (ac == 2)
+        ip = av[1];
+    else
+        ip = "192.168.203.245";
 
     ecs.setWindow("MyGame", 60, true);
-    
+
     ecs.create_scene("game");
 
     // ecs.create_prefab("bullet");
@@ -34,7 +40,7 @@ int main(void)
     // ecs.scene("game")->registry->add_component(player, SpawnWithInput("bullet", "space", 20.0, true));
     // ecs.scene("game")->registry->add_component(player, BoxCollider("player"));
 
-    ecs.joinOnlineGame("192.168.203.245", "4080");
+    ecs.joinOnlineGame(ip, "4080");
     ecs.load_scene("game");
     ecs.update();
     return 0;

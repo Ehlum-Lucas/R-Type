@@ -7,9 +7,15 @@
 
 #include "GameEngine.hpp"
 
-int main(void)
+int main(int ac, char **av)
 {
     GameEngine ecs;
+    std::string ip = "";
+
+    if (ac == 2)
+        ip = av[1];
+    else
+        ip = "192.168.203.245";
 
     // ecs.setWindow("MyGame", 60, true);
 
@@ -52,7 +58,7 @@ int main(void)
     //     ecs.scene("game")->registry->add_component(enemy, Shootable());
     // }
 
-    ecs.hostOnlineGame("192.168.203.245", "4080");
+    ecs.hostOnlineGame(ip, "4080");
     ecs.load_scene("game");
     ecs.update();
     return 0;
