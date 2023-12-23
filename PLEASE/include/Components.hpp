@@ -235,16 +235,18 @@
     // sprite component
     class Sprite {
         public:
-            Sprite(std::string texture_path, float angle = 0.0) : texture_path(texture_path)
+            Sprite(std::string texture_path, float _angle = 0.0) : texture_path(texture_path)
             {
                 texture.loadFromFile(texture_path);
                 sprite.setTexture(texture);
                 sprite.setRotation(angle);
                 sprite.setOrigin(texture.getSize().x / 2, texture.getSize().y / 2);
+                angle = _angle;
             };
             sf::Texture texture;
             std::string texture_path;
             sf::Sprite sprite;
+            float angle;
     };
 
     // size component
@@ -311,8 +313,8 @@
 
     class Type {
         public:
-            Type(std::string _type) {type = _type;};
-            std::string type;
+            Type(size_t _type) {type = _type;};
+            size_t type;
     };
 
     class Sendable {

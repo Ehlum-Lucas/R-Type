@@ -100,6 +100,34 @@
             void start_send_join();
             void start_receive_join();
 
+            void on_new_player_load_prefab(std::string const &prefab_name) {
+                _on_new_cient_prefab_name = prefab_name;
+            }
+
+            void set_player_atlas_texture(std::vector <std::string> const &textures) {
+                for (auto texture : textures) {
+                    _clients_atlas_texture[texture] = true;
+                }
+            }
+
+            std::string get_available_player_skin() {
+                for (auto &it : _clients_atlas_texture) {
+                    if (it.second) {
+                        it.second = false;
+                        return it.first;
+                    }
+                }
+                return "";
+            }
+
+            void serialize_game();
+
+            void set_player_skin_available(std::string const &skin) {
+                _clients_atlas_texture[skin] = true;
+            }
+
+            void add_prefab_to_a_scene(Registry& r, Entity &e, std::string prefab_name);
+
         private:
             std::shared_ptr<sf::RenderWindow> _window;
             sf::Event _event;
@@ -120,6 +148,7 @@
 
             std::thread io_context_thread_;
 
+            size_t e_type = 10000001;
             std::vector<ServerClient> _clients;
             bool _created = false;
             bool _connected = false;
@@ -128,8 +157,15 @@
             std::string _type;
             std::chrono::steady_clock::time_point _lastMessageTime;
             asio::ip::udp::endpoint _server_endpoint;
+
+            std::string _on_new_cient_prefab_name = "";
+            const int _max_client = 4;
+            std::map<std::string, bool> _clients_atlas_texture;
+            int _nb_clients = 0;
+
         public:
             std::shared_ptr<Scene> current_scene;
+
 
     };
 
