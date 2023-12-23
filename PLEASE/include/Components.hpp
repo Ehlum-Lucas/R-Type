@@ -174,6 +174,7 @@
         public:
             CircleShape(float radius) : shape(radius) {};
             sf::CircleShape shape;
+            float radius;
     };
 
     // rectangle shape component
@@ -181,6 +182,8 @@
         public:
             RectangleShape(float width, float height) : shape(sf::Vector2f(width, height)) {};
             sf::RectangleShape shape;
+            float width;
+            float height;
     };
 
     // drawable component

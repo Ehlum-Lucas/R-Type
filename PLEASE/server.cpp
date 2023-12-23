@@ -12,7 +12,7 @@ int main(void)
     GameEngine ecs;
 
     // ecs.setWindow("MyGame", 60, true);
-    
+
     ecs.create_scene("game");
 
     ecs.create_prefab("player");
@@ -52,7 +52,7 @@ int main(void)
     //     ecs.scene("game")->registry->add_component(enemy, Shootable());
     // }
 
-    ecs.hostOnlineGame("10.19.254.72", "4080");
+    ecs.hostOnlineGame("192.168.203.245", "4080");
     ecs.load_scene("game");
     ecs.update();
     return 0;

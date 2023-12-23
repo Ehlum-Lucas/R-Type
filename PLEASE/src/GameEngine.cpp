@@ -147,13 +147,87 @@ void GameEngine::serialize_game()
                 }
             }
             auto &cshapes = current_scene->registry->get_components<CircleShape>();
+            for (size_t j = 0; j < cshapes.size() && j < types.size(); j++) {
+                if (types[j] && types[j].value().type == base_type.value().type && cshapes[j]) {
+                    serialized_entity += " 404 ";
+                    separateString(std::to_string(cshapes[j].value().radius), bc, ac);
+                    serialized_entity += bc;
+                    serialized_entity += ac;
+                }
+            }
             auto &rshapes = current_scene->registry->get_components<RectangleShape>();
+            for (size_t j = 0; j < rshapes.size() && j < types.size(); j++) {
+                if (types[j] && types[j].value().type == base_type.value().type && rshapes[j]) {
+                    serialized_entity += " 405 ";
+                    separateString(std::to_string(rshapes[j].value().width), bc, ac);
+                    serialized_entity += bc;
+                    serialized_entity += ac;
+                    separateString(std::to_string(rshapes[j].value().height), bc, ac);
+                    serialized_entity += bc;
+                    serialized_entity += ac;
+                }
+            }
             auto &colors = current_scene->registry->get_components<Color>();
             auto &gravities = current_scene->registry->get_components<Gravity>();
+            for (size_t j = 0; j < gravities.size() && j < types.size(); j++) {
+                if (types[j] && types[j].value().type == base_type.value().type && gravities[j]) {
+                    serialized_entity += " 406 ";
+                    if (gravities[j].value().gravity_force < 0.0) {
+                        serialized_entity += " 1 ";
+                    } else {
+                        serialized_entity += " 0 ";
+                    }
+                    separateString(std::to_string(gravities[j].value().gravity_force), bc, ac);
+                    serialized_entity += bc;
+                    serialized_entity += ac;
+                    if (gravities[j].value().direction == "y") {
+                        serialized_entity += " 0 ";
+                    } else {
+                        serialized_entity += " 1 ";
+                    }
+                }
+            }
             auto &controllers = current_scene->registry->get_components<Controller>();
             auto &speeds = current_scene->registry->get_components<Speed>();
+            for (size_t j = 0; j < speeds.size() && j < types.size(); j++) {
+                if (types[j] && types[j].value().type == base_type.value().type && speeds[j]) {
+                    serialized_entity += " 407 ";
+                    if (speeds[j].value().speed < 0.0) {
+                        serialized_entity += " 1 ";
+                    } else {
+                        serialized_entity += " 0 ";
+                    }
+                    separateString(std::to_string(speeds[j].value().speed), bc, ac);
+                    serialized_entity += bc;
+                    serialized_entity += ac;
+                }
+            }
             auto &sprites = current_scene->registry->get_components<Sprite>();
             auto &sizes = current_scene->registry->get_components<Size>();
+            for (size_t j = 0; j < sizes.size() && j < types.size(); j++) {
+                if (types[j] && types[j].value().type == base_type.value().type && sizes[j]) {
+                    serialized_entity += " 408 ";
+                    if (sizes[j].value().width < 0.0) {
+                        serialized_entity += " 1 ";
+                    } else {
+                        serialized_entity += " 0 ";
+                    }
+                    separateString(std::to_string(sizes[j].value().width), bc, ac);
+                    serialized_entity += bc;
+                    serialized_entity += ac;
+                    if (sizes[j].value().height < 0.0) {
+                        serialized_entity += " 1 ";
+                    } else {
+                        serialized_entity += " 0 ";
+                    }
+                    separateString(std::to_string(sizes[j].value().height), bc, ac);
+                    serialized_entity += bc;
+                    serialized_entity += ac;
+                    separateString(std::to_string(sprites[j].value().angle), bc, ac);
+                    serialized_entity += bc;
+                    serialized_entity += ac;
+                }
+            }
             auto &bcolliders = current_scene->registry->get_components<BoxCollider>();
             auto &onclickloadscenes = current_scene->registry->get_components<OnClickLoadScene>();
             auto &swis = current_scene->registry->get_components<SpawnWithInput>();
@@ -168,6 +242,15 @@ void GameEngine::serialize_game()
     }
 }
 
+/*
+    cshapes
+    rshapes
+    gravities
+    controllers
+    speeds
+    sizes
+    bcolliders
+*/
 
 void GameEngine::start_send_host()
 {
