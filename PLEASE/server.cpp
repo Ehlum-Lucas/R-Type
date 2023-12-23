@@ -7,6 +7,18 @@
 
 #include "GameEngine.hpp"
 
+/**
+ * @file server.cpp
+ * @brief This file contains the implementation of the `main` function.
+ */
+
+/**
+ * This C++ code creates a game scene with 100 enemy entities, sets their properties, and then hosts an
+ * online game.
+ * 
+ * @return The main function is returning an integer value of 0.
+ */
+
 int main(void)
 {
     GameEngine ecs;

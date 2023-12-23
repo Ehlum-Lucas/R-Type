@@ -7,6 +7,19 @@
 
 #include "Systems.hpp"
 
+/**
+ * @file spawnwithinput_system.cpp
+ * @brief This file contains the implementation of the `spawnwithinput_system` function.
+ */
+
+/**
+ * The function `spawn_with_input_system` spawns entities based on user input and adds components to
+ * them from a prefab.
+ * 
+ * @param r The parameter "r" is of type "Registry&", which is a reference to an object of the
+ * "Registry" class.
+ */
+
 void spawn_with_input_system(Registry &r)
 {
     auto &spawnwithinputs = r.get_components<SpawnWithInput>();

@@ -7,6 +7,20 @@
 
 #include "Registry.hpp"
 
+/**
+ * @file controller_system.cpp
+ * @brief This file contains the implementation of the `controller_system` function.
+ */
+
+/**
+ * The function `controller_system` updates the velocities of entities based on keyboard inputs and
+ * controller settings.
+ * 
+ * @param r The parameter `r` is of type `Registry&`, which is a reference to an object of the
+ * `Registry` class. The `Registry` class is likely a container or manager class that stores and
+ * manages entities and their components in an entity-component-system (ECS) architecture.
+ */
+
 void controller_system(Registry &r) {
     auto &controllers = r.get_components<Controller>();
     auto &velocities = r.get_components<Velocity>();

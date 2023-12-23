@@ -5,6 +5,11 @@
 ** GameEngine
 */
 
+/**
+ * @file GameEngine.hpp
+ * @brief This file contains the declaration of the `GameEngine` class.
+ */
+
 #ifndef GAMEENGINE_HPP_
     #define GAMEENGINE_HPP_
     #include "Scene.hpp"

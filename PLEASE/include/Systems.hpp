@@ -5,6 +5,11 @@
 ** Systems
 */
 
+/**
+ * @file Systems.hpp
+ * @brief This file contains the declaration of the `Systems` functions.
+ */
+
 #ifndef SYSTEMS_HPP_
     #define SYSTEMS_HPP_
     #include "Registry.hpp"

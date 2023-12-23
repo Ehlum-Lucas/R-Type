@@ -7,6 +7,19 @@
 
 #include "Registry.hpp"
 
+/**
+ * @file draw_system.cpp
+ * @brief This file contains the implementation of the `draw_system` function.
+ */
+
+/**
+ * The function `draw_system` iterates through components in a registry and draws rectangles and
+ * sprites based on their positions, sizes, and colors.
+ * 
+ * @param r The parameter `r` is of type `Registry&`, which is a reference to an object of the
+ * `Registry` class.
+ */
+
 void draw_system(Registry &r)
 {
     auto &drawables = r.get_components<Drawable>();
