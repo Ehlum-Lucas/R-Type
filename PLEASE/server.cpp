@@ -59,6 +59,7 @@ int main(int ac, char **av)
         ecs.scene("game")->registry->add_component(enemy, Sprite("assets/enemy.png", 90.0));
         // ecs.scene("game")->registry->add_component(enemy, BoxCollider("enemy"));
         // ecs.scene("game")->registry->add_component(enemy, Shootable());
+    }
 
     ecs.hostOnlineGame(ip, "4080");
     ecs.load_scene("game");
