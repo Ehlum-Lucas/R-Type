@@ -54,7 +54,6 @@ set(SOURCES
             src/position_system.cpp
             src/quit_system.cpp
             src/Scene.cpp
-            src/Server.cpp
             src/serialize_components.cpp
             src/spawnwithinput_system.cpp
 )

@@ -19,41 +19,43 @@
 
 #include "GameEngine.hpp"
 
-/**
- * This C++ code initializes a game engine, creates entities and components, sets up a player entity,
- * joins an online game, loads a scene, and updates the game engine.
- * 
- * @return The main function is returning 0.
- */
-
-int main(void)
+int main(int ac, char **av)
 {
     GameEngine ecs;
+    std::string ip = "";
 
-    ecs.setWindow("MyGame", 60, true);
-    
+    if (ac == 2)
+        ip = av[1];
+    else
+        ip = "192.168.1.98";
+
+    ecs.load_texture("assets/player.png");
+    ecs.load_texture("assets/enemy.png");
+
+    ecs.setWindow("MyGame", 30, true);
+
     ecs.create_scene("game");
 
-    ecs.create_prefab("bullet");
-    ecs.add_component_to_prefab("bullet", Position(0, 0));
-    ecs.add_component_to_prefab("bullet", Velocity(50.0, 0.0));
-    ecs.add_component_to_prefab("bullet", Drawable());
-    ecs.add_component_to_prefab("bullet", Size(0.2, 0.2));
-    ecs.add_component_to_prefab("bullet", Sprite("assets/bullet.png", 90.0));
-    ecs.add_component_to_prefab("bullet", BoxCollider("bullet"));
+    // ecs.create_prefab("bullet");
+    // ecs.add_component_to_prefab("bullet", Position(0, 0));
+    // ecs.add_component_to_prefab("bullet", Velocity(50.0, 0.0));
+    // ecs.add_component_to_prefab("bullet", Drawable());
+    // ecs.add_component_to_prefab("bullet", Size(0.2, 0.2));
+    // ecs.add_component_to_prefab("bullet", Sprite("assets/bullet.png", 90.0));
+    // ecs.add_component_to_prefab("bullet", BoxCollider("bullet"));
 
-    Entity player = ecs.scene("game")->create_entity();
-    ecs.scene("game")->registry->add_component(player, Position(150, 500));
-    ecs.scene("game")->registry->add_component(player, Velocity(0.0, 0.0));
-    ecs.scene("game")->registry->add_component(player, Drawable());
-    ecs.scene("game")->registry->add_component(player, Controller(true, true, true, true, "up", "down", "left", "right"));
-    ecs.scene("game")->registry->add_component(player, Speed(10.0));
-    ecs.scene("game")->registry->add_component(player, Size(0.2, 0.2));
-    ecs.scene("game")->registry->add_component(player, Sprite("assets/player.png", 90.0));
-    ecs.scene("game")->registry->add_component(player, SpawnWithInput("bullet", "space", 20.0, true));
-    ecs.scene("game")->registry->add_component(player, BoxCollider("player"));
+    // Entity player = ecs.scene("game")->create_entity();
+    // ecs.scene("game")->registry->add_component(player, Position(150, 500));
+    // ecs.scene("game")->registry->add_component(player, Velocity(0.0, 0.0));
+    // ecs.scene("game")->registry->add_component(player, Drawable());
+    // ecs.scene("game")->registry->add_component(player, Controller(true, true, true, true, "up", "down", "left", "right"));
+    // ecs.scene("game")->registry->add_component(player, Speed(10.0));
+    // ecs.scene("game")->registry->add_component(player, Size(0.2, 0.2));
+    // ecs.scene("game")->registry->add_component(player, Sprite("assets/player.png", 90.0));
+    // ecs.scene("game")->registry->add_component(player, SpawnWithInput("bullet", "space", 20.0, true));
+    // ecs.scene("game")->registry->add_component(player, BoxCollider("player"));
 
-    ecs.joinOnlineGame("10.19.254.72", "4080");
+    ecs.joinOnlineGame(ip, "4080");
     ecs.load_scene("game");
     ecs.update();
     return 0;

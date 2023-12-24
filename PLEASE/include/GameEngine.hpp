@@ -40,7 +40,7 @@
                 } else {
                     _window = std::make_shared<sf::RenderWindow>(sf::VideoMode(width, height), title);
                 }
-                _window->setFramerateLimit(framerate);
+                // _window->setFramerateLimit(framerate);
             }
 
             void update();
@@ -81,7 +81,7 @@
                 _port = port;
                 _online = true;
                 _socket = std::make_shared<asio::ip::udp::socket>(_io_context, asio::ip::udp::endpoint(asio::ip::udp::v4(), std::stoi(_port)));
-                _timer = std::make_shared<asio::steady_timer>(_io_context, std::chrono::milliseconds(1000/60));
+                _timer = std::make_shared<asio::steady_timer>(_io_context, std::chrono::milliseconds(1000/30));
                 std::cout << "Server starting on port " << _port << std::endl;
                 start_receive_host();
                 start_send_host();
@@ -94,7 +94,7 @@
                 _online = true;
                 _socket = std::make_shared<asio::ip::udp::socket>(_io_context_c, asio::ip::udp::endpoint(asio::ip::udp::v4(), 0));
                 _server_endpoint = asio::ip::udp::endpoint(asio::ip::address::from_string(ip), std::stoi(port));
-                _timer = std::make_shared<asio::steady_timer>(_io_context_c, std::chrono::milliseconds(1000/60));
+                _timer = std::make_shared<asio::steady_timer>(_io_context_c, std::chrono::milliseconds(1000/30));
                 start_receive_join();
                 start_send_join();
                 io_context_thread_ = std::thread([this] {_io_context_c.run(); });
@@ -104,6 +104,53 @@
             void start_receive_host();
             void start_send_join();
             void start_receive_join();
+
+            void on_new_player_load_prefab(std::string const &prefab_name) {
+                _on_new_cient_prefab_name = prefab_name;
+            }
+
+            void set_player_atlas_texture(std::vector <std::string> const &textures) {
+                for (auto texture : textures) {
+                    _clients_atlas_texture[texture] = true;
+                }
+            }
+
+            std::string get_available_player_skin() {
+                for (auto &it : _clients_atlas_texture) {
+                    if (it.second) {
+                        it.second = false;
+                        return it.first;
+                    }
+                }
+                return "";
+            }
+
+            void serialize_game();
+            void unserialize_game();
+
+            bool is_a_component(std::string const &str);
+
+            void set_player_skin_available(std::string const &skin) {
+                _clients_atlas_texture[skin] = true;
+            }
+
+            void add_prefab_to_a_scene(Registry& r, Entity &e, std::string prefab_name);
+
+            void load_texture(std::string const &path) {
+                _textures[indice_texture++] = path;
+            }
+
+            int get_texture_indice(std::string const &path) {
+                for (auto texture : _textures) {
+                    if (texture.second == path)
+                        return texture.first;
+                }
+                return -1;
+            }
+
+            std::string get_texture_path(int indice) {
+                return _textures[indice];
+            }
 
         private:
             std::shared_ptr<sf::RenderWindow> _window;
@@ -133,8 +180,22 @@
             std::string _type;
             std::chrono::steady_clock::time_point _lastMessageTime;
             asio::ip::udp::endpoint _server_endpoint;
+
+            std::string _on_new_cient_prefab_name = "";
+            const int _max_client = 4;
+            std::map<std::string, bool> _clients_atlas_texture;
+            int _nb_clients = 0;
+
+            std::map <int, std::string> _textures;
+            int indice_texture = 0;
+
+            bool _game_is_running = false;
+            InputGestion _inputGestion;
+
         public:
             std::shared_ptr<Scene> current_scene;
+            size_t e_type = 10000001;
+
 
     };
 

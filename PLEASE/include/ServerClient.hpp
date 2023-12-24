@@ -19,11 +19,18 @@
         public:
             ServerClient(asio::ip::udp::endpoint endpoint): endpoint_(endpoint) {}
 
+
             asio::ip::udp::endpoint getEndpoint() const { return endpoint_; }
+
+            void setType(size_t type) { 
+                this->type = type;
+                this->string_type = std::to_string(type);
+            }
 
             bool created = false;
             bool connected = false;
-            std::string type;
+            size_t type;
+            std::string string_type;
             std::chrono::steady_clock::time_point lastMessageTime;
             size_t entity_id;
             // bool quit = false;
