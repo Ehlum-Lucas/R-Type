@@ -5,6 +5,11 @@
 ** SparseArray
 */
 
+/**
+ * @file SparseArray.hpp
+ * @brief This file contains the declaration of the `SparseArray` class.
+ */
+
 #ifndef SPARSEARRAY_HPP_
     #define SPARSEARRAY_HPP_
     #include <vector>

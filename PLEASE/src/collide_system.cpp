@@ -5,7 +5,20 @@
 ** collide_system
 */
 
+/**
+ * @file collide_system.cpp
+ * @brief This file contains the implementation of the `collide_system` function.
+ */
+
 #include "Systems.hpp"
+
+/**
+ * The `collide_system` function checks for collisions between entities with box colliders and handles
+ * the collision logic.
+ * 
+ * @param r The parameter `r` is of type `Registry&`, which is a reference to an object of the
+ * `Registry` class.
+ */
 
 void collide_system(Registry &r)
 {

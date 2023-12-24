@@ -5,6 +5,11 @@
 ** Client
 */
 
+/**
+ * @file Client.hpp
+ * @brief This file contains the declaration of the `Client` class.
+ */
+
 #ifndef CLIENT_HPP_
     #define CLIENT_HPP_
     #include <asio.hpp>

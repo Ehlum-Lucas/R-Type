@@ -7,6 +7,18 @@
 
 #include "Registry.hpp"
 
+/**
+ * @file gravity_system.cpp
+ * @brief This file contains the implementation of the `gravity_system` function.
+ */
+
+/**
+ * The function applies gravity forces to positions based on their corresponding gravity components.
+ * 
+ * @param r The parameter `r` is of type `Registry&`, which is a reference to an object of the
+ * `Registry` class.
+ */
+
 void gravity_system(Registry &r)
 {
     auto &gravities = r.get_components<Gravity>();

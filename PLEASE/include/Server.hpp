@@ -5,6 +5,11 @@
 ** Server
 */
 
+/**
+ * @file Server.hpp
+ * @brief This file contains the declaration of the `Server` class.
+ */
+
 #ifndef SERVER_HPP_
     #define SERVER_HPP_
     #include "ServerClient.hpp"

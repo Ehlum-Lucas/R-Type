@@ -7,6 +7,16 @@
 
 #include "GameEngine.hpp"
 
+/**
+ * @file GameEngine.cpp
+ * @brief This file contains the implementation of the `GameEngine` class.
+ */
+
+/**
+ * The function `start_send_host()` sends a message to all connected clients at a regular interval
+ * using asynchronous I/O operations.
+ */
+
 void GameEngine::start_send_host()
 {
     _timer->async_wait([this](std::error_code ec) {
@@ -22,6 +32,14 @@ void GameEngine::start_send_host()
         }
     });
 }
+
+/**
+ * The `start_receive_host` function is responsible for asynchronously receiving messages from clients
+ * and handling them accordingly.
+ * 
+ * @return In this code snippet, nothing is being explicitly returned. The function
+ * `start_receive_host()` has a void return type, which means it does not return any value.
+ */
 
 void GameEngine::start_receive_host()
 {
@@ -68,6 +86,11 @@ void GameEngine::start_receive_host()
     });
 }
 
+/**
+ * The function "start_send_join" asynchronously sends a message to a server every 1/60th of a second
+ * using a timer and a socket.
+ */
+
 void GameEngine::start_send_join()
 {
     _timer->async_wait([this](std::error_code ec) {
@@ -80,6 +103,11 @@ void GameEngine::start_send_join()
         }
     });
 }
+
+/**
+ * The function `start_receive_join()` asynchronously receives messages from a server and prints the
+ * received message along with the server's IP address and port number.
+ */
 
 void GameEngine::start_receive_join()
 {
@@ -95,6 +123,11 @@ void GameEngine::start_receive_join()
         start_receive_join();
     });
 }
+
+/**
+ * The function updates the game state and handles user input and rendering based on whether the game
+ * is online or offline.
+ */
 
 void GameEngine::update()
 {
