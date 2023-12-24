@@ -242,9 +242,9 @@
             {
                 texture.loadFromFile(texture_path);
                 sprite.setTexture(texture);
+                angle = _angle;
                 sprite.setRotation(angle);
                 sprite.setOrigin(texture.getSize().x / 2, texture.getSize().y / 2);
-                angle = _angle;
             };
             sf::Texture texture;
             std::string texture_path;

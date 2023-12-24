@@ -17,7 +17,10 @@ int main(int ac, char **av)
     else
         ip = "192.168.203.245";
 
-    ecs.setWindow("MyGame", 60, true);
+    ecs.load_texture("assets/player.png");
+    ecs.load_texture("assets/enemy.png");
+
+    ecs.setWindow("MyGame", 30, true);
 
     ecs.create_scene("game");
 

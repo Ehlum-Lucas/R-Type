@@ -121,12 +121,31 @@
             }
 
             void serialize_game();
+            void unserialize_game();
+
+            bool is_a_component(std::string const &str);
 
             void set_player_skin_available(std::string const &skin) {
                 _clients_atlas_texture[skin] = true;
             }
 
             void add_prefab_to_a_scene(Registry& r, Entity &e, std::string prefab_name);
+
+            void load_texture(std::string const &path) {
+                _textures[indice_texture++] = path;
+            }
+
+            int get_texture_indice(std::string const &path) {
+                for (auto texture : _textures) {
+                    if (texture.second == path)
+                        return texture.first;
+                }
+                return -1;
+            }
+
+            std::string get_texture_path(int indice) {
+                return _textures[indice];
+            }
 
         private:
             std::shared_ptr<sf::RenderWindow> _window;
@@ -148,7 +167,6 @@
 
             std::thread io_context_thread_;
 
-            size_t e_type = 10000001;
             std::vector<ServerClient> _clients;
             bool _created = false;
             bool _connected = false;
@@ -163,8 +181,12 @@
             std::map<std::string, bool> _clients_atlas_texture;
             int _nb_clients = 0;
 
+            std::map <int, std::string> _textures;
+            int indice_texture = 0;
+
         public:
             std::shared_ptr<Scene> current_scene;
+            size_t e_type = 10000001;
 
 
     };
