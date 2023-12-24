@@ -5,6 +5,11 @@
 ** ServerClient
 */
 
+/**
+ * @file ServerClient.hpp
+ * @brief This file contains the declaration of the `ServerClient` class.
+ */
+
 #ifndef SERVER_CLIENT_HPP_
     #define SERVER_CLIENT_HPP_
     #include <asio.hpp>

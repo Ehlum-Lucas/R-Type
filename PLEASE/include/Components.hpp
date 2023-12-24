@@ -5,6 +5,11 @@
 ** Components
 */
 
+/**
+ * @file Components.cpp
+ * @brief This file contains the implementation of the `Components` class.
+ */
+
 #ifndef COMPONENTS_HPP
     #define COMPONENTS_HPP
     #include <SFML/Graphics.hpp>
@@ -573,8 +578,6 @@
         public:
             Sendable() {};
     };
-
-
 
 
     // class ComponentFactory {

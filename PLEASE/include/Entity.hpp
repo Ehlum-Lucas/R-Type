@@ -5,6 +5,11 @@
 ** Entity
 */
 
+/**
+ * @file Entity.hpp
+ * @brief This file contains the declaration of the `Entity` class.
+ */
+
 #ifndef ENTITY_HPP_
     #define ENTITY_HPP_
     #include <vector>

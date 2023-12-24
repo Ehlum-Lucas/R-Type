@@ -780,16 +780,7 @@ void GameEngine::update()
                         _window->close();
                     }
                     quit_system(*current_scene->registry.get());
-                    // std::string scene_name = onclickloadscene_system(*current_scene->registry.get());
-                    // if (scene_name != "") {
-                    //     load_scene(scene_name);
-                    //     continue;
-                    // }
                 }
-                // spawn_with_input_system(*current_scene->registry.get());
-                // position_system(*current_scene->registry.get());
-                // gravity_system(*current_scene->registry.get());
-                // collide_system(*current_scene->registry.get());
                 draw_system(*current_scene->registry.get());
                 _window->display();
             }

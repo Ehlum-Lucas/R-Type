@@ -7,6 +7,22 @@
 
 #include "Server.hpp"
 
+/**
+ * @file Server.cpp
+ * @brief This file contains the implementation of the `Server` class.
+ */
+
+/**
+ * The Server constructor initializes a UDP socket and a timer, and starts receiving and sending
+ * messages.
+ * 
+ * @param io_context The `io_context` parameter is an object that provides the I/O functionality for
+ * the server. It is responsible for managing asynchronous I/O operations, such as reading and writing
+ * data from and to sockets.
+ * @param port The "port" parameter is the port number on which the server will listen for incoming UDP
+ * messages.
+ */
+
 Server::Server(asio::io_context& io_context, short port): _socket(io_context, asio::ip::udp::endpoint(asio::ip::udp::v4(), port)), _timer(io_context, std::chrono::milliseconds(1000/60))
 {
     std::cout << "Server starting on port " << port << std::endl;
@@ -14,6 +30,13 @@ Server::Server(asio::io_context& io_context, short port): _socket(io_context, as
     start_receive();
     start_send();
 }
+
+/**
+ * The `start_receive()` function is responsible for asynchronously receiving messages from clients,
+ * processing the messages, and updating the server's state accordingly.
+ * 
+ * @return The function `start_receive()` does not have a return type, so it does not return anything.
+ */
 
 void Server::start_receive() 
 {
@@ -118,6 +141,11 @@ void Server::start_receive()
     //     });
     // }
 }
+
+/**
+ * The start_send() function sends game updates to all connected clients at a rate of 60 updates per
+ * second.
+ */
 
 void Server::start_send() 
 {

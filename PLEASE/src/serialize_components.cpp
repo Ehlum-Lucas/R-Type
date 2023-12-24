@@ -7,6 +7,21 @@
 
 #include "Systems.hpp"
 
+/**
+ * @file serialize_components.cpp
+ * @brief This file contains the implementation of the `serialize_components` function.
+ */
+
+/**
+ * The function `serialize_components` takes a registry object and serializes the components of type
+ * Position, Sprite, Size, and Id into a vector of strings.
+ * 
+ * @param r The parameter `r` is of type `Registry&`, which is a reference to an object of the
+ * `Registry` class.
+ * 
+ * @return The function `serialize_components` returns a `std::vector<std::string>`.
+ */
+
 std::vector<std::string> serialize_components(Registry &r)
 {
     auto &positions = r.get_components<Position>();

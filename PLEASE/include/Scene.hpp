@@ -5,6 +5,11 @@
 ** Scene
 */
 
+/**
+ * @file Scene.hpp
+ * @brief This file contains the declaration of the `Scene` class.
+ */
+
 #ifndef SCENE_HPP_
     #define SCENE_HPP_
     #include "Systems.hpp"

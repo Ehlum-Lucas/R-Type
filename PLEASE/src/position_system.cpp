@@ -7,6 +7,18 @@
 
 #include "Systems.hpp"
 
+/**
+ * @file position_system.cpp
+ * @brief This file contains the implementation of the `position_system` function.
+ */
+
+/**
+ * The function updates the positions of entities based on their velocities.
+ * 
+ * @param r The parameter `r` is of type `Registry&`, which is a reference to an object of the
+ * `Registry` class.
+ */
+
 void position_system (Registry &r) {
     auto &positions = r.get_components<Position>();
     auto &velocities = r.get_components<Velocity>();
