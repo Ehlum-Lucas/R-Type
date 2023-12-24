@@ -29,6 +29,11 @@ void draw_system(Registry &r)
         }
     }
 
+    // std::cout << "drawables.size() = " << drawables.size() << std::endl;
+    // std::cout << "sprites.size() = " << sprites.size() << std::endl;
+    // std::cout << "sizes.size() = " << sizes.size() << std::endl;
+    // std::cout << "positions.size() = " << positions.size() << std::endl;
+
     for (size_t i = 0; i < drawables.size() &&  i < sprites.size() && i < sizes.size() && i < positions.size(); ++i) {
         auto &sprite = sprites[i];
         auto &size = sizes[i];

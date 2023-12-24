@@ -15,7 +15,7 @@ int main(int ac, char **av)
     if (ac == 2)
         ip = av[1];
     else
-        ip = "192.168.203.245";
+        ip = "192.168.1.98";
 
     ecs.load_texture("assets/player.png");
     ecs.load_texture("assets/enemy.png");

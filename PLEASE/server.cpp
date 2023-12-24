@@ -15,7 +15,7 @@ int main(int ac, char **av)
     if (ac == 2)
         ip = av[1];
     else
-        ip = "192.168.203.245";
+        ip = "192.168.1.98";
 
     // ecs.setWindow("MyGame", 60, true);
     ecs.load_texture("assets/player.png");
@@ -27,14 +27,14 @@ int main(int ac, char **av)
     ecs.add_component_to_prefab("player", Position(200, 500));
     ecs.add_component_to_prefab("player", Velocity(0.0, 0.0));
     ecs.add_component_to_prefab("player", Controller(true, true, true, true, "up", "down", "left", "right"));
-    ecs.add_component_to_prefab("player", Speed(20.0));
+    ecs.add_component_to_prefab("player", Speed(10.0));
     ecs.add_component_to_prefab("player", Drawable());
     ecs.add_component_to_prefab("player", Size(0.2, 0.2));
     ecs.add_component_to_prefab("player", Sprite("assets/player.png", 90.0));
     ecs.add_component_to_prefab("player", BoxCollider("player"));
 
     ecs.on_new_player_load_prefab("player");
-    std::vector<std::string> atlas = {"assets/player.png", "assets/player2.png", "assets/player3.png", "assets/player4.png"};
+    std::vector<std::string> atlas = {"assets/player.png", "assets/player.png", "assets/player.png", "assets/player.png"};
     ecs.set_player_atlas_texture(atlas);
 
      // ecs.scene("game")->registry->add_component(player, Position(150, 500));
@@ -60,6 +60,12 @@ int main(int ac, char **av)
         // ecs.scene("game")->registry->add_component(enemy, BoxCollider("enemy"));
         // ecs.scene("game")->registry->add_component(enemy, Shootable());
     }
+
+    // 402 1 000012.000000 0 000000.000000 00040340800001000000900000000409000000002000000000000002000000
+    // 10000100 401 0 0007916.0000000 0 0000587.0000000 402 1 0000120.00000000000000000000040340800001000000900000000409000000002000000000000002000000
+    // 10000100 401 0 0007916.0000000 0 0000587.0000000 402 0 0000000.000000000000000000000040340800001000000900000000409000000002000000000000002000000
+    // 10000100 401 0 0004532.0000000 0 0000587.0000000 402 1 0000012.0000000 0 0000000 0000000 40340800001000000900000000409000000002000000000000002000000
+    // 10000001 401 0 0000200.0000000 0 0000500.0000000 402 0 0000000.0000000 0 0000000 0000000 403 407 0 0000020.0000000 4080000000000090000000040900000000200000000000000200000041011119001900290039004 cfrom 192.168.1.98:4080
 
     ecs.hostOnlineGame(ip, "4080");
     ecs.load_scene("game");

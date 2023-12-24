@@ -149,9 +149,252 @@
                 }
                 
                 return sf::Keyboard::Unknown;
-            };
+            }
 
+            sf::Keyboard::Key binary_to_sf_key(std::string key) {
+                if (key == "9001") {
+                    return sf::Keyboard::Up;
+                } else if (key == "9002") {
+                    return sf::Keyboard::Down;
+                } else if (key == "9003") {
+                    return sf::Keyboard::Left;
+                } else if (key == "9004") {
+                    return sf::Keyboard::Right;
+                } else if (key == "9005") {
+                    return sf::Keyboard::Space;
+                } else if (key == "9006") {
+                    return sf::Keyboard::Num0;
+                } else if (key == "9007") {
+                    return sf::Keyboard::Num1;
+                } else if (key == "9008") {
+                    return sf::Keyboard::Num2;
+                } else if (key == "909") {
+                    return sf::Keyboard::Num3;
+                } else if (key == "9010") {
+                    return sf::Keyboard::Num4;
+                } else if (key == "9011") {
+                    return sf::Keyboard::Num5;
+                } else if (key == "9012") {
+                    return sf::Keyboard::Num6;
+                } else if (key == "9013") {
+                    return sf::Keyboard::Num7;
+                } else if (key == "9014") {
+                    return sf::Keyboard::Num8;
+                } else if (key == "9015") {
+                    return sf::Keyboard::Num9;
+                } else if (key == "9016") {
+                    return sf::Keyboard::A;
+                } else if (key == "9017") {
+                    return sf::Keyboard::B;
+                } else if (key == "9018") {
+                    return sf::Keyboard::C;
+                } else if (key == "9019") {
+                    return sf::Keyboard::D;
+                } else if (key == "9020") {
+                    return sf::Keyboard::E;
+                } else if (key == "9021") {
+                    return sf::Keyboard::F;
+                } else if (key == "9022") {
+                    return sf::Keyboard::G;
+                } else if (key == "9023") {
+                    return sf::Keyboard::H;
+                } else if (key == "9024") {
+                    return sf::Keyboard::I;
+                } else if (key == "9025") {
+                    return sf::Keyboard::J;
+                } else if (key == "9026") {
+                    return sf::Keyboard::K;
+                } else if (key == "9027") {
+                    return sf::Keyboard::L;
+                } else if (key == "9028") {
+                    return sf::Keyboard::M;
+                } else if (key == "9029") {
+                    return sf::Keyboard::N;
+                } else if (key == "9030") {
+                    return sf::Keyboard::O;
+                } else if (key == "9031") {
+                    return sf::Keyboard::P;
+                } else if (key == "9032") {
+                    return sf::Keyboard::Q;
+                } else if (key == "9033") {
+                    return sf::Keyboard::R;
+                } else if (key == "9034") {
+                    return sf::Keyboard::S;
+                } else if (key == "9035") {
+                    return sf::Keyboard::T;
+                } else if (key == "9036") {
+                    return sf::Keyboard::U;
+                } else if (key == "9037") {
+                    return sf::Keyboard::V;
+                } else if (key == "9038") {
+                    return sf::Keyboard::W;
+                } else if (key == "9039") {
+                    return sf::Keyboard::X;
+                } else if (key == "9040") {
+                    return sf::Keyboard::Y;
+                } else if (key == "9041") {
+                    return sf::Keyboard::Z;
+                } else if (key == "9042") {
+                    return sf::Keyboard::F1;
+                } else if (key == "9043") {
+                    return sf::Keyboard::F2;
+                } else if (key == "9044") {
+                    return sf::Keyboard::F3;
+                } else if (key == "9045") {
+                    return sf::Keyboard::F4;
+                } else if (key == "9046") {
+                    return sf::Keyboard::F5;
+                } else if (key == "9047") {
+                    return sf::Keyboard::F6;
+                } else if (key == "9048") {
+                    return sf::Keyboard::F7;
+                } else if (key == "9049") {
+                    return sf::Keyboard::F8;
+                } else if (key == "9050") {
+                    return sf::Keyboard::F9;
+                } else if (key == "9051") {
+                    return sf::Keyboard::F10;
+                } else if (key == "9052") {
+                    return sf::Keyboard::F11;
+                } else if (key == "9053") {
+                    return sf::Keyboard::F12;
+                } else if (key == "9054") {
+                    return sf::Keyboard::F13;
+                } else if (key == "9055") {
+                    return sf::Keyboard::F14;
+                } else if (key == "9056") {
+                    return sf::Keyboard::F15;
+                } else if (key == "9057") {
+                    return sf::Keyboard::RControl;
+                } else if (key == "9058") {
+                    return sf::Keyboard::LControl;
+                }
+                return sf::Keyboard::Unknown;
+            }
+
+            std::string sf_key_to_binary(sf::Keyboard::Key key) {
+                if (key == sf::Keyboard::Up) {
+                    return "9001";
+                } else if (key == sf::Keyboard::Down) {
+                    return "9002";
+                } else if (key == sf::Keyboard::Left) {
+                    return "9003";
+                } else if (key == sf::Keyboard::Right) {
+                    return "9004";
+                } else if (key == sf::Keyboard::Space) {
+                    return "9005";
+                } else if (key == sf::Keyboard::Num0) {
+                    return "9006";
+                } else if (key == sf::Keyboard::Num1) {
+                    return "9007";
+                } else if (key == sf::Keyboard::Num2) {
+                    return "9008";
+                } else if (key == sf::Keyboard::Num3) {
+                    return "9009";
+                } else if (key == sf::Keyboard::Num4) {
+                    return "9010";
+                } else if (key == sf::Keyboard::Num5) {
+                    return "9011";
+                } else if (key == sf::Keyboard::Num6) {
+                    return "9012";
+                } else if (key == sf::Keyboard::Num7) {
+                    return "9013";
+                } else if (key == sf::Keyboard::Num8) {
+                    return "9014";
+                } else if (key == sf::Keyboard::Num9) {
+                    return "9015";
+                } else if (key == sf::Keyboard::A) {
+                    return "9016";
+                } else if (key == sf::Keyboard::B) {
+                    return "9017";
+                } else if (key == sf::Keyboard::C) {
+                    return "9018";
+                } else if (key == sf::Keyboard::D) {
+                    return "9019";
+                } else if (key == sf::Keyboard::E) {
+                    return "9020";
+                } else if (key == sf::Keyboard::F) {
+                    return "9021";
+                } else if (key == sf::Keyboard::G) {
+                    return "9022";
+                } else if (key == sf::Keyboard::H) {
+                    return "9023";
+                } else if (key == sf::Keyboard::I) {
+                    return "9024";
+                } else if (key == sf::Keyboard::J) {
+                    return "9025";
+                } else if (key == sf::Keyboard::K) {
+                    return "9026";
+                } else if (key == sf::Keyboard::L) {
+                    return "9027";
+                } else if (key == sf::Keyboard::M) {
+                    return "9028";
+                } else if (key == sf::Keyboard::N) {
+                    return "9029";
+                } else if (key == sf::Keyboard::O) {
+                    return "9030";
+                } else if (key == sf::Keyboard::P) {
+                    return "9031";
+                } else if (key == sf::Keyboard::Q) {
+                    return "9032";
+                } else if (key == sf::Keyboard::R) {
+                    return "9033";
+                } else if (key == sf::Keyboard::S) {
+                    return "9034";
+                } else if (key == sf::Keyboard::T) {
+                    return "9035";
+                } else if (key == sf::Keyboard::U) {
+                    return "9036";
+                } else if (key == sf::Keyboard::V) {
+                    return "9037";
+                } else if (key == sf::Keyboard::W) {
+                    return "9038";
+                } else if (key == sf::Keyboard::X) {
+                    return "9039";
+                } else if (key == sf::Keyboard::Y) {
+                    return "9040";
+                } else if (key == sf::Keyboard::Z) {
+                    return "9041";
+                } else if (key == sf::Keyboard::F1) {
+                    return "9042";
+                } else if (key == sf::Keyboard::F2) {
+                    return "9043";
+                } else if (key == sf::Keyboard::F3) {
+                    return "9044";
+                } else if (key == sf::Keyboard::F4) {
+                    return "9045";
+                } else if (key == sf::Keyboard::F5) {
+                    return "9046";
+                } else if (key == sf::Keyboard::F6) {
+                    return "9047";
+                } else if (key == sf::Keyboard::F7) {
+                    return "9048";
+                } else if (key == sf::Keyboard::F8) {
+                    return "9049";
+                } else if (key == sf::Keyboard::F9) {
+                    return "9050";
+                } else if (key == sf::Keyboard::F10) {
+                    return "9051";
+                } else if (key == sf::Keyboard::F11) {
+                    return "9052";
+                } else if (key == sf::Keyboard::F12) {
+                    return "9053";
+                } else if (key == sf::Keyboard::F13) {
+                    return "9054";
+                } else if (key == sf::Keyboard::F14) {
+                    return "9055";
+                } else if (key == sf::Keyboard::F15) {
+                    return "9056";
+                } else if (key == sf::Keyboard::RControl) {
+                    return "9057";
+                } else if (key == sf::Keyboard::LControl) {
+                    return "9058";
+                }
+
+                return "9000";
+            }
     };
+
 
     // position component
     class Position {
@@ -210,11 +453,17 @@
     // controller component
     class Controller {
         public:
-            Controller(bool can_go_up, bool can_go_right, bool can_go_left, bool can_go_down, std::string up, std::string down, std::string left, std::string right) : can_go_up(can_go_up), can_go_right(can_go_right), can_go_left(can_go_left), can_go_down(can_go_down) {
-                this->up = inputGestion.get_key(up);
-                this->down = inputGestion.get_key(down);
-                this->left = inputGestion.get_key(left);
-                this->right = inputGestion.get_key(right);
+            Controller(bool can_go_up, bool can_go_down, bool can_go_left, bool can_go_right, std::string _up, std::string _down, std::string _left, std::string _right) : can_go_up(can_go_up), can_go_right(can_go_right), can_go_left(can_go_left), can_go_down(can_go_down) {
+                this->up = inputGestion.get_key(_up);
+                this->down = inputGestion.get_key(_down);
+                this->left = inputGestion.get_key(_left);
+                this->right = inputGestion.get_key(_right);
+            };
+            Controller(bool can_go_up, bool can_go_down, bool can_go_left, bool can_go_right, sf::Keyboard::Key _up, sf::Keyboard::Key _down, sf::Keyboard::Key _left, sf::Keyboard::Key _right) : can_go_up(can_go_up), can_go_right(can_go_right), can_go_left(can_go_left), can_go_down(can_go_down) {
+                this->up = _up;
+                this->down = _down;
+                this->left = _left;
+                this->right = _right;
             };
             bool can_go_up;
             bool can_go_right;

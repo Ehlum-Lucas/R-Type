@@ -35,7 +35,7 @@
                 } else {
                     _window = std::make_shared<sf::RenderWindow>(sf::VideoMode(width, height), title);
                 }
-                _window->setFramerateLimit(framerate);
+                // _window->setFramerateLimit(framerate);
             }
 
             void update();
@@ -76,7 +76,7 @@
                 _port = port;
                 _online = true;
                 _socket = std::make_shared<asio::ip::udp::socket>(_io_context, asio::ip::udp::endpoint(asio::ip::udp::v4(), std::stoi(_port)));
-                _timer = std::make_shared<asio::steady_timer>(_io_context, std::chrono::milliseconds(1000/60));
+                _timer = std::make_shared<asio::steady_timer>(_io_context, std::chrono::milliseconds(1000/30));
                 std::cout << "Server starting on port " << _port << std::endl;
                 start_receive_host();
                 start_send_host();
@@ -89,7 +89,7 @@
                 _online = true;
                 _socket = std::make_shared<asio::ip::udp::socket>(_io_context_c, asio::ip::udp::endpoint(asio::ip::udp::v4(), 0));
                 _server_endpoint = asio::ip::udp::endpoint(asio::ip::address::from_string(ip), std::stoi(port));
-                _timer = std::make_shared<asio::steady_timer>(_io_context_c, std::chrono::milliseconds(1000/60));
+                _timer = std::make_shared<asio::steady_timer>(_io_context_c, std::chrono::milliseconds(1000/30));
                 start_receive_join();
                 start_send_join();
                 io_context_thread_ = std::thread([this] {_io_context_c.run(); });
@@ -183,6 +183,9 @@
 
             std::map <int, std::string> _textures;
             int indice_texture = 0;
+
+            bool _game_is_running = false;
+            InputGestion _inputGestion;
 
         public:
             std::shared_ptr<Scene> current_scene;
