@@ -10,7 +10,7 @@ permissions:
 
 jobs:
   release:
-    name: Release pushed tag
+    name: Release
     runs-on: ubuntu-22.04
     steps:
       - name: Create release
@@ -20,6 +20,6 @@ jobs:
         run: |
           gh release create "$tag" \
               --repo="$GITHUB_REPOSITORY" \
-              --title="${GITHUB_REPOSITORY#*/} ${tag#v}" \
+              --title="${GITHUB_REPOSITORY#*/} $(date +%Y-%m-%d)" \
               --generate-notes \
               --draft
