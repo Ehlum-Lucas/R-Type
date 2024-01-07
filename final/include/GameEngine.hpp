@@ -64,11 +64,18 @@
 
             void add_prefab_to_a_scene(Registry& r, Entity &e, std::string prefab_name);
 
+            void useInterface() {
+                _useInterface = true;
+                setWindow("AAL ECS INTERFACE version (1.0.0)", 60, false, 1920, 1080);
+                update();
+            }
+
         private:
             std::shared_ptr<sf::RenderWindow> _window;
             sf::Event _event;
             std::vector<std::shared_ptr<Scene>> _scenes;
             InputGestion _inputGestion;
+            bool _useInterface = false;
 
         public:
             std::shared_ptr<Scene> current_scene;

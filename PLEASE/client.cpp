@@ -27,10 +27,10 @@ int main(int ac, char **av)
     if (ac == 2)
         ip = av[1];
     else
-        ip = "192.168.1.98";
+        ip = "10.19.254.77";
 
-    ecs.load_texture("assets/player.png");
-    ecs.load_texture("assets/enemy.png");
+    ecs.create_texture("assets/player.png");
+    // ecs.create_texture("assets/enemy.png");
 
     ecs.setWindow("MyGame", 30, true);
 

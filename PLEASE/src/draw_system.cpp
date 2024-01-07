@@ -51,11 +51,12 @@ void draw_system(Registry &r)
         auto &sprite = sprites[i];
         auto &size = sizes[i];
         auto &position = positions[i];
+        auto &drawable = drawables[i];
 
-        if (sprite && size && position) {
+        if (sprite && size && position && drawable) {
             sprite.value().sprite.setPosition(position.value().x, position.value().y);
-            sprite.value().sprite.setScale(size.value().width, size.value().height);
-            sprite.value().sprite.setTexture(sprite.value().texture);
+            // sprite.value().sprite.setScale(size.value().width, size.value().height);
+            // sprite.value().sprite.setTexture(sprite.value().texture);
             r._window->draw(sprite.value().sprite);
         }
     }

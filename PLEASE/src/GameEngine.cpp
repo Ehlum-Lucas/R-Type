@@ -8,6 +8,8 @@
 #include "GameEngine.hpp"
 
 
+#include <any>
+
 void GameEngine::add_prefab_to_a_scene(Registry& r, Entity &e, std::string prefab_name)
 {
     auto prefab_components = r.get_prefab(prefab_name);
@@ -16,13 +18,15 @@ void GameEngine::add_prefab_to_a_scene(Registry& r, Entity &e, std::string prefa
         if (component.type() == typeid(Sprite)) {
             auto &sprite = std::any_cast<Sprite&>(component);
             // r.add_component_from_prefab(e, sprite);
-            r.add_component(e, Sprite(get_available_player_skin(), sprite.angle));
+            std::string skin = get_available_player_skin();
+            std::cout << "skin: [" << skin << "]" << std::endl;
+            r.add_component(e, Sprite(skin, sprite.angle));
         } else if (component.type() == typeid(Position)) {
             auto &position = std::any_cast<Position&>(component);
             r.add_component_from_prefab(e, position);
         } else if (component.type() == typeid(Velocity)) {
-            auto &veclocity = std::any_cast<Velocity&>(component);
-            r.add_component_from_prefab(e, veclocity);
+            auto &velocity = std::any_cast<Velocity&>(component);
+            r.add_component_from_prefab(e, velocity);
         } else if (component.type() == typeid(Size)) {
             auto &size = std::any_cast<Size&>(component);
             r.add_component_from_prefab(e, size);
@@ -460,7 +464,6 @@ void GameEngine::unserialize_game()
                 current_scene->registry->add_component(e, Speed(std::stod(speed)));
             }
         }
-
         // Sprite
         if (message.substr(pos, 3) == "408") {
             pos += 3;
@@ -622,16 +625,6 @@ void GameEngine::unserialize_game()
     _received_messages.clear();
 }
 
-/*
-    cshapes
-    rshapes
-    gravities
-    controllers
-    speeds
-    sizes
-    bcolliders
-*/
-
 void GameEngine::start_send_host()
 {
     _timer->async_wait([this](std::error_code ec) {
@@ -715,11 +708,6 @@ void GameEngine::start_send_join()
 {
     _timer->async_wait([this](std::error_code ec) {
         if (!ec) {
-            if (_game_is_running) {
-                controller_system(*current_scene->registry.get());
-                position_system(*current_scene->registry.get());
-                serialize_game();
-            }
             if (!_created && !_connected) {
                 _to_send_messages.push_back("111");
             }
@@ -748,7 +736,7 @@ void GameEngine::start_receive_join()
     _socket->async_receive_from(asio::buffer(_recv_buffer), _server_endpoint, [this](std::error_code ec, std::size_t bytes_transferred) {
         if (!ec) {
             std::string message(_recv_buffer.data(), bytes_transferred);
-            std::cout << "Received_client: " << message << " cfrom " << _server_endpoint.address().to_string() << ":" << _server_endpoint.port() << std::endl;
+            // std::cout << "Received_client: " << message << " cfrom " << _server_endpoint.address().to_string() << ":" << _server_endpoint.port() << std::endl;
 
             if (message.substr(0, 3) == "122") {
                 _to_send_messages.push_back("133");
@@ -757,7 +745,6 @@ void GameEngine::start_receive_join()
             } else if (message.size() > 10 && message[0] == '1' && is_a_component(message.substr(8, 3)) && _created) {
                 _game_is_running = true;
                 _received_messages.push_back(message);
-                unserialize_game();
             }
             // _lastMessageTime = std::chrono::steady_clock::now();
         } else {
@@ -774,15 +761,23 @@ void GameEngine::update()
             _io_context.run();
         } else {
             while (_window->isOpen()) {
+                if (_game_is_running) {
+                    unserialize_game();
+                }
                 _window->clear(sf::Color::Black);
                 while (_window->pollEvent(_event)) {
                     if (_event.type == sf::Event::Closed) {
                         _window->close();
                     }
                     quit_system(*current_scene->registry.get());
+                    controller_system(*current_scene->registry.get());
                 }
+                position_system(*current_scene->registry.get());
                 draw_system(*current_scene->registry.get());
                 _window->display();
+                if (_game_is_running) {
+                    serialize_game();
+                }
             }
         }
     } else if (!_online) {

@@ -4,7 +4,7 @@ project(GameEngine)
 set(CMAKE_CXX_STANDARD 17)
 
 #Install Asio
-find_package(Asio)
+# find_package(Asio)
 
 if (NOT Asio_FOUND)
     message(STATUS "Asio not found, downloading...")
@@ -35,6 +35,7 @@ if (NOT SFML_FOUND)
     )
     FetchContent_GetProperties(sfml)
     if(NOT sfml_POPULATED)
+        message("Fetch sfml")
         FetchContent_Populate(sfml)
         message("Print sfml")
         message(${sfml_SOURCE_DIR} ${sfml_BINARY_DIR})
@@ -56,6 +57,7 @@ set(SOURCES
             src/Scene.cpp
             src/serialize_components.cpp
             src/spawnwithinput_system.cpp
+            src/TexturesLoader.cpp
 )
 
 # Ajoutez les fichiers source à la bibliothèque
@@ -65,7 +67,7 @@ add_library(gameEngineLib STATIC ${SOURCES})
 target_include_directories(gameEngineLib PUBLIC include)
 
 # Liez SFML à la bibliothèque
-target_link_libraries(gameEngineLib sfml-graphics sfml-audio)
+target_link_libraries(gameEngineLib sfml-graphics sfml-window sfml-system sfml-audio)
 
 # Ajoutez l'exécutable client.cpp
 add_executable(client client.cpp)
@@ -82,7 +84,7 @@ endif()
 add_custom_command(TARGET client POST_BUILD
 		COMMAND ${CMAKE_COMMAND} -E copy_directory
 		${CMAKE_SOURCE_DIR}/assets ${CMAKE_BINARY_DIR}/assets)
+
 # Liez l'exécutable à la bibliothèque
 target_link_libraries(client gameEngineLib)
 target_link_libraries(server gameEngineLib)
-target_link_libraries(server sfml-graphics sfml-window sfml-system sfml-audio)

@@ -15,7 +15,7 @@
     #include <SFML/Graphics.hpp>
     #include "Registry.hpp"
     #include <any>
-
+    #include "TexturesLoader.hpp"
 
     #define COLOR_RED sf::Color(255, 0, 0)
     #define COLOR_GREEN sf::Color(0, 255, 0)
@@ -494,7 +494,7 @@
         public:
             Sprite(std::string texture_path, float _angle = 0.0) : texture_path(texture_path)
             {
-                texture.loadFromFile(texture_path);
+                texture = texturesLoader.get_texture(texture_path);
                 sprite.setTexture(texture);
                 angle = _angle;
                 sprite.setRotation(angle);

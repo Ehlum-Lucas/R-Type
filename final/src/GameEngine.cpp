@@ -60,25 +60,37 @@ void GameEngine::add_prefab_to_a_scene(Registry& r, Entity &e, std::string prefa
 
 void GameEngine::update()
 {
-    while (_window->isOpen()) {
-        _window->clear(sf::Color::Black);
-        while (_window->pollEvent(_event)) {
-            if (_event.type == sf::Event::Closed) {
-                _window->close();
+    if (_useInterface) {
+        while (_window->isOpen()) {
+            _window->clear(sf::Color::Black);
+            while (_window->pollEvent(_event)) {
+                if (_event.type == sf::Event::Closed) {
+                    _window->close();
+                }
             }
-            quit_system(*current_scene->registry.get());
-            controller_system(*current_scene->registry.get());
-            std::string scene_name = onclickloadscene_system(*current_scene->registry.get());
-            if (scene_name != "") {
-                load_scene(scene_name);
-                continue;
-            }
+            _window->display();
         }
-        spawn_with_input_system(*current_scene->registry.get());
-        position_system(*current_scene->registry.get());
-        gravity_system(*current_scene->registry.get());
-        collide_system(*current_scene->registry.get());
-        draw_system(*current_scene->registry.get());
-        _window->display();
+    } else {
+        while (_window->isOpen()) {
+            _window->clear(sf::Color::Black);
+            while (_window->pollEvent(_event)) {
+                if (_event.type == sf::Event::Closed) {
+                    _window->close();
+                }
+                quit_system(*current_scene->registry.get());
+                controller_system(*current_scene->registry.get());
+                std::string scene_name = onclickloadscene_system(*current_scene->registry.get());
+                if (scene_name != "") {
+                    load_scene(scene_name);
+                    continue;
+                }
+            }
+            spawn_with_input_system(*current_scene->registry.get());
+            position_system(*current_scene->registry.get());
+            gravity_system(*current_scene->registry.get());
+            collide_system(*current_scene->registry.get());
+            draw_system(*current_scene->registry.get());
+            _window->display();
+        }
     }
 }

@@ -97,7 +97,13 @@
                 _timer = std::make_shared<asio::steady_timer>(_io_context_c, std::chrono::milliseconds(1000/30));
                 start_receive_join();
                 start_send_join();
-                io_context_thread_ = std::thread([this] {_io_context_c.run(); });
+                io_context_thread_ = std::thread([this] {
+                    try {
+                        _io_context_c.run();
+                    } catch (const std::exception& e) {
+                        std::cerr << "Error in thread : " << e.what() << std::endl;
+                    } 
+                });
             }
 
             void start_send_host();
@@ -136,7 +142,8 @@
 
             void add_prefab_to_a_scene(Registry& r, Entity &e, std::string prefab_name);
 
-            void load_texture(std::string const &path) {
+            void create_texture(std::string const &path) {
+                texturesLoader.set_texture(path);
                 _textures[indice_texture++] = path;
             }
 

@@ -18,8 +18,8 @@ int main(int ac, char **av)
         ip = "192.168.1.98";
 
     // ecs.setWindow("MyGame", 60, true);
-    ecs.load_texture("assets/player.png");
-    ecs.load_texture("assets/enemy.png");
+    ecs.create_texture("assets/player.png");
+    // ecs.create_texture("assets/enemy.png");
 
     ecs.create_scene("game");
 
@@ -37,29 +37,19 @@ int main(int ac, char **av)
     std::vector<std::string> atlas = {"assets/player.png", "assets/player.png", "assets/player.png", "assets/player.png"};
     ecs.set_player_atlas_texture(atlas);
 
-     // ecs.scene("game")->registry->add_component(player, Position(150, 500));
-    // ecs.scene("game")->registry->add_component(player, Velocity(0.0, 0.0));
-    // ecs.scene("game")->registry->add_component(player, Drawable());
-    // ecs.scene("game")->registry->add_component(player, Controller(true, true, true, true, "up", "down", "left", "right"));
-    // ecs.scene("game")->registry->add_component(player, Speed(10.0));
-    // ecs.scene("game")->registry->add_component(player, Size(0.2, 0.2));
-    // ecs.scene("game")->registry->add_component(player, Sprite("assets/player.png", 90.0));
-    // ecs.scene("game")->registry->add_component(player, SpawnWithInput("bullet", "space", 20.0, true));
-    // ecs.scene("game")->registry->add_component(player, BoxCollider("player"));
-
-    for (int i = 0; i < 100; ++i) {
-        Entity enemy = ecs.scene("game")->create_entity();
-        int posX = rand() % 15000 + 2000; // Random x position between 2000 and 4000
-        int posY = rand() % 951 + 50; // Random y position between 50 and 1000
-        ecs.scene("game")->registry->add_component(enemy, Type(ecs.e_type++));
-        ecs.scene("game")->registry->add_component(enemy, Position(posX, posY));
-        ecs.scene("game")->registry->add_component(enemy, Velocity(-12.0, 0.0));
-        ecs.scene("game")->registry->add_component(enemy, Drawable());
-        ecs.scene("game")->registry->add_component(enemy, Size(0.2, 0.2));
-        ecs.scene("game")->registry->add_component(enemy, Sprite("assets/enemy.png", 90.0));
-        // ecs.scene("game")->registry->add_component(enemy, BoxCollider("enemy"));
-        // ecs.scene("game")->registry->add_component(enemy, Shootable());
-    }
+    // for (int i = 0; i < 100; ++i) {
+    //     Entity enemy = ecs.scene("game")->create_entity();
+    //     int posX = rand() % 15000 + 2000; // Random x position between 2000 and 4000
+    //     int posY = rand() % 951 + 50; // Random y position between 50 and 1000
+    //     ecs.scene("game")->registry->add_component(enemy, Type(ecs.e_type++));
+    //     ecs.scene("game")->registry->add_component(enemy, Position(posX, posY));
+    //     ecs.scene("game")->registry->add_component(enemy, Velocity(-12.0, 0.0));
+    //     ecs.scene("game")->registry->add_component(enemy, Drawable());
+    //     ecs.scene("game")->registry->add_component(enemy, Size(0.2, 0.2));
+    //     ecs.scene("game")->registry->add_component(enemy, Sprite("assets/enemy.png", 90.0));
+    //     // ecs.scene("game")->registry->add_component(enemy, BoxCollider("enemy"));
+    //     // ecs.scene("game")->registry->add_component(enemy, Shootable());
+    // }
 
     ecs.hostOnlineGame(ip, "4080");
     ecs.load_scene("game");
