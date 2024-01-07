@@ -199,6 +199,8 @@
             bool _game_is_running = false;
             InputGestion _inputGestion;
 
+            bool _controllable_sended = false;
+
         public:
             std::shared_ptr<Scene> current_scene;
             size_t e_type = 10000001;

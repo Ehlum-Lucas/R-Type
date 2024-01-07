@@ -495,12 +495,12 @@
             Sprite(std::string texture_path, float _angle = 0.0) : texture_path(texture_path)
             {
                 texture = texturesLoader.get_texture(texture_path);
-                sprite.setTexture(texture);
+                sprite.setTexture(*texture.get());
                 angle = _angle;
                 sprite.setRotation(angle);
-                sprite.setOrigin(texture.getSize().x / 2, texture.getSize().y / 2);
+                sprite.setOrigin(texture->getSize().x / 2, texture->getSize().y / 2);
             };
-            sf::Texture texture;
+            std::shared_ptr<sf::Texture> texture;
             std::string texture_path;
             sf::Sprite sprite;
             float angle;

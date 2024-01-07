@@ -114,6 +114,51 @@ void GameEngine::serialize_game()
                 break;
             }
             float c = 1;
+
+            bool send = true;
+            bool cont = false;
+
+            // Controller
+            auto &controllers = current_scene->registry->get_components<Controller>();
+            for (size_t j = 0; j < controllers.size() && j < types.size(); j++) {
+                if (types[j] && types[j].value().type == base_type.value().type && controllers[j]) {
+                    if (_controllable_sended && _host) {
+                        send = false;
+                        break;
+                    }
+                    cont = true;
+                    serialized_entity += "410";
+                    if (controllers[j].value().can_go_up) {
+                        serialized_entity += "1";
+                    } else {
+                        serialized_entity += "0";
+                    }
+                    if (controllers[j].value().can_go_down) {
+                        serialized_entity += "1";
+                    } else {
+                        serialized_entity += "0";
+                    }
+                    if (controllers[j].value().can_go_left) {
+                        serialized_entity += "1";
+                    } else {
+                        serialized_entity += "0";
+                    }
+                    if (controllers[j].value().can_go_right) {
+                        serialized_entity += "1";
+                    } else {
+                        serialized_entity += "0";
+                    }
+                    serialized_entity +=  _inputGestion.sf_key_to_binary(controllers[j].value().up);
+                    serialized_entity +=  _inputGestion.sf_key_to_binary(controllers[j].value().down);
+                    serialized_entity +=  _inputGestion.sf_key_to_binary(controllers[j].value().left);
+                    serialized_entity +=  _inputGestion.sf_key_to_binary(controllers[j].value().right);
+                }
+            }
+
+            if (!send || (!_host && !cont)) {
+                continue;
+            }
+
             auto &posistions = current_scene->registry->get_components<Position>();
             for (size_t j = 0; j < posistions.size() && j < types.size(); j++) {
                 if (types[j] && types[j].value().type == base_type.value().type && posistions[j]) {
@@ -281,38 +326,6 @@ void GameEngine::serialize_game()
             auto &swis = current_scene->registry->get_components<SpawnWithInput>();
             auto &sendable = current_scene->registry->get_components<Sendable>();
 
-            // Controller
-            auto &controllers = current_scene->registry->get_components<Controller>();
-            for (size_t j = 0; j < controllers.size() && j < types.size(); j++) {
-                if (types[j] && types[j].value().type == base_type.value().type && controllers[j]) {
-                    serialized_entity += "410";
-                    if (controllers[j].value().can_go_up) {
-                        serialized_entity += "1";
-                    } else {
-                        serialized_entity += "0";
-                    }
-                    if (controllers[j].value().can_go_down) {
-                        serialized_entity += "1";
-                    } else {
-                        serialized_entity += "0";
-                    }
-                    if (controllers[j].value().can_go_left) {
-                        serialized_entity += "1";
-                    } else {
-                        serialized_entity += "0";
-                    }
-                    if (controllers[j].value().can_go_right) {
-                        serialized_entity += "1";
-                    } else {
-                        serialized_entity += "0";
-                    }
-                    serialized_entity +=  _inputGestion.sf_key_to_binary(controllers[j].value().up);
-                    serialized_entity +=  _inputGestion.sf_key_to_binary(controllers[j].value().down);
-                    serialized_entity +=  _inputGestion.sf_key_to_binary(controllers[j].value().left);
-                    serialized_entity +=  _inputGestion.sf_key_to_binary(controllers[j].value().right);
-                }
-            }
-
             serialized_elements.push_back(serialized_entity);
         }
     }
@@ -344,6 +357,77 @@ void GameEngine::unserialize_game()
             current_scene->registry->add_component(e, Type(std::stoi(entity_type)));
         }
         size_t pos = 8;
+
+
+        // Controller
+        if (message.substr(pos, 3) == "410") {
+            if (_host) {
+                std::cout << "CLIENT KNOW NOW" << std::endl;
+                _controllable_sended = true;
+            } else {
+                std::cout << "CLIENT RECEIVE A CONTROLLER" << std::endl;
+            }
+            pos += 3;
+            std::string can_up = message.substr(pos, 1);
+            pos++;
+            std::string can_down = message.substr(pos, 1);
+            pos++;
+            std::string can_left = message.substr(pos, 1);
+            pos++;
+            std::string can_right = message.substr(pos, 1);
+            pos++;
+            std::string key_up = message.substr(pos, 4);
+            pos += 4;
+            std::string key_down = message.substr(pos, 4);
+            pos += 4;
+            std::string key_left = message.substr(pos, 4);
+            pos += 4;
+            std::string key_right = message.substr(pos, 4);
+            pos += 4;
+            bool up = false, down = false, left = false, right = false;
+            if (can_up == "1") {
+                up = true;
+            } else {
+                up = false;
+            }
+            if (can_down == "1") {
+                down = true;
+            } else {
+                down = false;
+            }
+            if (can_left == "1") {
+                left = true;
+            } else {
+                left = false;
+            }
+            if (can_right == "1") {
+                right = true;
+            } else {
+                right = false;
+            }
+            bool exist = false;
+            auto &controllers = current_scene->registry->get_components<Controller>();
+            auto &types = current_scene->registry->get_components<Type>();
+            for (size_t j = 0; j < controllers.size() && j < types.size(); j++) {
+                if (controllers[j] && types[j] && types[j].value().type == std::stoi(entity_type)) {
+                    controllers[j].value().can_go_up = up;
+                    controllers[j].value().can_go_down = down;
+                    controllers[j].value().can_go_left = left;
+                    controllers[j].value().can_go_right = right;
+                    controllers[j].value().up = _inputGestion.binary_to_sf_key(key_up);
+                    controllers[j].value().down = _inputGestion.binary_to_sf_key(key_down);
+                    controllers[j].value().left = _inputGestion.binary_to_sf_key(key_left);
+                    controllers[j].value().right = _inputGestion.binary_to_sf_key(key_right);
+                    exist = true;
+                    break;
+                }
+            }
+            if (!exist) {
+                current_scene->registry->add_component(e, Controller(up, down, left, right, _inputGestion.binary_to_sf_key(key_up), _inputGestion.binary_to_sf_key(key_down), _inputGestion.binary_to_sf_key(key_left), _inputGestion.binary_to_sf_key(key_right)));
+            }
+        }
+
+
         // Position
         if (message.substr(pos, 3) == "401") {
             std::string x;
@@ -466,6 +550,9 @@ void GameEngine::unserialize_game()
         }
         // Sprite
         if (message.substr(pos, 3) == "408") {
+            if (!_host) {
+                std::cout << "CLIENT RECEIVE A SPRITE" << std::endl;
+            }
             pos += 3;
             std::string texture_id = message.substr(pos, 5);
             pos += 5;
@@ -491,6 +578,7 @@ void GameEngine::unserialize_game()
                 }
             }
             if (!exist) {
+                std::cout << "I CREATE SPRITE" << std::endl;
                 current_scene->registry->add_component(e, Sprite(get_texture_path(std::stoi(texture_id)), std::stod(angle)));
             }
         }
@@ -532,68 +620,6 @@ void GameEngine::unserialize_game()
                 current_scene->registry->add_component(e, Size(std::stod(width), std::stod(height)));
             }
         }
-        // Controller
-        if (message.substr(pos, 3) == "410") {
-            pos += 3;
-            std::string can_up = message.substr(pos, 1);
-            pos++;
-            std::string can_down = message.substr(pos, 1);
-            pos++;
-            std::string can_left = message.substr(pos, 1);
-            pos++;
-            std::string can_right = message.substr(pos, 1);
-            pos++;
-            std::string key_up = message.substr(pos, 4);
-            pos += 4;
-            std::string key_down = message.substr(pos, 4);
-            pos += 4;
-            std::string key_left = message.substr(pos, 4);
-            pos += 4;
-            std::string key_right = message.substr(pos, 4);
-            pos += 4;
-            bool up = false, down = false, left = false, right = false;
-            if (can_up == "1") {
-                up = true;
-            } else {
-                up = false;
-            }
-            if (can_down == "1") {
-                down = true;
-            } else {
-                down = false;
-            }
-            if (can_left == "1") {
-                left = true;
-            } else {
-                left = false;
-            }
-            if (can_right == "1") {
-                right = true;
-            } else {
-                right = false;
-            }
-            bool exist = false;
-            auto &controllers = current_scene->registry->get_components<Controller>();
-            auto &types = current_scene->registry->get_components<Type>();
-            for (size_t j = 0; j < controllers.size() && j < types.size(); j++) {
-                if (controllers[j] && types[j] && types[j].value().type == std::stoi(entity_type)) {
-                    controllers[j].value().can_go_up = up;
-                    controllers[j].value().can_go_down = down;
-                    controllers[j].value().can_go_left = left;
-                    controllers[j].value().can_go_right = right;
-                    controllers[j].value().up = _inputGestion.binary_to_sf_key(key_up);
-                    controllers[j].value().down = _inputGestion.binary_to_sf_key(key_down);
-                    controllers[j].value().left = _inputGestion.binary_to_sf_key(key_left);
-                    controllers[j].value().right = _inputGestion.binary_to_sf_key(key_right);
-                    exist = true;
-                    break;
-                }
-            }
-            if (!exist) {
-                current_scene->registry->add_component(e, Controller(up, down, left, right, _inputGestion.binary_to_sf_key(key_up), _inputGestion.binary_to_sf_key(key_down), _inputGestion.binary_to_sf_key(key_left), _inputGestion.binary_to_sf_key(key_right)));
-            }
-        }
-
         // Speed
         if (message.substr(pos, 3) == "407") {
             std::string speed;
@@ -622,7 +648,9 @@ void GameEngine::unserialize_game()
             }
         }
     }
-    _received_messages.clear();
+    if (_received_messages.size() > 0) {
+       _received_messages.clear();
+    }
 }
 
 void GameEngine::start_send_host()
@@ -639,7 +667,9 @@ void GameEngine::start_send_host()
                     _socket->send_to(asio::buffer(message), client.getEndpoint());
                 }
             }
-            _to_send_messages.clear();
+            if (_to_send_messages.size() > 0) {
+                _to_send_messages.clear();
+            }
             _timer->expires_after(std::chrono::milliseconds(1000/30));
             start_send_host();
         } else {
@@ -736,7 +766,7 @@ void GameEngine::start_receive_join()
     _socket->async_receive_from(asio::buffer(_recv_buffer), _server_endpoint, [this](std::error_code ec, std::size_t bytes_transferred) {
         if (!ec) {
             std::string message(_recv_buffer.data(), bytes_transferred);
-            // std::cout << "Received_client: " << message << " cfrom " << _server_endpoint.address().to_string() << ":" << _server_endpoint.port() << std::endl;
+            std::cout << "Received_client: " << message << " cfrom " << _server_endpoint.address().to_string() << ":" << _server_endpoint.port() << std::endl;
 
             if (message.substr(0, 3) == "122") {
                 _to_send_messages.push_back("133");
@@ -761,7 +791,7 @@ void GameEngine::update()
             _io_context.run();
         } else {
             while (_window->isOpen()) {
-                if (_game_is_running) {
+                if (_game_is_running && _received_messages.size() > 0) {
                     unserialize_game();
                 }
                 _window->clear(sf::Color::Black);
@@ -770,8 +800,8 @@ void GameEngine::update()
                         _window->close();
                     }
                     quit_system(*current_scene->registry.get());
-                    controller_system(*current_scene->registry.get());
                 }
+                controller_system(*current_scene->registry.get());
                 position_system(*current_scene->registry.get());
                 draw_system(*current_scene->registry.get());
                 _window->display();
