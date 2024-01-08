@@ -30,6 +30,7 @@ int main(int ac, char **av)
         ip = "10.19.254.250";
 
     ecs.create_texture("assets/player.png");
+    ecs.create_texture("assets/player2.png");
     ecs.create_texture("assets/enemy.png");
 
     ecs.setWindow("MyGame", 30, true);

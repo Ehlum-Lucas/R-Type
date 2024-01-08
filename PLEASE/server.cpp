@@ -19,6 +19,7 @@ int main(int ac, char **av)
 
     // ecs.setWindow("MyGame", 60, true);
     ecs.create_texture("assets/player.png");
+    ecs.create_texture("assets/player2.png");
     ecs.create_texture("assets/enemy.png");
 
     ecs.create_scene("game");
@@ -34,7 +35,7 @@ int main(int ac, char **av)
     ecs.add_component_to_prefab("player", BoxCollider("player"));
 
     ecs.on_new_player_load_prefab("player");
-    std::vector<std::string> atlas = {"assets/player.png", "assets/player.png", "assets/player.png", "assets/player.png"};
+    std::vector<std::string> atlas = {"assets/player.png", "assets/player2.png", "assets/player.png", "assets/player.png"};
     ecs.set_player_atlas_texture(atlas);
 
     for (int i = 0; i < 100; ++i) {
