@@ -27,7 +27,7 @@ int main(int ac, char **av)
     ecs.add_component_to_prefab("player", Position(200, 500));
     ecs.add_component_to_prefab("player", Velocity(0.0, 0.0));
     ecs.add_component_to_prefab("player", Controller(true, true, true, true, "up", "down", "left", "right"));
-    ecs.add_component_to_prefab("player", Speed(0.1));
+    ecs.add_component_to_prefab("player", Speed(10));
     ecs.add_component_to_prefab("player", Drawable());
     ecs.add_component_to_prefab("player", Size(0.2, 0.2));
     ecs.add_component_to_prefab("player", Sprite("assets/player.png", 90.0));

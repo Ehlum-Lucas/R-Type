@@ -360,7 +360,7 @@ void GameEngine::unserialize_game()
 
 
         // Controller
-        if (message.substr(pos, 3) == "410") {
+        if ((pos + 23) <= message.size() && message.substr(pos, 3) == "410") {
             if (_host) {
                 std::cout << "CLIENT KNOW NOW" << std::endl;
                 _controllable_sended = true;
@@ -429,7 +429,7 @@ void GameEngine::unserialize_game()
 
 
         // Position
-        if (message.substr(pos, 3) == "401") {
+        if ((pos + 33) <= message.size() && message.substr(pos, 3) == "401") {
             std::string x;
             pos += 3;
             if (message[pos] == '1') {
@@ -467,7 +467,7 @@ void GameEngine::unserialize_game()
             }
         }
         // Velocity
-        if (message.substr(pos, 3) == "402") {
+        if ((pos + 33) <= message.size() && message.substr(pos, 3) == "402") {
             std::string vx;
             pos += 3;
             if (message[pos] == '1') {
@@ -505,7 +505,7 @@ void GameEngine::unserialize_game()
             }
         }
         // Drawable
-        if (message.substr(pos, 3) == "403") {
+        if ((pos + 3) <= message.size() && message.substr(pos, 3) == "403") {
             pos += 3;
             bool exist = false;
             auto &drawables = current_scene->registry->get_components<Drawable>();
@@ -522,7 +522,7 @@ void GameEngine::unserialize_game()
         }
 
         // Speed
-        if (message.substr(pos, 3) == "407") {
+        if ((pos + 18) <= message.size() && message.substr(pos, 3) == "407") {
             std::string speed;
             pos += 3;
             if (message[pos] == '1') {
@@ -549,7 +549,7 @@ void GameEngine::unserialize_game()
             }
         }
         // Sprite
-        if (message.substr(pos, 3) == "408") {
+        if ((pos + 23) <= message.size() && message.substr(pos, 3) == "408") {
             if (!_host) {
                 std::cout << "CLIENT RECEIVE A SPRITE" << std::endl;
             }
@@ -583,7 +583,7 @@ void GameEngine::unserialize_game()
             }
         }
         // Size 
-        if (message.substr(pos, 3) == "409") {
+        if ((pos + 33) <= message.size() && message.substr(pos, 3) == "409") {
             std::string width;
             pos += 3;
             if (message[pos] == '1') {
@@ -621,7 +621,7 @@ void GameEngine::unserialize_game()
             }
         }
         // Speed
-        if (message.substr(pos, 3) == "407") {
+        if ((pos + 18) <= message.size() && message.substr(pos, 3) == "407") {
             std::string speed;
             pos += 3;
             if (message[pos] == '1') {

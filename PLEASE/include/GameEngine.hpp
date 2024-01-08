@@ -40,7 +40,7 @@
                 } else {
                     _window = std::make_shared<sf::RenderWindow>(sf::VideoMode(width, height), title);
                 }
-                // _window->setFramerateLimit(framerate);
+                _window->setFramerateLimit(framerate);
             }
 
             void update();
