@@ -37,19 +37,20 @@ int main(int ac, char **av)
     std::vector<std::string> atlas = {"assets/player.png", "assets/player.png", "assets/player.png", "assets/player.png"};
     ecs.set_player_atlas_texture(atlas);
 
-    // for (int i = 0; i < 100; ++i) {
-    //     Entity enemy = ecs.scene("game")->create_entity();
-    //     int posX = rand() % 15000 + 2000; // Random x position between 2000 and 4000
-    //     int posY = rand() % 951 + 50; // Random y position between 50 and 1000
-    //     ecs.scene("game")->registry->add_component(enemy, Type(ecs.e_type++));
-    //     ecs.scene("game")->registry->add_component(enemy, Position(posX, posY));
-    //     ecs.scene("game")->registry->add_component(enemy, Velocity(-12.0, 0.0));
-    //     ecs.scene("game")->registry->add_component(enemy, Drawable());
-    //     ecs.scene("game")->registry->add_component(enemy, Size(0.2, 0.2));
-    //     ecs.scene("game")->registry->add_component(enemy, Sprite("assets/enemy.png", 90.0));
-    //     // ecs.scene("game")->registry->add_component(enemy, BoxCollider("enemy"));
-    //     // ecs.scene("game")->registry->add_component(enemy, Shootable());
-    // }
+    for (int i = 0; i < 100; ++i) {
+        Entity enemy = ecs.scene("game")->create_entity();
+        int posX = rand() % 15000 + 2000; // Random x position between 2000 and 4000
+        int posY = rand() % 951 + 50; // Random y position between 50 and 1000
+        ecs.scene("game")->registry->add_component(enemy, Type(ecs.e_type++));
+        ecs.scene("game")->registry->add_component(enemy, Position(posX, posY));
+        ecs.scene("game")->registry->add_component(enemy, Velocity(-12.0, 0.0));
+        ecs.scene("game")->registry->add_component(enemy, Drawable());
+        ecs.scene("game")->registry->add_component(enemy, Size(0.2, 0.2));
+        ecs.scene("game")->registry->add_component(enemy, Sprite("assets/enemy.png", 90.0));
+        ecs.scene("game")->registry->add_component(enemy, Send());
+        // ecs.scene("game")->registry->add_component(enemy, BoxCollider("enemy"));
+        // ecs.scene("game")->registry->add_component(enemy, Shootable());
+    }
 
     ecs.hostOnlineGame(ip, "4080");
     ecs.load_scene("game");

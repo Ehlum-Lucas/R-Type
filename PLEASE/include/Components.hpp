@@ -579,6 +579,12 @@
             Sendable() {};
     };
 
+    class Send {
+        public:
+            Send() {};
+            bool sended = false;
+    };
+
 
     // class ComponentFactory {
     //     public:

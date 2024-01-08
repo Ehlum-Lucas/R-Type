@@ -118,6 +118,21 @@ void GameEngine::serialize_game()
             bool send = true;
             bool cont = false;
 
+            // Send
+            // auto &sends = current_scene->registry->get_components<Send>();
+            // for (size_t j = 0; j < sends.size() && j < types.size(); j++) {
+            //     if (types[j] && types[j].value().type == base_type.value().type && sends[j]) {
+            //         if (sends[j].value().sended) {
+            //             send = false;
+            //         }
+            //         sends[j].value().sended = true;
+            //     }
+            // }
+
+            // if (!send) {
+                // continue;
+            // }
+
             // Controller
             auto &controllers = current_scene->registry->get_components<Controller>();
             for (size_t j = 0; j < controllers.size() && j < types.size(); j++) {
@@ -362,7 +377,6 @@ void GameEngine::unserialize_game()
         // Controller
         if ((pos + 23) <= message.size() && message.substr(pos, 3) == "410") {
             if (_host) {
-                std::cout << "CLIENT KNOW NOW" << std::endl;
                 _controllable_sended = true;
             } else {
                 std::cout << "CLIENT RECEIVE A CONTROLLER" << std::endl;
@@ -664,7 +678,13 @@ void GameEngine::start_send_host()
             for (auto& client : _clients) {
                 for (auto& message : _to_send_messages) {
                     // std::cout << "Send to " << client.getEndpoint().address().to_string() << ":" << client.getEndpoint().port() << " : " << message << std::endl;
-                    _socket->send_to(asio::buffer(message), client.getEndpoint());
+                    std::string e_type_ser = message.substr(0, 8);
+                    auto e_check = std::find(client.entities_sended.begin(), client.entities_sended.end(), e_type_ser);
+
+                    if (e_check == client.entities_sended.end()) {
+                        _socket->send_to(asio::buffer(message), client.getEndpoint());
+                        client.entities_sended.push_back(e_type_ser);
+                    }
                 }
             }
             if (_to_send_messages.size() > 0) {
@@ -683,6 +703,8 @@ void GameEngine::start_receive_host()
     _socket->async_receive_from(asio::buffer(_recv_buffer), _remote_endpoint, [this](std::error_code ec, std::size_t bytes_transferred) {
         if (!ec) {
             std::string message(_recv_buffer.data(), bytes_transferred);
+
+            std::cout << "REICEIVED MESSAGE: " << message << std::endl;
 
             // Check if th1e client is already in the list
             auto cl = std::find_if(_clients.begin(), _clients.end(), [this](const ServerClient& client) {

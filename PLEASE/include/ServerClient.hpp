@@ -33,6 +33,7 @@
             std::string string_type;
             std::chrono::steady_clock::time_point lastMessageTime;
             size_t entity_id;
+            std::vector<std::string> entities_sended;
             // bool quit = false;
         private:
             asio::ip::udp::endpoint endpoint_;
