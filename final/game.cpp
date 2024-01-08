@@ -35,6 +35,7 @@ int main()
     // ecs.add_component_to_prefab("bullet", Sprite("assets/bullet.png", 0.0));
     // ecs.add_component_to_prefab("bullet", BoxCollider("bullet", true));
     // ecs.add_component_to_prefab("bullet", OnCollideDestroy("enemy"));
+    // ecs.add_component_to_prefab("bullet", Sound("assets/laser.ogg", 20.0, false));
 
     // Entity player = ecs.scene("game")->create_entity();
     // ecs.scene("game")->registry->add_component(player, Position(150, 500));

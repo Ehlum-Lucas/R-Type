@@ -54,6 +54,12 @@ void GameEngine::add_prefab_to_a_scene(Registry& r, Entity &e, std::string prefa
         } else if (component.type() == typeid(SpawnWithInput)) {
             auto &comp = std::any_cast<SpawnWithInput&>(component);
             r.add_component_from_prefab(e, comp);
+        } else if (component.type() == typeid(OnCollideDestroy)) {
+            auto &comp = std::any_cast<OnCollideDestroy&>(component);
+            r.add_component_from_prefab(e, comp);
+        } else if (component.type() == typeid(Sound)) {
+            auto &comp = std::any_cast<Sound&>(component);
+            r.add_component_from_prefab(e, comp);
         }
     }
 }
@@ -90,6 +96,7 @@ void GameEngine::update()
             gravity_system(*current_scene->registry.get());
             collide_system(*current_scene->registry.get());
             draw_system(*current_scene->registry.get());
+            sound_system(*current_scene->registry.get());
             _window->display();
         }
     }

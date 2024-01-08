@@ -44,6 +44,7 @@ endif()
 
 # Spécifiez les fichiers source
 set(SOURCES
+            src/sound_system.cpp
             src/collide_system.cpp
             src/controller_system.cpp
             src/draw_system.cpp

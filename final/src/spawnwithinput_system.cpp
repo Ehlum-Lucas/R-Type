@@ -84,6 +84,9 @@ void spawn_with_input_system(Registry &r)
                         } else if (component.type() == typeid(OnCollideDestroy)) {
                             auto &comp = std::any_cast<OnCollideDestroy&>(component);
                             r.add_component_from_prefab(e, comp);
+                        } else if (component.type() == typeid(Sound)) {
+                            auto &comp = std::any_cast<Sound&>(component);
+                            r.add_component_from_prefab(e, comp);
                         }
                     }
                     spawnwithinput.value().timer = 0;
