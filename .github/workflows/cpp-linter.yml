@@ -16,6 +16,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           style: llvm
+          source: 'PLEASE/**/*.c PLEASE/**/*.cc PLEASE/**/*.cpp PLEASE/**/*.cxx PLEASE/**/*.h PLEASE/**/*.hh PLEASE/**/*.hpp PLEASE/**/*.hxx'
           thread-comments: ${{ github.event_name == 'push' && 'update' }}
 
       - name: Fail fast?!
