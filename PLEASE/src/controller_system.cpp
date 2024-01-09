@@ -37,19 +37,19 @@ void controller_system(Registry &r) {
 
             if (sf::Keyboard::isKeyPressed(controller.value().up) && controller.value().can_go_up) {
                 velocity.value().vy = -speed.value().speed;
-                std::cout << "UP" << std::endl;
+                // std::cout << "UP" << std::endl;
             }
             if (sf::Keyboard::isKeyPressed(controller.value().down) && controller.value().can_go_down) {
                 velocity.value().vy = speed.value().speed;
-                std::cout << "DOWN" << std::endl;
+                // std::cout << "DOWN" << std::endl;
             }
             if (sf::Keyboard::isKeyPressed(controller.value().left) && controller.value().can_go_left) {
                 velocity.value().vx = -speed.value().speed;
-                std::cout << "LEFT" << std::endl;
+                // std::cout << "LEFT" << std::endl;
             }
             if (sf::Keyboard::isKeyPressed(controller.value().right) && controller.value().can_go_right) {
                 velocity.value().vx = speed.value().speed;
-                std::cout << "RIGHT" << std::endl;
+                // std::cout << "RIGHT" << std::endl;
             }
         }
     }
