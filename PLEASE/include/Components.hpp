@@ -579,6 +579,14 @@
             Sendable() {};
     };
 
+    class Parralax {
+        public:
+            Parralax(float _start_pos_x, float _start_pos_y, float _reset_pos = 0) {reset_pos = reset_pos; start_pos_x = _start_pos_x; start_pos_y = _start_pos_y;};
+            float reset_pos;
+            float start_pos_x;
+            float start_pos_y;
+    };
+
     // class ComponentFactory {
     //     public:
     //         void add_any_component_to_registry(Entity e, std::any component, Registry &r)

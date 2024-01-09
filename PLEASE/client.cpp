@@ -34,10 +34,19 @@ int main(int ac, char **av)
     ecs.create_texture("assets/player3.png");
     ecs.create_texture("assets/player4.png");
     ecs.create_texture("assets/enemy.png");
+    ecs.create_texture("assets/spaceBackground.png");
 
     ecs.setWindow("MyGame", 30, true);
 
     ecs.create_scene("game");
+
+    Entity parralax = ecs.scene("game")->create_entity();
+    ecs.scene("game")->registry->add_component(parralax, Position(1920, 540));
+    ecs.scene("game")->registry->add_component(parralax, Drawable());
+    ecs.scene("game")->registry->add_component(parralax, Size(1, 1));
+    ecs.scene("game")->registry->add_component(parralax, Velocity(-1.0, 0.0));
+    ecs.scene("game")->registry->add_component(parralax, Sprite("assets/spaceBackground.png", 0.0));
+    ecs.scene("game")->registry->add_component(parralax, Parralax(1920, 540, -960));
 
     // ecs.create_prefab("bullet");
     // ecs.add_component_to_prefab("bullet", Position(0, 0));
