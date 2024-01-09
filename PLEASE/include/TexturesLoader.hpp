@@ -16,12 +16,6 @@
             TexturesLoader();
             ~TexturesLoader();
             std::shared_ptr<sf::Texture> get_texture(std::string texture_path) {
-                std::cout << "GETTING TEXTURE " << texture_path << std::endl;
-
-                std::cout << "TEXTURES:" << std::endl;
-                for (auto it = textures.begin(); it != textures.end(); ++it) {
-                    std::cout << "texture " << it->first << std::endl;
-                }
                 return textures[texture_path];
             }
             void set_texture(std::string texture_path) {

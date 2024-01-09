@@ -31,6 +31,8 @@ int main(int ac, char **av)
 
     ecs.create_texture("assets/player.png");
     ecs.create_texture("assets/player2.png");
+    ecs.create_texture("assets/player3.png");
+    ecs.create_texture("assets/player4.png");
     ecs.create_texture("assets/enemy.png");
 
     ecs.setWindow("MyGame", 30, true);

@@ -52,7 +52,6 @@ Scene::Scene(std::string _name, std::shared_ptr<sf::RenderWindow> window, sf::Ev
     registry->register_component<SpawnWithInput>();
     registry->register_component<Type>();
     registry->register_component<Sendable>();
-    registry->register_component<Send>();
 }
 
 /**

@@ -579,13 +579,6 @@
             Sendable() {};
     };
 
-    class Send {
-        public:
-            Send() {};
-            bool sended = false;
-    };
-
-
     // class ComponentFactory {
     //     public:
     //         void add_any_component_to_registry(Entity e, std::any component, Registry &r)

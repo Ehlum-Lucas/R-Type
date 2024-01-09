@@ -118,21 +118,6 @@ void GameEngine::serialize_game()
             bool send = true;
             bool cont = false;
 
-            // Send
-            // auto &sends = current_scene->registry->get_components<Send>();
-            // for (size_t j = 0; j < sends.size() && j < types.size(); j++) {
-            //     if (types[j] && types[j].value().type == base_type.value().type && sends[j]) {
-            //         if (sends[j].value().sended) {
-            //             send = false;
-            //         }
-            //         sends[j].value().sended = true;
-            //     }
-            // }
-
-            // if (!send) {
-                // continue;
-            // }
-
             // Controller
             auto &controllers = current_scene->registry->get_components<Controller>();
             for (size_t j = 0; j < controllers.size() && j < types.size(); j++) {
@@ -683,9 +668,12 @@ void GameEngine::start_send_host()
 
                     if (e_check == client.entities_sended.end()) {
                         _socket->send_to(asio::buffer(message), client.getEndpoint());
-                        client.entities_sended.push_back(e_type_ser);
+                        if (client.connected && client.created) {
+                            client.entities_sended.push_back(e_type_ser);
+                        }
                     }
                 }
+            
             }
             if (_to_send_messages.size() > 0) {
                 _to_send_messages.clear();
@@ -704,7 +692,7 @@ void GameEngine::start_receive_host()
         if (!ec) {
             std::string message(_recv_buffer.data(), bytes_transferred);
 
-            std::cout << "REICEIVED MESSAGE: " << message << std::endl;
+            // std::cout << "REICEIVED MESSAGE: " << message << std::endl;
 
             // Check if th1e client is already in the list
             auto cl = std::find_if(_clients.begin(), _clients.end(), [this](const ServerClient& client) {
@@ -762,6 +750,7 @@ void GameEngine::start_send_join()
         if (!ec) {
             if (!_created && !_connected) {
                 _to_send_messages.push_back("111");
+                std::cout << "SEND 111" << std::endl;
             }
             for (auto& message : _to_send_messages) {
                 _socket->send_to(asio::buffer(message), _server_endpoint);
@@ -814,6 +803,7 @@ void GameEngine::update()
         } else {
             while (_window->isOpen()) {
                 if (_game_is_running && _received_messages.size() > 0) {
+                    std::cout << "GAME IS RUNNING" << std::endl;
                     unserialize_game();
                 }
                 _window->clear(sf::Color::Black);

@@ -20,6 +20,8 @@ int main(int ac, char **av)
     // ecs.setWindow("MyGame", 60, true);
     ecs.create_texture("assets/player.png");
     ecs.create_texture("assets/player2.png");
+    ecs.create_texture("assets/player3.png");
+    ecs.create_texture("assets/player4.png");
     ecs.create_texture("assets/enemy.png");
 
     ecs.create_scene("game");
@@ -35,7 +37,7 @@ int main(int ac, char **av)
     ecs.add_component_to_prefab("player", BoxCollider("player"));
 
     ecs.on_new_player_load_prefab("player");
-    std::vector<std::string> atlas = {"assets/player.png", "assets/player2.png", "assets/player.png", "assets/player.png"};
+    std::vector<std::string> atlas = {"assets/player.png", "assets/player2.png", "assets/player3.png", "assets/player4.png"};
     ecs.set_player_atlas_texture(atlas);
 
     for (int i = 0; i < 100; ++i) {
@@ -48,7 +50,6 @@ int main(int ac, char **av)
         ecs.scene("game")->registry->add_component(enemy, Drawable());
         ecs.scene("game")->registry->add_component(enemy, Size(0.2, 0.2));
         ecs.scene("game")->registry->add_component(enemy, Sprite("assets/enemy.png", 90.0));
-        ecs.scene("game")->registry->add_component(enemy, Send());
         // ecs.scene("game")->registry->add_component(enemy, BoxCollider("enemy"));
         // ecs.scene("game")->registry->add_component(enemy, Shootable());
     }
