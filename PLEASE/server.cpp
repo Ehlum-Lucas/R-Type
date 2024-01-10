@@ -7,15 +7,10 @@
 
 #include "GameEngine.hpp"
 
-int main(int ac, char **av)
+int main()
 {
     GameEngine ecs;
     std::string ip = "";
-
-    if (ac == 2)
-        ip = av[1];
-    else
-        ip = "192.168.1.98";
 
     // ecs.setWindow("MyGame", 60, true);
     ecs.create_texture("assets/player.png");
@@ -23,6 +18,7 @@ int main(int ac, char **av)
     ecs.create_texture("assets/player3.png");
     ecs.create_texture("assets/player4.png");
     ecs.create_texture("assets/enemy.png");
+    ecs.create_texture("assets/bullet.png");
 
     ecs.create_scene("game");
 
@@ -35,6 +31,14 @@ int main(int ac, char **av)
     ecs.add_component_to_prefab("player", Size(0.2, 0.2));
     ecs.add_component_to_prefab("player", Sprite("assets/player.png", 90.0));
     ecs.add_component_to_prefab("player", BoxCollider("player"));
+    ecs.add_component_to_prefab("player", SpawnWithInput("bullet", "space", 20.0, true));
+    ecs.create_prefab("bullet");
+    ecs.add_component_to_prefab("bullet", Position(0, 0));
+    ecs.add_component_to_prefab("bullet", Velocity(50.0, 0.0));
+    ecs.add_component_to_prefab("bullet", Drawable());
+    ecs.add_component_to_prefab("bullet", Size(0.1, 0.1));
+    ecs.add_component_to_prefab("bullet", Sprite("assets/bullet.png", 0.0));
+    ecs.add_component_to_prefab("bullet", BoxCollider("bullet"));
 
     ecs.on_new_player_load_prefab("player");
     std::vector<std::string> atlas = {"assets/player.png", "assets/player2.png", "assets/player3.png", "assets/player4.png"};
@@ -54,7 +58,7 @@ int main(int ac, char **av)
         // ecs.scene("game")->registry->add_component(enemy, Shootable());
     }
 
-    ecs.hostOnlineGame(ip, "4080");
+    ecs.hostOnlineGame("4080");
     ecs.load_scene("game");
     ecs.update();
     return 0;

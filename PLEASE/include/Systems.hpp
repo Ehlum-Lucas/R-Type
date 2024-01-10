@@ -23,7 +23,7 @@
     void collide_system(Registry &r);
     std::string onclickloadscene_system(Registry &r);
     std::vector<std::string> serialize_components(Registry &r);
-    void spawn_with_input_system(Registry &r);
     void parralax_system (Registry &r);
+    std::string  spawn_with_input_system(Registry &r, bool online);
 
 #endif /* !SYSTEMS_HPP_ */

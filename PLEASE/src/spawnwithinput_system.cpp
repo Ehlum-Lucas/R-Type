@@ -20,7 +20,7 @@
  * "Registry" class.
  */
 
-void spawn_with_input_system(Registry &r)
+std::string spawn_with_input_system(Registry &r, bool online)
 {
     auto &spawnwithinputs = r.get_components<SpawnWithInput>();
     auto &positions = r.get_components<Position>();
@@ -33,13 +33,46 @@ void spawn_with_input_system(Registry &r)
 
             if (spawnwithinput.value().timer >= spawnwithinput.value().delay) {
                 if (sf::Keyboard::isKeyPressed(spawnwithinput.value().input)) {
+
                     auto prefab_components = r.get_prefab(spawnwithinput.value().prefab_name);
 
+                    if (online) {
+                        std::string ser = "";
+                        std::string bc;
+                        std::string ac;
+                        int c = 1;
+                        spawnwithinput.value().timer = 0;
+                        ser += spawnwithinput.value().prefab_name;
+                        ser += ";";
+                        if (spawnwithinput.value().at_parent_pos) {
+                            if (pos.value().x < 0.0) {
+                                c = -1;
+                                ser += "1";
+                            } else {
+                                ser += "0";
+                            }
+                            separateString(std::to_string(pos.value().x * c), bc, ac);
+                            ser += bc;
+                            ser += ac;
+                            if (pos.value().y < 0.0) {
+                                c = -1;
+                                ser += "1";
+                            } else {
+                                ser += "0";
+                            }
+                            separateString(std::to_string(pos.value().y * c), bc, ac);
+                            ser += bc;
+                            ser += ac;
+                        }
+                        return ser;
+                    }
                     Entity e = r.create_entity();
                     r.add_component(e, Id(e.get_id()));
+                
                     for (auto component : prefab_components) {
                         if (component.type() == typeid(Sprite)) {
                             auto &sprite = std::any_cast<Sprite&>(component);
+
                             r.add_component_from_prefab(e, sprite);
                         } else if (component.type() == typeid(Position)) {
                             auto &position = std::any_cast<Position&>(component);
@@ -81,6 +114,14 @@ void spawn_with_input_system(Registry &r)
                         } else if (component.type() == typeid(CircleShape)) {
                             auto &comp = std::any_cast<CircleShape&>(component);
                             r.add_component_from_prefab(e, comp);
+                        } else if (component.type() == typeid(Send)) {
+                            auto &comp = std::any_cast<Send&>(component);
+                            r.add_component_from_prefab(e, comp);
+                        }else if (component.type() == typeid(SpawnWithInput)) {
+                            auto &comp = std::any_cast<SpawnWithInput&>(component);
+                            r.add_component_from_prefab(e, comp);
+                        } else {
+                            std::cout << "Component type not found" << std::endl;
                         }
                     }
                     spawnwithinput.value().timer = 0;
@@ -98,4 +139,5 @@ void spawn_with_input_system(Registry &r)
             // }
         }
     }
+    return "";
 }

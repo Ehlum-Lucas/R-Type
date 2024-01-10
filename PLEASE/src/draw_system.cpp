@@ -29,6 +29,8 @@ void draw_system(Registry &r)
     auto &sprites = r.get_components<Sprite>();
     auto &sizes = r.get_components<Size>();
 
+    // std::cout << "sprites.size() = " << sprites.size() << std::endl;
+
     for (size_t i = 0; i < drawables.size() && i < positions.size() && i < rectangle_shapes.size() && i < colors.size(); ++i) {
         auto &drawable = drawables[i];
         auto &position = positions[i];

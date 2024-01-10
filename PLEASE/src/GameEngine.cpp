@@ -10,20 +10,27 @@
 
 #include <any>
 
-void GameEngine::add_prefab_to_a_scene(Registry& r, Entity &e, std::string prefab_name)
+void GameEngine::add_prefab_to_a_scene(Registry& r, Entity &e, std::string prefab_name, bool is_player, bool cp = false, float x = 0, float y = 0)
 {
     auto prefab_components = r.get_prefab(prefab_name);
 
     for (auto component : prefab_components) {
         if (component.type() == typeid(Sprite)) {
             auto &sprite = std::any_cast<Sprite&>(component);
-            // r.add_component_from_prefab(e, sprite);
-            std::string skin = get_available_player_skin();
-            std::cout << "skin: [" << skin << "]" << std::endl;
-            r.add_component(e, Sprite(skin, sprite.angle));
+            if (is_player) {
+                std::string skin = get_available_player_skin();
+                std::cout << "skin: [" << skin << "]" << std::endl;
+                r.add_component(e, Sprite(skin, sprite.angle));
+            } else {
+                r.add_component_from_prefab(e, sprite);
+            }
         } else if (component.type() == typeid(Position)) {
             auto &position = std::any_cast<Position&>(component);
-            r.add_component_from_prefab(e, position);
+            if (cp) {
+                r.add_component(e, Position(x, y));
+            } else {
+                r.add_component_from_prefab(e, position);
+            }
         } else if (component.type() == typeid(Velocity)) {
             auto &velocity = std::any_cast<Velocity&>(component);
             r.add_component_from_prefab(e, velocity);
@@ -64,38 +71,6 @@ void GameEngine::add_prefab_to_a_scene(Registry& r, Entity &e, std::string prefa
     }
 }
 
-void separateString(const std::string& input, std::string& beforeComma, std::string& afterComma) {
-    size_t commaPos = input.find('.');
-    beforeComma = "";
-    afterComma = "";
-    if (commaPos != std::string::npos) {
-        beforeComma = input.substr(0, commaPos);
-        afterComma = input.substr(commaPos + 1);
-    } else {
-        beforeComma = input;
-        afterComma = "";
-    }
-
-    // while (afterComma.length() > 1 && afterComma.back() == '0') {
-    //     afterComma.pop_back();
-    // }
-
-    while (beforeComma.length() < 7) {
-        beforeComma = "0" + beforeComma;
-    }
-
-    while (afterComma.length() < 7) {
-        afterComma += "0";
-    }
-
-}
-
-void set_size_string_to(std::string &str, std::size_t size) {
-    while (str.length() < size) {
-        str = "0" + str;
-    }
-}
-
 void GameEngine::serialize_game()
 {
     auto &types = current_scene->registry->get_components<Type>();
@@ -109,6 +84,7 @@ void GameEngine::serialize_game()
             std::string bc;
             std::string ac;
             serialized_entity += std::to_string(base_type.value().type);
+            std::string string_type = serialized_entity;
             auto &types = current_scene->registry->get_components<Type>();
             if (types.size() <= 0) {
                 break;
@@ -117,7 +93,17 @@ void GameEngine::serialize_game()
 
             bool send = true;
             bool cont = false;
+            bool force_send = false;
 
+            auto &sends = current_scene->registry->get_components<Send>();
+            for (size_t j = 0; j < sends.size() && j < types.size(); j++) {
+                if (types[j] && types[j].value().type == base_type.value().type && sends[j]) {
+                    std::cout << "OH UNE BALLE GARS " << std::endl;
+                    force_send = true;
+                    break;
+                }
+            }
+            
             // Controller
             auto &controllers = current_scene->registry->get_components<Controller>();
             for (size_t j = 0; j < controllers.size() && j < types.size(); j++) {
@@ -155,7 +141,7 @@ void GameEngine::serialize_game()
                 }
             }
 
-            if (!send || (!_host && !cont)) {
+            if ((!send && !force_send) || (!_host && !cont && !force_send)) {
                 continue;
             }
 
@@ -323,7 +309,43 @@ void GameEngine::serialize_game()
             }
             auto &bcolliders = current_scene->registry->get_components<BoxCollider>();
             auto &onclickloadscenes = current_scene->registry->get_components<OnClickLoadScene>();
+            // SpawnWithInput
             auto &swis = current_scene->registry->get_components<SpawnWithInput>();
+            for (size_t j = 0; j < swis.size() && j < types.size(); j++) {
+                if (types[j] && types[j].value().type == base_type.value().type && swis[j]) {
+                    serialized_entity += "411";
+
+                    std::string prefab_id = std::to_string(get_prefab_id_with_name(swis[j].value().prefab_name));
+                    set_size_string_to(prefab_id, 5); 
+                    serialized_entity += prefab_id;
+                    serialized_entity += _inputGestion.sf_key_to_binary(swis[j].value().input);
+                    if (swis[j].value().delay < 0.0) {
+                        c = -1;
+                        serialized_entity += "1";
+                    } else {
+                        c = 1;
+                        serialized_entity += "0";
+                    }
+                    separateString(std::to_string(swis[j].value().delay * c), bc, ac);
+                    serialized_entity += bc;
+                    serialized_entity += ac;
+                    if (swis[j].value().at_parent_pos) {
+                        serialized_entity += "1";
+                    } else {
+                        serialized_entity += "0";
+                    }
+                    if (swis[j].value().angle < 0.0) {
+                        serialized_entity += "1";
+                        c = -1;
+                    } else {
+                        serialized_entity += "0";
+                        c = 1;
+                    }
+                    separateString(std::to_string(swis[j].value().angle * c), bc, ac);
+                    serialized_entity += bc;
+                    serialized_entity += ac;
+                }
+            }
             auto &sendable = current_scene->registry->get_components<Sendable>();
 
             serialized_elements.push_back(serialized_entity);
@@ -361,68 +383,68 @@ void GameEngine::unserialize_game()
 
         // Controller
         if ((pos + 23) <= message.size() && message.substr(pos, 3) == "410") {
-            if (_host) {
-                _controllable_sended = true;
+            if (!_host && entity_type != _type) {
+                std::cout << entity_type << " != " << _type << std::endl;
+                pos += 23;
             } else {
-                std::cout << "CLIENT RECEIVE A CONTROLLER" << std::endl;
-            }
-            pos += 3;
-            std::string can_up = message.substr(pos, 1);
-            pos++;
-            std::string can_down = message.substr(pos, 1);
-            pos++;
-            std::string can_left = message.substr(pos, 1);
-            pos++;
-            std::string can_right = message.substr(pos, 1);
-            pos++;
-            std::string key_up = message.substr(pos, 4);
-            pos += 4;
-            std::string key_down = message.substr(pos, 4);
-            pos += 4;
-            std::string key_left = message.substr(pos, 4);
-            pos += 4;
-            std::string key_right = message.substr(pos, 4);
-            pos += 4;
-            bool up = false, down = false, left = false, right = false;
-            if (can_up == "1") {
-                up = true;
-            } else {
-                up = false;
-            }
-            if (can_down == "1") {
-                down = true;
-            } else {
-                down = false;
-            }
-            if (can_left == "1") {
-                left = true;
-            } else {
-                left = false;
-            }
-            if (can_right == "1") {
-                right = true;
-            } else {
-                right = false;
-            }
-            bool exist = false;
-            auto &controllers = current_scene->registry->get_components<Controller>();
-            auto &types = current_scene->registry->get_components<Type>();
-            for (size_t j = 0; j < controllers.size() && j < types.size(); j++) {
-                if (controllers[j] && types[j] && types[j].value().type == std::stoi(entity_type)) {
-                    controllers[j].value().can_go_up = up;
-                    controllers[j].value().can_go_down = down;
-                    controllers[j].value().can_go_left = left;
-                    controllers[j].value().can_go_right = right;
-                    controllers[j].value().up = _inputGestion.binary_to_sf_key(key_up);
-                    controllers[j].value().down = _inputGestion.binary_to_sf_key(key_down);
-                    controllers[j].value().left = _inputGestion.binary_to_sf_key(key_left);
-                    controllers[j].value().right = _inputGestion.binary_to_sf_key(key_right);
-                    exist = true;
-                    break;
+                pos += 3;
+                std::string can_up = message.substr(pos, 1);
+                pos++;
+                std::string can_down = message.substr(pos, 1);
+                pos++;
+                std::string can_left = message.substr(pos, 1);
+                pos++;
+                std::string can_right = message.substr(pos, 1);
+                pos++;
+                std::string key_up = message.substr(pos, 4);
+                pos += 4;
+                std::string key_down = message.substr(pos, 4);
+                pos += 4;
+                std::string key_left = message.substr(pos, 4);
+                pos += 4;
+                std::string key_right = message.substr(pos, 4);
+                pos += 4;
+                bool up = false, down = false, left = false, right = false;
+                if (can_up == "1") {
+                    up = true;
+                } else {
+                    up = false;
                 }
-            }
-            if (!exist) {
-                current_scene->registry->add_component(e, Controller(up, down, left, right, _inputGestion.binary_to_sf_key(key_up), _inputGestion.binary_to_sf_key(key_down), _inputGestion.binary_to_sf_key(key_left), _inputGestion.binary_to_sf_key(key_right)));
+                if (can_down == "1") {
+                    down = true;
+                } else {
+                    down = false;
+                }
+                if (can_left == "1") {
+                    left = true;
+                } else {
+                    left = false;
+                }
+                if (can_right == "1") {
+                    right = true;
+                } else {
+                    right = false;
+                }
+                bool exist = false;
+                auto &controllers = current_scene->registry->get_components<Controller>();
+                auto &types = current_scene->registry->get_components<Type>();
+                for (size_t j = 0; j < controllers.size() && j < types.size(); j++) {
+                    if (controllers[j] && types[j] && types[j].value().type == std::stoi(entity_type)) {
+                        controllers[j].value().can_go_up = up;
+                        controllers[j].value().can_go_down = down;
+                        controllers[j].value().can_go_left = left;
+                        controllers[j].value().can_go_right = right;
+                        controllers[j].value().up = _inputGestion.binary_to_sf_key(key_up);
+                        controllers[j].value().down = _inputGestion.binary_to_sf_key(key_down);
+                        controllers[j].value().left = _inputGestion.binary_to_sf_key(key_left);
+                        controllers[j].value().right = _inputGestion.binary_to_sf_key(key_right);
+                        exist = true;
+                        break;
+                    }
+                }
+                if (!exist) {
+                    current_scene->registry->add_component(e, Controller(up, down, left, right, _inputGestion.binary_to_sf_key(key_up), _inputGestion.binary_to_sf_key(key_down), _inputGestion.binary_to_sf_key(key_left), _inputGestion.binary_to_sf_key(key_right)));
+                }
             }
         }
 
@@ -550,7 +572,7 @@ void GameEngine::unserialize_game()
         // Sprite
         if ((pos + 23) <= message.size() && message.substr(pos, 3) == "408") {
             if (!_host) {
-                std::cout << "CLIENT RECEIVE A SPRITE" << std::endl;
+                // std::cout << "CLIENT RECEIVE A SPRITE" << std::endl;
             }
             pos += 3;
             std::string texture_id = message.substr(pos, 5);
@@ -577,7 +599,7 @@ void GameEngine::unserialize_game()
                 }
             }
             if (!exist) {
-                std::cout << "I CREATE SPRITE" << std::endl;
+                // std::cout << "I CREATE SPRITE" << std::endl;
                 current_scene->registry->add_component(e, Sprite(get_texture_path(std::stoi(texture_id)), std::stod(angle)));
             }
         }
@@ -646,6 +668,61 @@ void GameEngine::unserialize_game()
                 current_scene->registry->add_component(e, Speed(std::stod(speed)));
             }
         }
+        // SpawnWithInput
+        if ((pos + 43) <= message.size() && message.substr(pos, 3) == "411") {
+            if (!_host && entity_type != _type) {
+                pos += 43;
+            } else {
+
+                pos += 3;
+                std::string prefab_id = message.substr(pos, 5);
+                pos += 5;
+                std::string input = message.substr(pos, 4);
+                pos += 4;
+                std::string delay = "";
+                if (message[pos] == '1') {
+                    delay += "-";
+                }
+                pos++;
+                delay += message.substr(pos, 7);
+                pos += 7;
+                delay += ".";
+                delay += message.substr(pos, 7);
+                pos += 7;
+                bool at_parent_pos = false;
+                if (message[pos] == '1') {
+                    at_parent_pos = true;
+                }
+                pos++;
+                std::string angle = "";
+                if (message[pos] == '1') {
+                    angle += "-";
+                }
+                pos++;
+                angle += message.substr(pos, 7);
+                pos += 7;
+                angle += ".";
+                angle += message.substr(pos, 7);
+                pos += 7;
+                bool exist = false;
+                auto &swis = current_scene->registry->get_components<SpawnWithInput>();
+                auto &types = current_scene->registry->get_components<Type>();
+                for (size_t j = 0; j < swis.size() && j < types.size(); j++) {
+                    if (swis[j] && types[j] && types[j].value().type == std::stoi(entity_type)) {
+                        // swis[j].value().prefab_name = get_prefab_name_with_id(std::stoi(prefab_id));
+                        // swis[j].value().input = _inputGestion.binary_to_sf_key(input);
+                        // swis[j].value().delay = std::stoi(delay);
+                        // swis[j].value().at_parent_pos = at_parent_pos;
+                        // swis[j].value().angle = std::stod(angle);
+                        exist = true;
+                        break;
+                    }
+                }
+                if (!exist) {
+                    current_scene->registry->add_component(e, SpawnWithInput(get_prefab_name_with_id(std::stoi(prefab_id)), _inputGestion.binary_to_sf_key(input), std::stod(delay), at_parent_pos, std::stod(angle)));
+                }
+            }
+        }
     }
     if (_received_messages.size() > 0) {
        _received_messages.clear();
@@ -661,13 +738,17 @@ void GameEngine::start_send_host()
                 serialize_game();
             }
             for (auto& client : _clients) {
+                int nb = 0;
                 for (auto& message : _to_send_messages) {
+                    nb++;
                     // std::cout << "Send to " << client.getEndpoint().address().to_string() << ":" << client.getEndpoint().port() << " : " << message << std::endl;
                     std::string e_type_ser = message.substr(0, 8);
                     auto e_check = std::find(client.entities_sended.begin(), client.entities_sended.end(), e_type_ser);
+                    std::string first_comp = message.substr(8, 3);
 
-                    if (e_check == client.entities_sended.end()) {
+                    if (e_check == client.entities_sended.end() || (_host && first_comp == "410" && e_type_ser != client.string_type)) {
                         _socket->send_to(asio::buffer(message), client.getEndpoint());
+                        
                         if (client.connected && client.created) {
                             client.entities_sended.push_back(e_type_ser);
                         }
@@ -701,7 +782,6 @@ void GameEngine::start_receive_host()
 
             if (cl == _clients.end()) {
                 _clients.push_back(ServerClient(_remote_endpoint));
-
                 // // Print all client endpoints
                 // std::cout << "Current client endpoints:\n";
                 // for (const ServerClient& client : _clients) {
@@ -715,11 +795,40 @@ void GameEngine::start_receive_host()
                         current_scene->registry->add_component(e, Id(e.get_id()));
                         it->setType(e_type);
                         current_scene->registry->add_component(e, Type(e_type++));
-                        add_prefab_to_a_scene(*current_scene->registry.get(), e, _on_new_cient_prefab_name);
+                        add_prefab_to_a_scene(*current_scene->registry.get(), e, _on_new_cient_prefab_name, true);
                         it->created = true;
                     } else if (message == "133") {
                         it->connected = true;
                         _game_is_running = true;
+                    } else if (message.substr(0, 3) == "000" && it->created && it->connected) {
+                        int p_id = std::stoi(message.substr(3, 1));
+                        int pos = 4;
+                        std::string x;
+                        if (message[pos] == '1') {
+                            x += "-";
+                        }
+                        pos++;
+                        x += message.substr(pos, 7);
+                        pos += 7;
+                        x += ".";
+                        x += message.substr(pos, 7);
+                        pos += 7;
+                        std::string y;
+                        if (message[pos] == '1') {
+                            y += "-";
+                        }
+                        pos++;
+                        y += message.substr(pos, 7);
+                        pos += 7;
+                        y += ".";
+                        y += message.substr(pos, 7);
+                        std::string prefab_name = get_prefab_name_with_id(p_id);
+                        std::cout << "000 " << std::to_string(p_id) << std::endl;
+                        Entity e = current_scene->registry->create_entity();
+                        current_scene->registry->add_component(e, Id(e.get_id()));
+                        current_scene->registry->add_component(e, Type(e_type++));
+                        add_prefab_to_a_scene(*current_scene->registry.get(), e, prefab_name, false, true, std::stod(x), std::stod(y));
+                        // it->entities_sended.push_back(std::to_string(e_type - 1));
                     } else if (message.size() > 10 && message[0] == '1' && is_a_component(message.substr(8, 3)) && it->created && it->connected) {
                         _received_messages.push_back(message);
                         unserialize_game();
@@ -777,12 +886,12 @@ void GameEngine::start_receive_join()
     _socket->async_receive_from(asio::buffer(_recv_buffer), _server_endpoint, [this](std::error_code ec, std::size_t bytes_transferred) {
         if (!ec) {
             std::string message(_recv_buffer.data(), bytes_transferred);
-            std::cout << "Received_client: " << message << " cfrom " << _server_endpoint.address().to_string() << ":" << _server_endpoint.port() << std::endl;
+            // std::cout << "Received_client: " << message << " cfrom " << _server_endpoint.address().to_string() << ":" << _server_endpoint.port() << std::endl;
 
             if (message.substr(0, 3) == "122") {
                 _to_send_messages.push_back("133");
                 _created = true;
-                _type = std::stoi(message.substr(3));
+                _type = message.substr(3);
             } else if (message.size() > 10 && message[0] == '1' && is_a_component(message.substr(8, 3)) && _created) {
                 _game_is_running = true;
                 _received_messages.push_back(message);
@@ -803,7 +912,7 @@ void GameEngine::update()
         } else {
             while (_window->isOpen()) {
                 if (_game_is_running && _received_messages.size() > 0) {
-                    std::cout << "GAME IS RUNNING" << std::endl;
+                    // std::cout << "GAME IS RUNNING" << std::endl;
                     unserialize_game();
                 }
                 _window->clear(sf::Color::Black);
@@ -812,6 +921,17 @@ void GameEngine::update()
                         _window->close();
                     }
                     quit_system(*current_scene->registry.get());
+                }
+                std::string p_ser = spawn_with_input_system(*current_scene->registry.get(), true);
+                if (p_ser != "") {
+                    std::istringstream iss(p_ser);
+                    std::string token;
+                    std::getline(iss, token, ';');
+                    std::string prefab_name = token;
+                    std::getline(iss, token);
+                    std::string ser = token;
+                    std::cout << "send -> " << "000" + std::to_string(get_prefab_id_with_name(prefab_name)) + ser << std::endl;
+                    _to_send_messages.push_back("000" + std::to_string(get_prefab_id_with_name(prefab_name)) + ser);
                 }
                 controller_system(*current_scene->registry.get());
                 position_system(*current_scene->registry.get());
@@ -838,7 +958,7 @@ void GameEngine::update()
                     continue;
                 }
             }
-            spawn_with_input_system(*current_scene->registry.get());
+            spawn_with_input_system(*current_scene->registry.get(), false);
             position_system(*current_scene->registry.get());
             parralax_system(*current_scene->registry.get());
             gravity_system(*current_scene->registry.get());
