@@ -3,45 +3,11 @@ project(GameEngineLib)
 
 set(CMAKE_CXX_STANDARD 17)
 
-#Install Asio
-# find_package(Asio)
+include($ENV{VCPKG_ROOT}/scripts/buildsystems/vcpkg.cmake)
 
-if (NOT Asio_FOUND)
-    message(STATUS "Asio not found, downloading...")
-    include(FetchContent)
-    FetchContent_Declare(
-        asio
-        GIT_REPOSITORY https://github.com/chriskohlhoff/asio.git
-        GIT_TAG asio-1-18-1
-    )
-    FetchContent_GetProperties(asio)
-    if (NOT asio_POPULATED)
-        FetchContent_Populate(asio)
-        include_directories(${asio_SOURCE_DIR}/asio/include)
-    endif()
-endif()
+find_package(asio CONFIG REQUIRED)
 
-#Install SFML
-if (UNIX)
-    message("Compilation Linux")
-    find_package(SFML 2.5 COMPONENTS graphics window system audio REQUIRED)
-endif()
-
-# if (NOT SFML_FOUND)
-#     FetchContent_Declare(
-#         sfml
-#         GIT_REPOSITORY "https://github.com/SFML/SFML.git"
-#         GIT_TAG        "2.6.x"
-#     )
-#     FetchContent_GetProperties(sfml)
-#     if(NOT sfml_POPULATED)
-#         message("Fetch sfml")
-#         FetchContent_Populate(sfml)
-#         message("Print sfml")
-#         message(${sfml_SOURCE_DIR} ${sfml_BINARY_DIR})
-#         add_subdirectory(${sfml_SOURCE_DIR} ${sfml_BINARY_DIR})
-#     endif()
-# endif()
+find_package(SFML COMPONENTS graphics window system audio REQUIRED)
 
 # Spécifiez les fichiers source
 set(SOURCES
@@ -69,3 +35,4 @@ add_library(GameEngineLib ${SOURCES})
 
 # Liez SFML à la bibliothèque
 target_link_libraries(GameEngineLib sfml-graphics sfml-window sfml-system sfml-audio)
+target_link_libraries(GameEngineLib asio::asio)
