@@ -165,9 +165,6 @@ void GameEngine::serialize_game()
                 }
             }
 
-
-
-
             if ((!send && !force_send) || (!_host && !cont && !force_send)) {
                 continue;
             }

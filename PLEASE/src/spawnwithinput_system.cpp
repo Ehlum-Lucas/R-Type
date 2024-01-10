@@ -81,6 +81,20 @@ void spawn_with_input_system(Registry &r)
                         } else if (component.type() == typeid(CircleShape)) {
                             auto &comp = std::any_cast<CircleShape&>(component);
                             r.add_component_from_prefab(e, comp);
+                        } else if (component.type() == typeid(Send)) {
+                            auto &comp = std::any_cast<Send&>(component);
+                            r.add_component_from_prefab(e, comp);
+                        } else if (component.type() == typeid(Type)) {
+                            auto &comp = std::any_cast<Type&>(component);
+                            r.add_component_from_prefab(e, comp);
+                        } else if (component.type() == typeid(Shootable)) {
+                            auto &comp = std::any_cast<Shootable&>(component);
+                            r.add_component_from_prefab(e, comp);
+                        } else if (component.type() == typeid(SpawnWithInput)) {
+                            auto &comp = std::any_cast<SpawnWithInput&>(component);
+                            r.add_component_from_prefab(e, comp);
+                        } else {
+                            std::cout << "Component type not found" << std::endl;
                         }
                     }
                     spawnwithinput.value().timer = 0;
