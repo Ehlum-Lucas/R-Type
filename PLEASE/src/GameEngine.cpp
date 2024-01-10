@@ -323,7 +323,43 @@ void GameEngine::serialize_game()
             }
             auto &bcolliders = current_scene->registry->get_components<BoxCollider>();
             auto &onclickloadscenes = current_scene->registry->get_components<OnClickLoadScene>();
+            // SpawnWithInput
             auto &swis = current_scene->registry->get_components<SpawnWithInput>();
+            for (size_t j = 0; j < swis.size() && j < types.size(); j++) {
+                if (types[j] && types[j].value().type == base_type.value().type && swis[j]) {
+                    serialized_entity += "411";
+
+                    std::string prefab_id = std::to_string(get_prefab_id_with_name(swis[j].value().prefab_name));
+                    set_size_string_to(prefab_id, 5); 
+                    serialized_entity += prefab_id;
+                    serialized_entity += _inputGestion.sf_key_to_binary(swis[j].value().input);
+                    if (swis[j].value().delay < 0.0) {
+                        c = -1;
+                        serialized_entity += "1";
+                    } else {
+                        c = 1;
+                        serialized_entity += "0";
+                    }
+                    separateString(std::to_string(swis[j].value().delay * c), bc, ac);
+                    serialized_entity += bc;
+                    serialized_entity += ac;
+                    if (swis[j].value().at_parent_pos) {
+                        serialized_entity += "1";
+                    } else {
+                        serialized_entity += "0";
+                    }
+                    if (swis[j].value().angle < 0.0) {
+                        serialized_entity += "1";
+                        c = -1;
+                    } else {
+                        serialized_entity += "0";
+                        c = 1;
+                    }
+                    separateString(std::to_string(swis[j].value().angle * c), bc, ac);
+                    serialized_entity += bc;
+                    serialized_entity += ac;
+                }
+            }
             auto &sendable = current_scene->registry->get_components<Sendable>();
 
             serialized_elements.push_back(serialized_entity);
@@ -361,11 +397,6 @@ void GameEngine::unserialize_game()
 
         // Controller
         if ((pos + 23) <= message.size() && message.substr(pos, 3) == "410") {
-            // if (_host) {
-            //     _controllable_sended = true;
-            // } else {
-            //     std::cout << "CLIENT RECEIVE A CONTROLLER" << std::endl;
-            // }
             if (!_host && entity_type != _type) {
                 std::cout << entity_type << " != " << _type << std::endl;
                 pos += 23;
@@ -651,6 +682,57 @@ void GameEngine::unserialize_game()
                 current_scene->registry->add_component(e, Speed(std::stod(speed)));
             }
         }
+        // SpawnWithInput
+        if ((pos + 43) <= message.size() && message.substr(pos, 3) == "411") {
+            pos += 3;
+            std::string prefab_id = message.substr(pos, 5);
+            pos += 5;
+            std::string input = message.substr(pos, 4);
+            pos += 4;
+            std::string delay = "";
+            if (message[pos] == '1') {
+                delay += "-";
+            }
+            pos++;
+            delay += message.substr(pos, 7);
+            pos += 7;
+            delay += ".";
+            delay += message.substr(pos, 7);
+            pos += 7;
+            bool at_parent_pos = false;
+            if (message[pos] == '1') {
+                at_parent_pos = true;
+            }
+            pos++;
+            std::string angle = "";
+            if (message[pos] == '1') {
+                angle += "-";
+            }
+            pos++;
+            angle += message.substr(pos, 7);
+            pos += 7;
+            angle += ".";
+            angle += message.substr(pos, 7);
+            pos += 7;
+            bool exist = false;
+            auto &swis = current_scene->registry->get_components<SpawnWithInput>();
+            auto &types = current_scene->registry->get_components<Type>();
+            for (size_t j = 0; j < swis.size() && j < types.size(); j++) {
+                if (swis[j] && types[j] && types[j].value().type == std::stoi(entity_type)) {
+                    // swis[j].value().prefab_name = get_prefab_name_with_id(std::stoi(prefab_id));
+                    // swis[j].value().input = _inputGestion.binary_to_sf_key(input);
+                    // swis[j].value().delay = std::stoi(delay);
+                    // swis[j].value().at_parent_pos = at_parent_pos;
+                    // swis[j].value().angle = std::stod(angle);
+                    exist = true;
+                    break;
+                }
+            }
+            if (!exist) {
+                current_scene->registry->add_component(e, SpawnWithInput(get_prefab_name_with_id(std::stoi(prefab_id)), _inputGestion.binary_to_sf_key(input), std::stod(delay), at_parent_pos, std::stod(angle)));
+                std::cout << "SpawnWithInput had been created" << std::endl;
+            }
+        }
     }
     if (_received_messages.size() > 0) {
        _received_messages.clear();
@@ -666,7 +748,9 @@ void GameEngine::start_send_host()
                 serialize_game();
             }
             for (auto& client : _clients) {
+                int nb = 0;
                 for (auto& message : _to_send_messages) {
+                    nb++;
                     // std::cout << "Send to " << client.getEndpoint().address().to_string() << ":" << client.getEndpoint().port() << " : " << message << std::endl;
                     std::string e_type_ser = message.substr(0, 8);
                     auto e_check = std::find(client.entities_sended.begin(), client.entities_sended.end(), e_type_ser);
@@ -819,6 +903,7 @@ void GameEngine::update()
                     }
                     quit_system(*current_scene->registry.get());
                 }
+                spawn_with_input_system(*current_scene->registry.get());
                 controller_system(*current_scene->registry.get());
                 position_system(*current_scene->registry.get());
                 draw_system(*current_scene->registry.get());

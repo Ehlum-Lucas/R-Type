@@ -28,24 +28,26 @@ int main(int ac, char **av)
         ip = av[1];
     else
         ip = "10.19.254.250";
-
+        
     ecs.create_texture("assets/player.png");
     ecs.create_texture("assets/player2.png");
     ecs.create_texture("assets/player3.png");
     ecs.create_texture("assets/player4.png");
     ecs.create_texture("assets/enemy.png");
+    ecs.create_texture("assets/bullet.png");
 
     ecs.setWindow("MyGame", 30, true);
 
     ecs.create_scene("game");
 
-    // ecs.create_prefab("bullet");
-    // ecs.add_component_to_prefab("bullet", Position(0, 0));
-    // ecs.add_component_to_prefab("bullet", Velocity(50.0, 0.0));
-    // ecs.add_component_to_prefab("bullet", Drawable());
-    // ecs.add_component_to_prefab("bullet", Size(0.2, 0.2));
-    // ecs.add_component_to_prefab("bullet", Sprite("assets/bullet.png", 90.0));
-    // ecs.add_component_to_prefab("bullet", BoxCollider("bullet"));
+    ecs.create_prefab("player");
+    ecs.create_prefab("bullet");
+    ecs.add_component_to_prefab("bullet", Position(0, 0));
+    ecs.add_component_to_prefab("bullet", Velocity(50.0, 0.0));
+    ecs.add_component_to_prefab("bullet", Drawable());
+    ecs.add_component_to_prefab("bullet", Size(0.1, 0.1));
+    ecs.add_component_to_prefab("bullet", Sprite("assets/bullet.png", 0.0));
+    ecs.add_component_to_prefab("bullet", BoxCollider("bullet"));
 
     // Entity player = ecs.scene("game")->create_entity();
     // ecs.scene("game")->registry->add_component(player, Position(150, 500));

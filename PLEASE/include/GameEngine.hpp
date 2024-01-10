@@ -66,7 +66,26 @@
             void create_prefab(std::string name) {
                 for (auto it = _scenes.begin(); it != _scenes.end(); ++it) {
                     (*it)->registry->_prefabs[name] = std::vector<std::any>();
+                    _prefabs_serialized[name] = _prefabs_serialized_indice++;
                 }
+            }
+
+            std::string get_prefab_name_with_id(int id)
+            {
+                for (auto it = _prefabs_serialized.begin(); it != _prefabs_serialized.end(); ++it) {
+                    if (it->second == id)
+                        return it->first;
+                }
+                return "";
+            }
+
+            int get_prefab_id_with_name(std::string name)
+            {
+                for (auto it = _prefabs_serialized.begin(); it != _prefabs_serialized.end(); ++it) {
+                    if (it->first == name)
+                        return it->second;
+                }
+                return -1;
             }
 
             void add_component_to_prefab(std::string name, std::any component) {
@@ -200,6 +219,9 @@
             InputGestion _inputGestion;
 
             bool _controllable_sended = false;
+
+            std::map<std::string, int> _prefabs_serialized;
+            int _prefabs_serialized_indice = 0;
 
         public:
             std::shared_ptr<Scene> current_scene;

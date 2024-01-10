@@ -26,14 +26,17 @@ void controller_system(Registry &r) {
     auto &velocities = r.get_components<Velocity>();
     auto &speeds = r.get_components<Speed>();
 
+    // std::cout << "controllers" << controllers.size() << std::endl;
     for (size_t i = 0; i < controllers.size() && i < velocities.size(); ++i) {
         auto &controller = controllers[i];
         auto &velocity = velocities[i];
         auto &speed = speeds[i];
 
+
         if (controller && velocity && speed) {
             velocity.value().vy = 0;
             velocity.value().vx = 0;
+            // std::cout << "ici gros" << std::endl;
 
             if (sf::Keyboard::isKeyPressed(controller.value().up) && controller.value().can_go_up) {
                 velocity.value().vy = -speed.value().speed;
@@ -53,4 +56,5 @@ void controller_system(Registry &r) {
             }
         }
     }
+    // std::cout << "finis gros" << std::endl;
 }

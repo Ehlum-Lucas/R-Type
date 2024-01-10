@@ -3,23 +3,23 @@ project(GameEngine)
 
 set(CMAKE_CXX_STANDARD 17)
 
-#Install Asio
+# #Install Asio
 # find_package(Asio)
 
-if (NOT Asio_FOUND)
-    message(STATUS "Asio not found, downloading...")
-    include(FetchContent)
-    FetchContent_Declare(
-        asio
-        GIT_REPOSITORY https://github.com/chriskohlhoff/asio.git
-        GIT_TAG asio-1-18-1
-    )
-    FetchContent_GetProperties(asio)
-    if (NOT asio_POPULATED)
-        FetchContent_Populate(asio)
-        include_directories(${asio_SOURCE_DIR}/asio/include)
-    endif()
-endif()
+# if (NOT Asio_FOUND)
+#     message(STATUS "Asio not found, downloading...")
+#     include(FetchContent)
+#     FetchContent_Declare(
+#         asio
+#         GIT_REPOSITORY https://github.com/chriskohlhoff/asio.git
+#         GIT_TAG asio-1-18-1
+#     )
+#     FetchContent_GetProperties(asio)
+#     if (NOT asio_POPULATED)
+#         FetchContent_Populate(asio)
+#         include_directories(${asio_SOURCE_DIR}/asio/include)
+#     endif()
+# endif()
 
 #Install SFML
 if (UNIX)

@@ -525,6 +525,14 @@
                 angle = _angle;
                 at_parent_pos = _at_parent_pos;
             };
+            SpawnWithInput(std::string _prefab_name, sf::Keyboard::Key _input, float _delay, bool _at_parent_pos, float _angle = 0.0) : prefab_name(_prefab_name)
+            {
+                input = _input;
+                timer = _delay;
+                delay = _delay;
+                angle = _angle;
+                at_parent_pos = _at_parent_pos;
+            };
             std::string prefab_name;
             float angle;
             float timer;

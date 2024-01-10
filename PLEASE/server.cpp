@@ -35,6 +35,8 @@ int main(int ac, char **av)
     ecs.add_component_to_prefab("player", Size(0.2, 0.2));
     ecs.add_component_to_prefab("player", Sprite("assets/player.png", 90.0));
     ecs.add_component_to_prefab("player", BoxCollider("player"));
+    ecs.add_component_to_prefab("player", SpawnWithInput("bullet", "space", 20.0, true));
+    ecs.create_prefab("bullet");
 
     ecs.on_new_player_load_prefab("player");
     std::vector<std::string> atlas = {"assets/player.png", "assets/player2.png", "assets/player3.png", "assets/player4.png"};
