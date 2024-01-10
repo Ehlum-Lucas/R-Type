@@ -593,6 +593,7 @@
             float reset_pos;
             float start_pos_x;
             float start_pos_y;
+    };
       
     class Send {
         public:
