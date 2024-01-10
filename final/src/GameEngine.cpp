@@ -89,6 +89,8 @@ void GameEngine::update()
             position_system(*current_scene->registry.get());
             gravity_system(*current_scene->registry.get());
             collide_system(*current_scene->registry.get());
+            animation_system(*current_scene->registry.get());
+            sound_system(*current_scene->registry.get());
             draw_system(*current_scene->registry.get());
             _window->display();
         }

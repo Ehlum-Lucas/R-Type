@@ -12,6 +12,7 @@
 
 #ifndef COMPONENTS_HPP
     #define COMPONENTS_HPP
+    #include <SFML/Audio.hpp>
     #include <SFML/Graphics.hpp>
     #include "Registry.hpp"
     #include <any>
@@ -506,6 +507,34 @@
             float angle;
     };
 
+// sprite component
+class AnimatedSprite
+{
+public:
+    AnimatedSprite(std::string texture_path, float _angle = 0.0, float sprite_size_x = 0.0, float sprite_size_y = 0.0, float _start_frame = 0.0, float _max_frame = 0.0, float _speed = 1.0) : texture_path(texture_path)
+    {
+        texture.loadFromFile(texture_path);
+        sprite.setTexture(texture);
+        angle = _angle;
+        sprite.setRotation(angle);
+        sprite.setOrigin(sprite_size_x / 2, sprite_size_y / 2);
+        rect = sf::IntRect(sprite_size_x * _start_frame, 0, sprite_size_x, sprite_size_y);
+        sprite.setTextureRect(rect);
+        start_frame = _start_frame;
+        max_frame = _max_frame;
+        speed = _speed;
+    };
+    sf::Texture texture;
+    std::string texture_path;
+    sf::Sprite sprite;
+    sf::IntRect rect;
+    sf::Clock clock;
+    int start_frame;
+    int max_frame;
+    float speed;
+    float angle;
+};
+
     // size component
     class Size {
         public:
@@ -582,11 +611,58 @@
             size_t type;
     };
 
-    class Sendable {
-        public:
-            Sendable() {};
-    };
+class Sendable
+{
+public:
+    Sendable(){};
+};
 
+class Sound
+{
+public:
+    Sound(std::string _sound_path, float _volume = 100.0, bool _loop = false)
+    {
+        buffer = std::make_shared<sf::SoundBuffer>();
+        sound = std::make_shared<sf::Sound>();
+        sound_path = _sound_path;
+        volume = _volume;
+        loop = _loop;
+        buffer->loadFromFile(_sound_path);
+        sound->setLoop(_loop);
+        sound->setVolume(_volume);
+        sound->setBuffer(*buffer);
+    };
+    ~Sound()
+    {
+        sound->stop();
+    };
+    std::string sound_path;
+    std::shared_ptr<sf::SoundBuffer> buffer;
+    std::shared_ptr<sf::Sound> sound;
+    bool loop;
+    float volume;
+    bool played = false;
+};
+
+class Music
+{
+public:
+    Music(std::string _music_path, float _volume = 100.0, bool _loop = false)
+    {
+        music = std::make_shared<sf::Music>();
+        music_path = _music_path;
+        volume = _volume;
+        loop = _loop;
+        music->openFromFile(_music_path);
+        music->setLoop(_loop);
+        music->setVolume(_volume);
+    };
+    ~Music(){};
+    std::string music_path;
+    std::shared_ptr<sf::Music> music;
+    bool loop;
+    float volume;
+};
 
     // class ComponentFactory {
     //     public:
@@ -597,7 +673,7 @@
     //                 r.add_component_from_prefab(e, sprite);
     //             } else if (component.type() == typeid(Position)) {
     //                 auto &position = std::any_cast<Position&>(component);
-    //                 r.add_component_from_prefab(e, position);
+    //            Size      r.add_component_from_prefab(e, position);
     //             } else if (component.type() == typeid(Velocity)) {
     //                 auto &veclocity = std::any_cast<Velocity&>(component);
     //                 r.add_component_from_prefab(e, veclocity);
