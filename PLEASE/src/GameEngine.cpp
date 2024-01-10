@@ -10,20 +10,27 @@
 
 #include <any>
 
-void GameEngine::add_prefab_to_a_scene(Registry& r, Entity &e, std::string prefab_name)
+void GameEngine::add_prefab_to_a_scene(Registry& r, Entity &e, std::string prefab_name, bool is_player, bool cp = false, float x = 0, float y = 0)
 {
     auto prefab_components = r.get_prefab(prefab_name);
 
     for (auto component : prefab_components) {
         if (component.type() == typeid(Sprite)) {
             auto &sprite = std::any_cast<Sprite&>(component);
-            // r.add_component_from_prefab(e, sprite);
-            std::string skin = get_available_player_skin();
-            std::cout << "skin: [" << skin << "]" << std::endl;
-            r.add_component(e, Sprite(skin, sprite.angle));
+            if (is_player) {
+                std::string skin = get_available_player_skin();
+                std::cout << "skin: [" << skin << "]" << std::endl;
+                r.add_component(e, Sprite(skin, sprite.angle));
+            } else {
+                r.add_component_from_prefab(e, sprite);
+            }
         } else if (component.type() == typeid(Position)) {
             auto &position = std::any_cast<Position&>(component);
-            r.add_component_from_prefab(e, position);
+            if (cp) {
+                r.add_component(e, Position(x, y));
+            } else {
+                r.add_component_from_prefab(e, position);
+            }
         } else if (component.type() == typeid(Velocity)) {
             auto &velocity = std::any_cast<Velocity&>(component);
             r.add_component_from_prefab(e, velocity);
@@ -64,38 +71,6 @@ void GameEngine::add_prefab_to_a_scene(Registry& r, Entity &e, std::string prefa
     }
 }
 
-void separateString(const std::string& input, std::string& beforeComma, std::string& afterComma) {
-    size_t commaPos = input.find('.');
-    beforeComma = "";
-    afterComma = "";
-    if (commaPos != std::string::npos) {
-        beforeComma = input.substr(0, commaPos);
-        afterComma = input.substr(commaPos + 1);
-    } else {
-        beforeComma = input;
-        afterComma = "";
-    }
-
-    // while (afterComma.length() > 1 && afterComma.back() == '0') {
-    //     afterComma.pop_back();
-    // }
-
-    while (beforeComma.length() < 7) {
-        beforeComma = "0" + beforeComma;
-    }
-
-    while (afterComma.length() < 7) {
-        afterComma += "0";
-    }
-
-}
-
-void set_size_string_to(std::string &str, std::size_t size) {
-    while (str.length() < size) {
-        str = "0" + str;
-    }
-}
-
 void GameEngine::serialize_game()
 {
     auto &types = current_scene->registry->get_components<Type>();
@@ -123,6 +98,7 @@ void GameEngine::serialize_game()
             auto &sends = current_scene->registry->get_components<Send>();
             for (size_t j = 0; j < sends.size() && j < types.size(); j++) {
                 if (types[j] && types[j].value().type == base_type.value().type && sends[j]) {
+                    std::cout << "OH UNE BALLE GARS " << std::endl;
                     force_send = true;
                     break;
                 }
@@ -819,11 +795,40 @@ void GameEngine::start_receive_host()
                         current_scene->registry->add_component(e, Id(e.get_id()));
                         it->setType(e_type);
                         current_scene->registry->add_component(e, Type(e_type++));
-                        add_prefab_to_a_scene(*current_scene->registry.get(), e, _on_new_cient_prefab_name);
+                        add_prefab_to_a_scene(*current_scene->registry.get(), e, _on_new_cient_prefab_name, true);
                         it->created = true;
                     } else if (message == "133") {
                         it->connected = true;
                         _game_is_running = true;
+                    } else if (message.substr(0, 3) == "000" && it->created && it->connected) {
+                        int p_id = std::stoi(message.substr(3, 1));
+                        int pos = 4;
+                        std::string x;
+                        if (message[pos] == '1') {
+                            x += "-";
+                        }
+                        pos++;
+                        x += message.substr(pos, 7);
+                        pos += 7;
+                        x += ".";
+                        x += message.substr(pos, 7);
+                        pos += 7;
+                        std::string y;
+                        if (message[pos] == '1') {
+                            y += "-";
+                        }
+                        pos++;
+                        y += message.substr(pos, 7);
+                        pos += 7;
+                        y += ".";
+                        y += message.substr(pos, 7);
+                        std::string prefab_name = get_prefab_name_with_id(p_id);
+                        std::cout << "000 " << std::to_string(p_id) << std::endl;
+                        Entity e = current_scene->registry->create_entity();
+                        current_scene->registry->add_component(e, Id(e.get_id()));
+                        current_scene->registry->add_component(e, Type(e_type++));
+                        add_prefab_to_a_scene(*current_scene->registry.get(), e, prefab_name, false, true, std::stod(x), std::stod(y));
+                        // it->entities_sended.push_back(std::to_string(e_type - 1));
                     } else if (message.size() > 10 && message[0] == '1' && is_a_component(message.substr(8, 3)) && it->created && it->connected) {
                         _received_messages.push_back(message);
                         unserialize_game();
@@ -917,7 +922,17 @@ void GameEngine::update()
                     }
                     quit_system(*current_scene->registry.get());
                 }
-                spawn_with_input_system(*current_scene->registry.get());
+                std::string p_ser = spawn_with_input_system(*current_scene->registry.get(), true);
+                if (p_ser != "") {
+                    std::istringstream iss(p_ser);
+                    std::string token;
+                    std::getline(iss, token, ';');
+                    std::string prefab_name = token;
+                    std::getline(iss, token);
+                    std::string ser = token;
+                    std::cout << "send -> " << "000" + std::to_string(get_prefab_id_with_name(prefab_name)) + ser << std::endl;
+                    _to_send_messages.push_back("000" + std::to_string(get_prefab_id_with_name(prefab_name)) + ser);
+                }
                 controller_system(*current_scene->registry.get());
                 position_system(*current_scene->registry.get());
                 draw_system(*current_scene->registry.get());
@@ -942,7 +957,7 @@ void GameEngine::update()
                     continue;
                 }
             }
-            spawn_with_input_system(*current_scene->registry.get());
+            spawn_with_input_system(*current_scene->registry.get(), false);
             position_system(*current_scene->registry.get());
             gravity_system(*current_scene->registry.get());
             collide_system(*current_scene->registry.get());

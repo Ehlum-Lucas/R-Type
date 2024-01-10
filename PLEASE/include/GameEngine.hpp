@@ -159,7 +159,7 @@
                 _clients_atlas_texture[skin] = true;
             }
 
-            void add_prefab_to_a_scene(Registry& r, Entity &e, std::string prefab_name);
+            void add_prefab_to_a_scene(Registry& r, Entity &e, std::string prefab_name, bool is_player, bool cp, float x, float y);
 
             void create_texture(std::string const &path) {
                 texturesLoader.set_texture(path);

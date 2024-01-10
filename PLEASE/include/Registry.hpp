@@ -8,6 +8,8 @@
     #include "Components.hpp"
     #include <unordered_map>
     #include <any>
+    #include "parsing.hpp"
+    #include <sstream>
 
     #define M_PI       3.14159265358979323846
 

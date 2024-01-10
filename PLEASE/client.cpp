@@ -48,7 +48,6 @@ int main(int ac, char **av)
     ecs.add_component_to_prefab("bullet", Size(0.1, 0.1));
     ecs.add_component_to_prefab("bullet", Sprite("assets/bullet.png", 0.0));
     ecs.add_component_to_prefab("bullet", BoxCollider("bullet"));
-    ecs.add_component_to_prefab("bullet", Send());
 
     // Entity player = ecs.scene("game")->create_entity();
     // ecs.scene("game")->registry->add_component(player, Position(150, 500));
