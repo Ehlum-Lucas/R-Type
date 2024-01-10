@@ -58,6 +58,7 @@ set(SOURCES
             src/serialize_components.cpp
             src/spawnwithinput_system.cpp
             src/TexturesLoader.cpp
+            src/parralax_system.cpp
             src/parsing.cpp
 )
 

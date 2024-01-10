@@ -34,11 +34,19 @@ int main(int ac, char **av)
     ecs.create_texture("assets/player3.png");
     ecs.create_texture("assets/player4.png");
     ecs.create_texture("assets/enemy.png");
+    ecs.create_texture("assets/spaceBackground.png");
     ecs.create_texture("assets/bullet.png");
-
     ecs.setWindow("MyGame", 30, true);
 
     ecs.create_scene("game");
+
+    Entity parralax = ecs.scene("game")->create_entity();
+    ecs.scene("game")->registry->add_component(parralax, Position(1920, 540));
+    ecs.scene("game")->registry->add_component(parralax, Drawable());
+    ecs.scene("game")->registry->add_component(parralax, Size(1, 1));
+    ecs.scene("game")->registry->add_component(parralax, Velocity(-1.0, 0.0));
+    ecs.scene("game")->registry->add_component(parralax, Sprite("assets/spaceBackground.png", 0.0));
+    ecs.scene("game")->registry->add_component(parralax, Parralax(1920, 540, -960));
 
     ecs.create_prefab("player");
     ecs.create_prefab("bullet");
@@ -48,18 +56,7 @@ int main(int ac, char **av)
     ecs.add_component_to_prefab("bullet", Size(0.1, 0.1));
     ecs.add_component_to_prefab("bullet", Sprite("assets/bullet.png", 0.0));
     ecs.add_component_to_prefab("bullet", BoxCollider("bullet"));
-
-    // Entity player = ecs.scene("game")->create_entity();
-    // ecs.scene("game")->registry->add_component(player, Position(150, 500));
-    // ecs.scene("game")->registry->add_component(player, Velocity(0.0, 0.0));
-    // ecs.scene("game")->registry->add_component(player, Drawable());
-    // ecs.scene("game")->registry->add_component(player, Controller(true, true, true, true, "up", "down", "left", "right"));
-    // ecs.scene("game")->registry->add_component(player, Speed(10.0));
-    // ecs.scene("game")->registry->add_component(player, Size(0.2, 0.2));
-    // ecs.scene("game")->registry->add_component(player, Sprite("assets/player.png", 90.0));
-    // ecs.scene("game")->registry->add_component(player, SpawnWithInput("bullet", "space", 20.0, true));
-    // ecs.scene("game")->registry->add_component(player, BoxCollider("player"));
-
+  
     ecs.joinOnlineGame(ip, "4080");
     ecs.load_scene("game");
     ecs.update();
