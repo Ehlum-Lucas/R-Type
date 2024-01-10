@@ -94,9 +94,9 @@
                 }
             }
 
-            void hostOnlineGame(std::string const &ip, std::string const &port) {
+            void hostOnlineGame(std::string const &port) {
                 _host = true;
-                _ip = ip;
+                _ip = "";
                 _port = port;
                 _online = true;
                 _socket = std::make_shared<asio::ip::udp::socket>(_io_context, asio::ip::udp::endpoint(asio::ip::udp::v4(), std::stoi(_port)));
