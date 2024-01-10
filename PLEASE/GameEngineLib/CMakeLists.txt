@@ -6,10 +6,8 @@ set(CMAKE_CXX_STANDARD 17)
 include($ENV{VCPKG_ROOT}/scripts/buildsystems/vcpkg.cmake)
 
 find_package(asio CONFIG REQUIRED)
-
 find_package(SFML COMPONENTS graphics window system audio REQUIRED)
 
-# Spécifiez les fichiers source
 set(SOURCES
             src/collide_system.cpp
             src/controller_system.cpp
@@ -29,10 +27,7 @@ set(SOURCES
 )
 
 include_directories(include)
-
-# Ajoutez les fichiers source à la bibliothèque
 add_library(GameEngineLib ${SOURCES})
 
-# Liez SFML à la bibliothèque
 target_link_libraries(GameEngineLib sfml-graphics sfml-window sfml-system sfml-audio)
 target_link_libraries(GameEngineLib asio::asio)
