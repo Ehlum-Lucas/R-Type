@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.10)
-project(GameEngine)
+project(RType)
 
 set(CMAKE_CXX_STANDARD 17)
 
@@ -22,54 +22,58 @@ set(CMAKE_CXX_STANDARD 17)
 # endif()
 
 #Install SFML
-if (UNIX)
-    message("Compilation Linux")
-    find_package(SFML 2.5 COMPONENTS graphics window system audio REQUIRED)
-endif()
+# if (UNIX)
+#     message("Compilation Linux")
+#     find_package(SFML 2.5 COMPONENTS graphics window system audio REQUIRED)
+# endif()
 
-if (NOT SFML_FOUND)
-    FetchContent_Declare(
-        sfml
-        GIT_REPOSITORY "https://github.com/SFML/SFML.git"
-        GIT_TAG        "2.6.x"
-    )
-    FetchContent_GetProperties(sfml)
-    if(NOT sfml_POPULATED)
-        message("Fetch sfml")
-        FetchContent_Populate(sfml)
-        message("Print sfml")
-        message(${sfml_SOURCE_DIR} ${sfml_BINARY_DIR})
-        add_subdirectory(${sfml_SOURCE_DIR} ${sfml_BINARY_DIR})
-    endif()
-endif()
+# if (NOT SFML_FOUND)
+#     FetchContent_Declare(
+#         sfml
+#         GIT_REPOSITORY "https://github.com/SFML/SFML.git"
+#         GIT_TAG        "2.6.x"
+#     )
+#     FetchContent_GetProperties(sfml)
+#     if(NOT sfml_POPULATED)
+#         message("Fetch sfml")
+#         FetchContent_Populate(sfml)
+#         message("Print sfml")
+#         message(${sfml_SOURCE_DIR} ${sfml_BINARY_DIR})
+#         add_subdirectory(${sfml_SOURCE_DIR} ${sfml_BINARY_DIR})
+#     endif()
+# endif()
 
 # Spécifiez les fichiers source
-set(SOURCES
-            src/collide_system.cpp
-            src/controller_system.cpp
-            src/draw_system.cpp
-            src/Entity.cpp
-            src/GameEngine.cpp
-            src/gravity_system.cpp
-            src/onclickloadscene_system.cpp
-            src/position_system.cpp
-            src/quit_system.cpp
-            src/Scene.cpp
-            src/serialize_components.cpp
-            src/spawnwithinput_system.cpp
-            src/TexturesLoader.cpp
-            src/parralax_system.cpp
-            src/parsing.cpp
-)
+# set(SOURCES
+#             src/collide_system.cpp
+#             src/controller_system.cpp
+#             src/draw_system.cpp
+#             src/Entity.cpp
+#             src/GameEngine.cpp
+#             src/gravity_system.cpp
+#             src/onclickloadscene_system.cpp
+#             src/position_system.cpp
+#             src/quit_system.cpp
+#             src/Scene.cpp
+#             src/serialize_components.cpp
+#             src/spawnwithinput_system.cpp
+#             src/TexturesLoader.cpp
+#             src/parralax_system.cpp
+#             src/parsing.cpp
+# )
 
-# Ajoutez les fichiers source à la bibliothèque
-add_library(gameEngineLib STATIC ${SOURCES})
+# # Ajoutez les fichiers source à la bibliothèque
+# add_library(gameEngineLib STATIC ${SOURCES})
 
-# Spécifiez les dossiers d'inclusion
-target_include_directories(gameEngineLib PUBLIC include)
+# # Spécifiez les dossiers d'inclusion
+# target_include_directories(gameEngineLib PUBLIC include)
 
-# Liez SFML à la bibliothèque
-target_link_libraries(gameEngineLib sfml-graphics sfml-window sfml-system sfml-audio)
+# # Liez SFML à la bibliothèque
+# target_link_libraries(gameEngineLib sfml-graphics sfml-window sfml-system sfml-audio)
+
+include_directories(GameEngineLib/include)
+
+add_subdirectory(GameEngineLib)
 
 # Ajoutez l'exécutable client.cpp
 add_executable(client client.cpp)
@@ -88,5 +92,5 @@ add_custom_command(TARGET client POST_BUILD
 		${CMAKE_SOURCE_DIR}/assets ${CMAKE_BINARY_DIR}/assets)
 
 # Liez l'exécutable à la bibliothèque
-target_link_libraries(client gameEngineLib)
-target_link_libraries(server gameEngineLib)
+target_link_libraries(client GameEngineLib)
+target_link_libraries(server GameEngineLib)
