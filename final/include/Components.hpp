@@ -580,8 +580,8 @@ public:
 
     class Id {
         public:
-            Id(size_t id) : id(id) {};
-            size_t id;
+            Id(std::size_t id) : id(id) {};
+            std::size_t id;
     };
 
     class Shootable {
@@ -607,8 +607,8 @@ public:
 
     class Type {
         public:
-            Type(size_t _type) {type = _type;};
-            size_t type;
+            Type(std::size_t _type) {type = _type;};
+            std::size_t type;
     };
 
 class Sendable
@@ -662,6 +662,7 @@ public:
     std::shared_ptr<sf::Music> music;
     bool loop;
     float volume;
+    bool played = false;
 };
 
     // class ComponentFactory {

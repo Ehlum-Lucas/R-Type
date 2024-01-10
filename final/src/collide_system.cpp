@@ -29,7 +29,7 @@ void collide_system(Registry &r)
     auto &ids = r.get_components<Id>();
     auto &onCollideDestroys = r.get_components<OnCollideDestroy>();
 
-    for (size_t i = 0; i < positions.size() && i < box_colliders.size() && i < sprites.size() && i < sizes.size() && i < ids.size() && i < onCollideDestroys.size(); ++i) {
+    for (std::size_t i = 0; i < positions.size() && i < box_colliders.size() && i < sprites.size() && i < sizes.size() && i < ids.size() && i < onCollideDestroys.size(); ++i) {
         bool check = false;
         auto &pos1 = positions[i];
         auto &box_collider1 = box_colliders[i];
@@ -46,7 +46,7 @@ void collide_system(Registry &r)
             col1.setPosition(pos1.value().x, pos1.value().y);
             if (box_collider1.value().draw)
                 r._window->draw(col1);
-            for (size_t y = 0; y < positions.size() && y < box_colliders.size() && y < onCollideDestroys.size() && y < ids.size(); ++y) {
+            for (std::size_t y = 0; y < positions.size() && y < box_colliders.size() && y < onCollideDestroys.size() && y < ids.size(); ++y) {
                 auto &pos2 = positions[y];
                 auto &box_collider2 = box_colliders[y];
                 auto &sprite2 = sprites[y];

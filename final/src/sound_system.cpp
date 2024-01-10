@@ -22,18 +22,34 @@
 void sound_system(Registry &r)
 {
     auto &sounds = r.get_components<Sound>();
+    auto &musics = r.get_components<Music>();
 
-    for (size_t i = 0; i < sounds.size(); ++i)
+    for (std::size_t i = 0; i < sounds.size(); ++i)
     {
         auto &sound = sounds[i];
 
         // Spawn sound
         if (sound)
         {
-            if (sound.value().sound->getStatus() != sf::Sound::Playing && !sound.value().played && !sound.value().loop)
+            if (sound.value().sound->getStatus() != sf::Sound::Playing && !sound.value().played)
             {
                 sound.value().sound->play();
-                sound.value().played = true;
+                if (!sound.value().loop)
+                    sound.value().played = true;
+            }
+        }
+    }
+    for (std::size_t i = 0; i < musics.size(); ++i)
+    {
+        auto &music = musics[i];
+
+        if (music)
+        {
+            if (music.value().music->getStatus() != sf::SoundSource::Playing)
+            {
+                music.value().music->play();
+                if (!music.value().loop)
+                    music.value().played = true;
             }
         }
     }

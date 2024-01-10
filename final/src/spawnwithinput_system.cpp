@@ -25,7 +25,7 @@ void spawn_with_input_system(Registry &r)
     auto &spawnwithinputs = r.get_components<SpawnWithInput>();
     auto &positions = r.get_components<Position>();
 
-    for (size_t i = 0; i < spawnwithinputs.size() && i < positions.size(); ++i) {
+    for (std::size_t i = 0; i < spawnwithinputs.size() && i < positions.size(); ++i) {
         auto &spawnwithinput = spawnwithinputs[i];
         auto const &pos = positions[i];
 

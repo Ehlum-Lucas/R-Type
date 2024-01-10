@@ -23,7 +23,7 @@ void position_system (Registry &r) {
     auto &positions = r.get_components<Position>();
     auto &velocities = r.get_components<Velocity>();
 
-    for ( size_t i = 0; i < positions.size() && i < velocities.size(); ++i) {
+    for ( std::size_t i = 0; i < positions.size() && i < velocities.size(); ++i) {
         auto &pos = positions[i];
         auto const &vel = velocities[i];
 

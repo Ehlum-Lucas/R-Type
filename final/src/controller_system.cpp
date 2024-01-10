@@ -26,7 +26,7 @@ void controller_system(Registry &r) {
     auto &velocities = r.get_components<Velocity>();
     auto &speeds = r.get_components<Speed>();
 
-    for (size_t i = 0; i < controllers.size() && i < velocities.size(); ++i) {
+    for (std::size_t i = 0; i < controllers.size() && i < velocities.size(); ++i) {
         auto &controller = controllers[i];
         auto &velocity = velocities[i];
         auto &speed = speeds[i];

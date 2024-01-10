@@ -45,7 +45,7 @@
             std::string receiveMessage() {
                 char buf[100000];
                 asio::ip::udp::endpoint sender_endpoint;
-                size_t len = _socket.receive_from(asio::buffer(buf), sender_endpoint);
+                std::size_t len = _socket.receive_from(asio::buffer(buf), sender_endpoint);
                 return std::string(buf, len);
             }
 

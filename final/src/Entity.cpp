@@ -12,7 +12,7 @@
  * @brief This file contains the implementation of the `Entity` class.
  */
 
-size_t next_entity_id = 0;
+std::size_t next_entity_id = 0;
 
 /**
  * The Entity constructor assigns an ID to a new entity object, either by incrementing the

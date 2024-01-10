@@ -30,7 +30,7 @@ void draw_system(Registry &r)
     auto &sprites = r.get_components<Sprite>();
     auto &sizes = r.get_components<Size>();
 
-    for (size_t i = 0; i < drawables.size() && i < positions.size() && i < rectangle_shapes.size() && i < colors.size(); ++i)
+    for (std::size_t i = 0; i < drawables.size() && i < positions.size() && i < rectangle_shapes.size() && i < colors.size(); ++i)
     {
         auto &drawable = drawables[i];
         auto &position = positions[i];
@@ -50,7 +50,7 @@ void draw_system(Registry &r)
     // std::cout << "sizes.size() = " << sizes.size() << std::endl;
     // std::cout << "positions.size() = " << positions.size() << std::endl;
 
-    for (size_t i = 0; i < sprites.size() && i < sizes.size() && i < positions.size(); ++i)
+    for (std::size_t i = 0; i < sprites.size() && i < sizes.size() && i < positions.size(); ++i)
     {
         auto &animsprite = animsprites[i];
         auto &sprite = sprites[i];
@@ -80,7 +80,7 @@ void draw_system(Registry &r)
         }
     }
 
-    for (size_t i = 0; i < animsprites.size() && i < sizes.size() && i < positions.size(); ++i)
+    for (std::size_t i = 0; i < animsprites.size() && i < sizes.size() && i < positions.size(); ++i)
     {
         auto &animsprite = animsprites[i];
         auto &size = sizes[i];

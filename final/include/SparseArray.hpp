@@ -47,8 +47,8 @@
                 return *this;
             }
 
-            reference_type operator[](size_t idx) { return _data[idx]; }
-            const_reference_type operator[](size_t idx) const { return _data[idx]; }
+            reference_type operator[](std::size_t idx) { return _data[idx]; }
+            const_reference_type operator[](std::size_t idx) const { return _data[idx]; }
 
             iterator begin() {return _data.begin();};
             const_iterator begin() const {return _data.begin();};

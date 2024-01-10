@@ -29,7 +29,7 @@ std::string onclickloadscene_system(Registry &r)
     auto &onclickloadscenes = r.get_components<OnClickLoadScene>();
     auto &sprites = r.get_components<Sprite>();
 
-    for (size_t i = 0; i < sprites.size() && i < onclickloadscenes.size(); ++i) {
+    for (std::size_t i = 0; i < sprites.size() && i < onclickloadscenes.size(); ++i) {
         auto &sprite = sprites[i];
         auto &onclickloadscene = onclickloadscenes[i];
 

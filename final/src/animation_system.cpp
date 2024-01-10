@@ -25,7 +25,7 @@ void animation_system(Registry &r)
     auto &positions = r.get_components<Position>();
     auto &sizes = r.get_components<Size>();
 
-    for (size_t i = 0; i < animated_sprites.size(); ++i)
+    for (std::size_t i = 0; i < animated_sprites.size(); ++i)
     {
         auto &animsprite = animated_sprites[i];
         auto &position = positions[i];
