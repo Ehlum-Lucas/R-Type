@@ -66,6 +66,7 @@
                         delete_components_by_entity_id<Size>(id);
                         delete_components_by_entity_id<BoxCollider>(id);
                         delete_components_by_entity_id<SpawnWithInput>(id);
+                        delete_components_by_entity_id<Send>(id);
                         
                         delete_components_by_entity_id<Id>(id);
                         it->delete_entity();

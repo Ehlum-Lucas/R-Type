@@ -118,7 +118,16 @@ void GameEngine::serialize_game()
 
             bool send = true;
             bool cont = false;
+            bool force_send = false;
 
+            auto &sends = current_scene->registry->get_components<Send>();
+            for (size_t j = 0; j < sends.size() && j < types.size(); j++) {
+                if (types[j] && types[j].value().type == base_type.value().type && sends[j]) {
+                    force_send = true;
+                    break;
+                }
+            }
+            
             // Controller
             auto &controllers = current_scene->registry->get_components<Controller>();
             for (size_t j = 0; j < controllers.size() && j < types.size(); j++) {
@@ -155,7 +164,11 @@ void GameEngine::serialize_game()
                     serialized_entity +=  _inputGestion.sf_key_to_binary(controllers[j].value().right);
                 }
             }
-            if (!send || (!_host && !cont)) {
+
+
+
+
+            if ((!send && !force_send) || (!_host && !cont && !force_send)) {
                 continue;
             }
 
@@ -734,7 +747,6 @@ void GameEngine::unserialize_game()
                 }
                 if (!exist) {
                     current_scene->registry->add_component(e, SpawnWithInput(get_prefab_name_with_id(std::stoi(prefab_id)), _inputGestion.binary_to_sf_key(input), std::stod(delay), at_parent_pos, std::stod(angle)));
-                    std::cout << "SpawnWithInput had been created" << std::endl;
                 }
             }
         }
