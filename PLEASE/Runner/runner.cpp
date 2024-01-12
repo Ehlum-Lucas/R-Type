@@ -96,6 +96,12 @@ int main()
 
     // Parralax Level 1
 
+    Entity txt = ecs.scene("level1")->create_entity();
+    ecs.scene("level1")->registry->add_component(txt, Text("assets/fonts/BruceForeverRegular-X3jd2.ttf", "PRESS [ D ] to show collisions", 32));
+    ecs.scene("level1")->registry->add_component(txt, Color(COLOR_BLACK));
+    ecs.scene("level1")->registry->add_component(txt, Position(1180, 20));
+    ecs.scene("level1")->registry->add_component(txt, Drawable());
+
     Entity sky = ecs.scene("level1")->create_entity();
     ecs.scene("level1")->registry->add_component(sky, Position(1920, 540));
     ecs.scene("level1")->registry->add_component(sky, Size(1, 1));
@@ -103,6 +109,7 @@ int main()
     ecs.scene("level1")->registry->add_component(sky, Sprite("assets/city-day/city-parralax-1.png"));
     ecs.scene("level1")->registry->add_component(sky, Parralax(1920, 540, 0));
     ecs.scene("level1")->registry->add_component(sky, Velocity(-2.75, 0));
+
 
     Entity backgroundCity2 = ecs.scene("level1")->create_entity();
     ecs.scene("level1")->registry->add_component(backgroundCity2, Position(1920, 540));

@@ -73,6 +73,7 @@
                         delete_components_by_entity_id<OnCollideStop>(id);
                         delete_components_by_entity_id<AddForce>(id);
                         delete_components_by_entity_id<ShowCollisionsWithInput>(id);
+                        delete_components_by_entity_id<Text>(id); 
                         
                         delete_components_by_entity_id<Id>(id);
                         it->delete_entity();

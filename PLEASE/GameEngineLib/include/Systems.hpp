@@ -29,6 +29,7 @@
     void oncollidestop_system(Registry &r);
     void addforce_system(Registry &r);
     void showcollisionswithinput_system(Registry &r);
+    void text_system(Registry &r);
     
 
 #endif /* !SYSTEMS_HPP_ */

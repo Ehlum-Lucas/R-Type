@@ -968,6 +968,7 @@ void GameEngine::update()
             showcollisionswithinput_system(*current_scene->registry.get());
             boxcollider_system(*current_scene->registry.get());
             oncollidestop_system(*current_scene->registry.get());
+            text_system(*current_scene->registry.get());
             _window->display();
         }
     }

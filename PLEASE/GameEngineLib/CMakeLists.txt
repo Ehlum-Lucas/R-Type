@@ -28,6 +28,7 @@ set(SOURCES
             src/oncollidestop_system.cpp
             src/addforce_system.cpp
             src/showcollisionswithinput_system.cpp
+            src/text_system.cpp
 )
 
 include_directories(include)

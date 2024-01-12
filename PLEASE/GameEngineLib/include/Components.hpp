@@ -666,6 +666,18 @@
             bool sended = false;
     };
 
+    class Text {
+        public:
+            Text(std::string _path, std::string _text, float _size) {
+                font = texturesLoader.get_font(_path);
+                text.setFont(*font.get());
+                text.setString(_text);
+                text.setCharacterSize(_size);
+            };
+            std::shared_ptr<sf::Font> font;
+            sf::Text text;
+    };
+
     // class ComponentFactory {
     //     public:
     //         void add_any_component_to_registry(Entity e, std::any component, Registry &r)

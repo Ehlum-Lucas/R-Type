@@ -57,6 +57,7 @@ Scene::Scene(std::string _name, std::shared_ptr<sf::RenderWindow> window, sf::Ev
     registry->register_component<OnCollideStop>();
     registry->register_component<AddForce>();
     registry->register_component<ShowCollisionsWithInput>();
+    registry->register_component<Text>();
 }
 
 /**
