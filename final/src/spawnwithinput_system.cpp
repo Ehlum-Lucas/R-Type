@@ -81,8 +81,8 @@ void spawn_with_input_system(Registry &r)
                         } else if (component.type() == typeid(CircleShape)) {
                             auto &comp = std::any_cast<CircleShape&>(component);
                             r.add_component_from_prefab(e, comp);
-                        } else if (component.type() == typeid(OnCollideDestroy)) {
-                            auto &comp = std::any_cast<OnCollideDestroy&>(component);
+                        } else if (component.type() == typeid(OnCollide)) {
+                            auto &comp = std::any_cast<OnCollide&>(component);
                             r.add_component_from_prefab(e, comp);
                         }
                     }

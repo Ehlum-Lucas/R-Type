@@ -40,7 +40,7 @@ void draw_system(Registry &r)
         if (drawable && position && rectangle_shape && color)
         {
             rectangle_shape.value().shape.setPosition(position.value().x, position.value().y);
-            rectangle_shape.value().shape.setFillColor(color.value().color);
+            rectangle_shape.value().shape.setFillColor(sf::Color(color.value().r, color.value().g, color.value().b));
             r._window->draw(rectangle_shape.value().shape);
         }
     }

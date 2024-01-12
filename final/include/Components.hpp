@@ -18,19 +18,19 @@
     #include <any>
 
 
-    #define COLOR_RED sf::Color(255, 0, 0)
-    #define COLOR_GREEN sf::Color(0, 255, 0)
-    #define COLOR_BLUE sf::Color(0, 0, 255)
-    #define COLOR_YELLOW sf::Color(255, 255, 0)
-    #define COLOR_MAGENTA sf::Color(255, 0, 255)
-    #define COLOR_CYAN sf::Color(0, 255, 255)
-    #define COLOR_WHITE sf::Color(255, 255, 255)
-    #define COLOR_BLACK sf::Color(0, 0, 0)
-    #define COLOR_ORANGE sf::Color(255, 165, 0)
-    #define COLOR_PINK sf::Color(255, 192, 203)
-    #define COLOR_GREY sf::Color(128, 128, 128)
-    #define COLOR_BROWN sf::Color(165, 42, 42)
-    #define COLOR_TRANSPARENT sf::Color(0, 0, 0, 0)
+    #define COLOR_RED Color(255, 0, 0)
+    #define COLOR_GREEN Color(0, 255, 0)
+    #define COLOR_BLUE Color(0, 0, 255)
+    #define COLOR_YELLOW Color(255, 255, 0)
+    #define COLOR_MAGENTA Color(255, 0, 255)
+    #define COLOR_CYAN Color(0, 255, 255)
+    #define COLOR_WHITE Color(255, 255, 255)
+    #define COLOR_BLACK Color(0, 0, 0)
+    #define COLOR_ORANGE Color(255, 165, 0)
+    #define COLOR_PINK Color(255, 192, 203)
+    #define COLOR_GREY Color(128, 128, 128)
+    #define COLOR_BROWN Color(165, 42, 42)
+    #define COLOR_TRANSPARENT Color(0, 0, 0, 0)
 
     class InputGestion {
         public:
@@ -444,8 +444,11 @@
     // color component
     class Color {
         public:
-            Color(sf::Color color) : color(color) {};
-            sf::Color color;
+            Color() : r(0), g(0), b(0) {};
+            Color(std::size_t r, std::size_t g, std::size_t b) : r(r), g(g), b(b) {};
+            std::size_t r;
+            std::size_t g;
+            std::size_t b;
     };
 
     // gravity component
@@ -568,14 +571,14 @@ public:
     // box collider component
     class BoxCollider {
         public:
-            BoxCollider(std::string _tag, bool _draw = false, sf::Color _color = COLOR_RED) {
+            BoxCollider(std::string _tag, bool _draw = false, Color _color = COLOR_RED) {
                 tag = _tag;
                 draw = _draw;
                 color = _color;
             };
             bool draw;
             std::string tag;
-            sf::Color color;
+            Color color;
     };
 
     class Id {
@@ -589,12 +592,14 @@ public:
             Shootable() {};
     };
 
-    class OnCollideDestroy {
+    class OnCollide {
         public:
-            OnCollideDestroy(std::string _tag) {
+            OnCollide(std::string _tag, std::string _type) {
                 tag = _tag;
+                type = _type;
             };
             std::string tag;
+            std::string type;
     };
 
     class OnClickLoadScene {
