@@ -25,5 +25,10 @@
     std::vector<std::string> serialize_components(Registry &r);
     void parralax_system (Registry &r);
     std::string  spawn_with_input_system(Registry &r, bool online);
+    void boxcollider_system(Registry &r);
+    void oncollidestop_system(Registry &r);
+    void addforce_system(Registry &r);
+    void showcollisionswithinput_system(Registry &r);
+    
 
 #endif /* !SYSTEMS_HPP_ */

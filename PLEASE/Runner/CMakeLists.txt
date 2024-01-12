@@ -60,6 +60,10 @@ set(SOURCES
             ../GameEngineLib/src/TexturesLoader.cpp
             ../GameEngineLib/src/parralax_system.cpp
             ../GameEngineLib/src/parsing.cpp
+            ../GameEngineLib/src/boxcollider_system.cpp
+            ../GameEngineLib/src/oncollidestop_system.cpp
+            ../GameEngineLib/src/addforce_system.cpp
+            ../GameEngineLib/src/showcollisionswithinput_system.cpp
 )
 
 # Ajoutez les fichiers source à la bibliothèque

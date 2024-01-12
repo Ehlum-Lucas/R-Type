@@ -54,6 +54,9 @@ Scene::Scene(std::string _name, std::shared_ptr<sf::RenderWindow> window, sf::Ev
     registry->register_component<Sendable>();
     registry->register_component<Parralax>();
     registry->register_component<Send>();
+    registry->register_component<OnCollideStop>();
+    registry->register_component<AddForce>();
+    registry->register_component<ShowCollisionsWithInput>();
 }
 
 /**

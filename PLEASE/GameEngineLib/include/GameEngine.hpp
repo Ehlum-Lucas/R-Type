@@ -178,6 +178,23 @@
                 return _textures[indice];
             }
 
+            void create_font(std::string const &path) {
+                texturesLoader.set_font(path);
+                _fonts[indice_font++] = path;
+            }
+
+            int get_font_indice(std::string const &path) {
+                for (auto font : _fonts) {
+                    if (font.second == path)
+                        return font.first;
+                }
+                return -1;
+            }
+
+            std::string get_font_path(int indice) {
+                return _fonts[indice];
+            }
+
         private:
             std::shared_ptr<sf::RenderWindow> _window;
             sf::Event _event;
@@ -214,6 +231,9 @@
 
             std::map <int, std::string> _textures;
             int indice_texture = 0;
+
+            std::map<int, std::string> _fonts;
+            int indice_font = 0;
 
             bool _game_is_running = false;
             InputGestion _inputGestion;

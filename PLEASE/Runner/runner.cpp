@@ -22,6 +22,8 @@ int main()
     ecs.create_scene("level6");
     ecs.create_scene("level7");
 
+    ecs.create_font("assets/fonts/BruceForeverRegular-X3jd2.ttf");
+
     ecs.create_texture("assets/character/Player.png");
     ecs.create_texture("assets/city-day/city-parralax-1.png");
     ecs.create_texture("assets/city-day/city-parralax-2.png");
@@ -94,7 +96,6 @@ int main()
 
     // Parralax Level 1
 
-
     Entity sky = ecs.scene("level1")->create_entity();
     ecs.scene("level1")->registry->add_component(sky, Position(1920, 540));
     ecs.scene("level1")->registry->add_component(sky, Size(1, 1));
@@ -142,14 +143,18 @@ int main()
     ecs.scene("level1")->registry->add_component(ground, Sprite("assets/city-day/city-parralax-6.png"));
     ecs.scene("level1")->registry->add_component(ground, Parralax(1920, 540, 0));
     ecs.scene("level1")->registry->add_component(ground, Velocity(-4, 0));
+    ecs.scene("level1")->registry->add_component(ground, BoxCollider("ground", 3840, 58, 0, 520, false, COLOR_YELLOW_128));
 
     Entity player = ecs.scene("level1")->create_entity();
     ecs.scene("level1")->registry->add_component(player, Position(100, 50));
-    ecs.scene("level1")->registry->add_component(player, Size(2, 2));
+    ecs.scene("level1")->registry->add_component(player, Size(3, 3));
     ecs.scene("level1")->registry->add_component(player, Drawable());
     ecs.scene("level1")->registry->add_component(player, Sprite("assets/character/Player.png"));
-    ecs.scene("level1")->registry->add_component(player, BoxCollider("player", true, COLOR_RED));
-    ecs.scene("level1")->registry->add_component(player, Gravity(2));
+    ecs.scene("level1")->registry->add_component(player, BoxCollider("player", 70, 90, 0, 6, false, COLOR_RED_128));
+    ecs.scene("level1")->registry->add_component(player, OnCollideStop("ground"));
+    ecs.scene("level1")->registry->add_component(player, Gravity(8));
+    ecs.scene("level1")->registry->add_component(player, AddForce(-20, 200, "space"));
+    ecs.scene("level1")->registry->add_component(player, ShowCollisionsWithInput("d"));
 
     // Parralax Level 2
 
@@ -524,7 +529,7 @@ int main()
     ecs.scene("level7")->registry->add_component(backgroundSnow9, Parralax(1920, 540, 0));
     ecs.scene("level7")->registry->add_component(backgroundSnow9, Velocity(-4, 0));
 
-    ecs.load_scene("menu");
+    ecs.load_scene("level1");
     ecs.update();
 
     return 0;

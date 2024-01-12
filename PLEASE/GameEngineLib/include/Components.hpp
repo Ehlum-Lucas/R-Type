@@ -31,6 +31,20 @@
     #define COLOR_BROWN sf::Color(165, 42, 42)
     #define COLOR_TRANSPARENT sf::Color(0, 0, 0, 0)
 
+    #define COLOR_RED_128 sf::Color(255, 0, 0, 128)
+    #define COLOR_GREEN_128 sf::Color(0, 255, 0, 128)
+    #define COLOR_BLUE_128 sf::Color(0, 0, 255)
+    #define COLOR_YELLOW_128 sf::Color(255, 255, 0, 128)
+    #define COLOR_MAGENTA_128 sf::Color(255, 0, 255)
+    #define COLOR_CYAN_128 sf::Color(0, 255, 255)
+    #define COLOR_WHITE_128 sf::Color(255, 255, 255)
+    #define COLOR_BLACK_128 sf::Color(0, 0, 0, 128)
+    #define COLOR_ORANGE_128 sf::Color(255, 165, 0, 128)
+    #define COLOR_PINK_128 sf::Color(255, 192, 203)
+    #define COLOR_GREY_128 sf::Color(128, 128, 0, 128)
+    #define COLOR_BROWN_128 sf::Color(165, 42, 42)
+    #define COLOR_TRANSPARENT_128 sf::Color(0, 0, 0, 0, 128)
+
     class InputGestion {
         public:
             sf::Keyboard::Key get_key(std::string key)
@@ -455,6 +469,28 @@
             std::string direction;
     };
 
+    // addForce component
+    class AddForce {
+        public:
+            AddForce(float _force, float _end_point, std::string _input, std::string _direction = "y") {
+                force = _force;
+                end_point = _end_point;
+                direction = _direction;
+                input = inputGestion.get_key(_input);
+            };
+            float force;
+            float end_point;
+            float start_x;
+            float start_y;
+            bool processing = false;
+            bool key_was_pressed = false;
+            std::string direction;
+            sf::Keyboard::Key input;
+
+        private:
+            InputGestion inputGestion;
+    };
+
     // controller component
     class Controller {
         public:
@@ -547,14 +583,43 @@
     // box collider component
     class BoxCollider {
         public:
-            BoxCollider(std::string _tag, bool _draw = false, sf::Color _color = COLOR_RED) {
+            BoxCollider(std::string _tag, float _width, float _height, float _origin_x = 0.0, float _origin_y = 0.0, bool _draw = false, sf::Color _color = COLOR_RED) {
                 tag = _tag;
                 draw = _draw;
                 color = _color;
+                width = _width;
+                height = _height;
+                origin_x = _origin_x;
+                origin_y = _origin_y;
+                collider = std::make_shared<sf::RectangleShape>(sf::Vector2f(width,height));
             };
             bool draw;
             std::string tag;
             sf::Color color;
+            std::shared_ptr<sf::RectangleShape> collider;
+            float width;
+            float height;
+            float origin_x;
+            float origin_y;
+            bool collide = true;
+    };
+
+    // ShowCollisionsWithInput
+    class ShowCollisionsWithInput {
+        public:
+            ShowCollisionsWithInput(std::string _input) {input = inputGestion.get_key(_input);};
+
+            sf::Keyboard::Key input;
+            bool showed = true;
+            bool released = true;
+        private:
+            InputGestion inputGestion;
+    };
+
+    class OnCollideStop {
+        public:
+            OnCollideStop(std::string _tag) {tag =_tag;};
+            std::string tag;
     };
 
     class Id {

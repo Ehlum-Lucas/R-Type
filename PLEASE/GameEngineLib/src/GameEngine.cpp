@@ -959,11 +959,15 @@ void GameEngine::update()
                 }
             }
             spawn_with_input_system(*current_scene->registry.get(), false);
-            position_system(*current_scene->registry.get());
             parralax_system(*current_scene->registry.get());
             gravity_system(*current_scene->registry.get());
-            collide_system(*current_scene->registry.get());
+            // collide_system(*current_scene->registry.get());
+            addforce_system(*current_scene->registry.get());
+            position_system(*current_scene->registry.get());
             draw_system(*current_scene->registry.get());
+            showcollisionswithinput_system(*current_scene->registry.get());
+            boxcollider_system(*current_scene->registry.get());
+            oncollidestop_system(*current_scene->registry.get());
             _window->display();
         }
     }
