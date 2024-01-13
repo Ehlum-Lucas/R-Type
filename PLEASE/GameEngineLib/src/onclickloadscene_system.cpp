@@ -34,7 +34,7 @@ std::string onclickloadscene_system(Registry &r)
         auto &onclickloadscene = onclickloadscenes[i];
 
 
-        if (sf::Mouse::isButtonPressed(sf::Mouse::Left)) {
+        if (sf::Mouse::isButtonPressed(sf::Mouse::Left) && sprite && onclickloadscene) {
             sf::Vector2i mousePosition = sf::Mouse::getPosition();
             if (sprite.value().sprite.getGlobalBounds().contains(mousePosition.x, mousePosition.y)) {
                 return onclickloadscene.value().scene_name;

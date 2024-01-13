@@ -84,15 +84,128 @@ int main()
     ecs.create_texture("assets/snow-day/snow-parralax-8.png");
     ecs.create_texture("assets/snow-day/snow-parralax-9.png");
 
+    ecs.create_texture("assets/menu/BackArrow.png");
+    ecs.create_texture("assets/menu/background.png");
+    ecs.create_texture("assets/menu/GreenButton.png");
+    ecs.create_texture("assets/menu/RedButton.png");
+    ecs.create_texture("assets/menu/background.png");
+    ecs.create_texture("assets/menu/RightArrow.png");
 
-    Entity button = ecs.scene("menu")->create_entity();
+    // Menu
 
-    ecs.scene("menu")->registry->add_component(button, Position(800, 500));
-    ecs.scene("menu")->registry->add_component(button, Size(10, 5));
-    ecs.scene("menu")->registry->add_component(button, Drawable());
-    ecs.scene("menu")->registry->add_component(button, Sprite("assets/character/Player.png"));
-    ecs.scene("menu")->registry->add_component(button, OnClickLoadScene("level7"));
+    Entity background = ecs.scene("menu")->create_entity();
+    ecs.scene("menu")->registry->add_component(background, Position(960, -1320));
+    ecs.scene("menu")->registry->add_component(background, Size(1, 1));
+    ecs.scene("menu")->registry->add_component(background, Drawable());
+    ecs.scene("menu")->registry->add_component(background, Sprite("assets/menu/background.png"));
+    ecs.scene("menu")->registry->add_component(background, Parralax(960, -1320, 1080));
+    ecs.scene("menu")->registry->add_component(background, Velocity(0, 1));
 
+    Entity buttonPlay = ecs.scene("menu")->create_entity();
+    ecs.scene("menu")->registry->add_component(buttonPlay, Position(1920/2, 1080/2));
+    ecs.scene("menu")->registry->add_component(buttonPlay, Size(3, 3));
+    ecs.scene("menu")->registry->add_component(buttonPlay, Drawable());
+    ecs.scene("menu")->registry->add_component(buttonPlay, Sprite("assets/menu/GreenButton.png"));
+    ecs.scene("menu")->registry->add_component(buttonPlay, OnClickLoadScene("level1Choose"));
+    ecs.scene("menu")->registry->add_component(buttonPlay, Text("assets/fonts/BruceForeverRegular-X3jd2.ttf", "Play", 64));
+    ecs.scene("menu")->registry->add_component(buttonPlay, Color(COLOR_WHITE));
+
+    Entity Title = ecs.scene("menu")->create_entity();
+    ecs.scene("menu")->registry->add_component(Title, Position(1920/2, 1080/2 - 400));
+    ecs.scene("menu")->registry->add_component(Title, Drawable());
+    ecs.scene("menu")->registry->add_component(Title, Text("assets/fonts/BruceForeverRegular-X3jd2.ttf", "Runner", 128));
+    ecs.scene("menu")->registry->add_component(Title, Color(COLOR_WHITE));
+
+    // Level Choose
+
+    std::map<std::string, std::vector<std::string>> _choices;
+    _choices["level1Choose"] = {"assets/city-day/city-parralax-1.png", "assets/city-day/city-parralax-2.png", "assets/city-day/city-parralax-3.png", "assets/city-day/city-parralax-4.png", "assets/city-day/city-parralax-5.png", "assets/city-day/city-parralax-6.png"};
+    _choices["level2Choose"] = {"assets/desert-day/desert-parralax-1.png", "assets/desert-day/desert-parralax-2.png", "assets/desert-day/desert-parralax-3.png", "assets/desert-day/desert-parralax-4.png", "assets/desert-day/desert-parralax-5.png", "assets/desert-day/desert-parralax-6.png", "assets/desert-day/desert-parralax-7.png", "assets/desert-day/desert-parralax-8.png", "assets/desert-day/desert-parralax-9.png"};
+    _choices["level3Choose"] = {"assets/field-day/field-parralax-1.png", "assets/field-day/field-parralax-2.png", "assets/field-day/field-parralax-3.png", "assets/field-day/field-parralax-4.png", "assets/field-day/field-parralax-5.png", "assets/field-day/field-parralax-6.png", "assets/field-day/field-parralax-7.png", "assets/field-day/field-parralax-8.png", "assets/field-day/field-parralax-9.png", "assets/field-day/field-parralax-10.png"};
+    _choices["level4Choose"] = {"assets/forest-day/forest-parralax-1.png", "assets/forest-day/forest-parralax-2.png", "assets/forest-day/forest-parralax-3.png", "assets/forest-day/forest-parralax-4.png", "assets/forest-day/forest-parralax-5.png"};
+    _choices["level5Choose"] = {"assets/hills-days/hills-parralax-1.png", "assets/hills-days/hills-parralax-2.png", "assets/hills-days/hills-parralax-3.png", "assets/hills-days/hills-parralax-4.png", "assets/hills-days/hills-parralax-5.png", "assets/hills-days/hills-parralax-6.png", "assets/hills-days/hills-parralax-7.png"};
+    _choices["level6Choose"] = {"assets/mysterious-forest/mysterious-parralax-1.png", "assets/mysterious-forest/mysterious-parralax-2.png", "assets/mysterious-forest/mysterious-parralax-3.png", "assets/mysterious-forest/mysterious-parralax-4.png", "assets/mysterious-forest/mysterious-parralax-5.png", "assets/mysterious-forest/mysterious-parralax-6.png"};
+    _choices["level7Choose"] = {"assets/snow-day/snow-parralax-1.png", "assets/snow-day/snow-parralax-2.png", "assets/snow-day/snow-parralax-3.png", "assets/snow-day/snow-parralax-4.png", "assets/snow-day/snow-parralax-5.png", "assets/snow-day/snow-parralax-6.png", "assets/snow-day/snow-parralax-7.png", "assets/snow-day/snow-parralax-8.png", "assets/snow-day/snow-parralax-9.png"};
+
+    std::map<std::string, std::string> _names_scenes;
+    _names_scenes["level1Choose"] = "The City";
+    _names_scenes["level2Choose"] = "The Desert";
+    _names_scenes["level3Choose"] = "The Field";
+    _names_scenes["level4Choose"] = "The Forest";
+    _names_scenes["level5Choose"] = "The Hills";
+    _names_scenes["level6Choose"] = "The Dark Forest";
+    _names_scenes["level7Choose"] = "The Snow";
+
+    std::map<std::string, std::string> _names_back;
+    _names_back["level1Choose"] = "level7Choose";
+    _names_back["level2Choose"] = "level1Choose";
+    _names_back["level3Choose"] = "level2Choose";
+    _names_back["level4Choose"] = "level3Choose";
+    _names_back["level5Choose"] = "level4Choose";
+    _names_back["level6Choose"] = "level5Choose";
+    _names_back["level7Choose"] = "level6Choose";
+
+    std::map<std::string, std::string> _names_next;
+    _names_next["level1Choose"] = "level2Choose";
+    _names_next["level2Choose"] = "level3Choose";
+    _names_next["level3Choose"] = "level4Choose";
+    _names_next["level4Choose"] = "level5Choose";
+    _names_next["level5Choose"] = "level6Choose";
+    _names_next["level6Choose"] = "level7Choose";
+    _names_next["level7Choose"] = "level1Choose";
+
+    std::map<std::string, std::string> _names_play;
+    _names_play["level1Choose"] = "level1";
+    _names_play["level2Choose"] = "level2";
+    _names_play["level3Choose"] = "level3";
+    _names_play["level4Choose"] = "level4";
+    _names_play["level5Choose"] = "level5";
+    _names_play["level6Choose"] = "level6";
+    _names_play["level7Choose"] = "level7";
+
+    for (const auto& pair : _choices) {
+        const std::string& scene_name = pair.first;
+        const std::vector<std::string>& paths = pair.second;
+
+        ecs.create_scene(scene_name);
+
+        for (auto &path : paths) {
+            Entity entity = ecs.scene(scene_name)->create_entity();
+            ecs.scene(scene_name)->registry->add_component(entity, Position(1920, 540));
+            ecs.scene(scene_name)->registry->add_component(entity, Size(1, 1));
+            ecs.scene(scene_name)->registry->add_component(entity, Drawable());
+            ecs.scene(scene_name)->registry->add_component(entity, Sprite(path));
+        }
+
+        Entity txt = ecs.scene(scene_name)->create_entity();
+        ecs.scene(scene_name)->registry->add_component(txt, Position(1920/2, 1080/2 - 400));
+        ecs.scene(scene_name)->registry->add_component(txt, Drawable());
+        ecs.scene(scene_name)->registry->add_component(txt, Text("assets/fonts/BruceForeverRegular-X3jd2.ttf", _names_scenes[scene_name], 128));
+        ecs.scene(scene_name)->registry->add_component(txt, Color(COLOR_WHITE));
+
+        Entity backArrow = ecs.scene(scene_name)->create_entity();
+        ecs.scene(scene_name)->registry->add_component(backArrow, Position(1920/2 - 800, 1080/2 + 400));
+        ecs.scene(scene_name)->registry->add_component(backArrow, Drawable());
+        ecs.scene(scene_name)->registry->add_component(backArrow, Size(1, 1));
+        ecs.scene(scene_name)->registry->add_component(backArrow, Sprite("assets/menu/BackArrow.png"));
+        ecs.scene(scene_name)->registry->add_component(backArrow, OnClickLoadScene(_names_back[scene_name]));
+
+        Entity nextArrow = ecs.scene(scene_name)->create_entity();
+        ecs.scene(scene_name)->registry->add_component(nextArrow, Position(1920/2 + 800, 1080/2 + 400));
+        ecs.scene(scene_name)->registry->add_component(nextArrow, Drawable());
+        ecs.scene(scene_name)->registry->add_component(nextArrow, Size(1, 1));
+        ecs.scene(scene_name)->registry->add_component(nextArrow, Sprite("assets/menu/RightArrow.png"));
+        ecs.scene(scene_name)->registry->add_component(nextArrow, OnClickLoadScene(_names_next[scene_name]));
+
+        Entity playButton = ecs.scene(scene_name)->create_entity();
+        ecs.scene(scene_name)->registry->add_component(playButton, Position(1920/2, 1080/2 + 400));
+        ecs.scene(scene_name)->registry->add_component(playButton, Drawable());
+        ecs.scene(scene_name)->registry->add_component(playButton, Size(3, 3));
+        ecs.scene(scene_name)->registry->add_component(playButton, Sprite("assets/menu/GreenButton.png"));
+        ecs.scene(scene_name)->registry->add_component(playButton, OnClickLoadScene(_names_play[scene_name]));
+        ecs.scene(scene_name)->registry->add_component(playButton, Text("assets/fonts/BruceForeverRegular-X3jd2.ttf", "Play", 64));
+        ecs.scene(scene_name)->registry->add_component(playButton, Color(COLOR_WHITE));
+    }
 
     // Parralax Level 1
 
@@ -536,7 +649,7 @@ int main()
     ecs.scene("level7")->registry->add_component(backgroundSnow9, Parralax(1920, 540, 0));
     ecs.scene("level7")->registry->add_component(backgroundSnow9, Velocity(-4, 0));
 
-    ecs.load_scene("level1");
+    ecs.load_scene("menu");
     ecs.update();
 
     return 0;

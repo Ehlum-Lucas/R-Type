@@ -654,7 +654,7 @@
 
     class Parralax {
         public:
-            Parralax(float _start_pos_x, float _start_pos_y, float _reset_pos = 0) {reset_pos = reset_pos; start_pos_x = _start_pos_x; start_pos_y = _start_pos_y;};
+            Parralax(float _start_pos_x, float _start_pos_y, float _reset_pos = 0) {reset_pos = _reset_pos; start_pos_x = _start_pos_x; start_pos_y = _start_pos_y;};
             float reset_pos;
             float start_pos_x;
             float start_pos_y;
@@ -673,6 +673,10 @@
                 text.setFont(*font.get());
                 text.setString(_text);
                 text.setCharacterSize(_size);
+                
+                // Set the origin of the text to the middle
+                sf::FloatRect textBounds = text.getLocalBounds();
+                text.setOrigin(textBounds.left + textBounds.width / 2, textBounds.top + textBounds.height / 2);
             };
             std::shared_ptr<sf::Font> font;
             sf::Text text;
