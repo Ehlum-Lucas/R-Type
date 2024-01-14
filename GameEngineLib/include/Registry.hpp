@@ -76,6 +76,7 @@
                         delete_components_by_entity_id<Text>(id); 
                         delete_components_by_entity_id<SpawnPrefabAtRandomPosition>(id);
                         delete_components_by_entity_id<OnCollideLoadScene>(id);
+                        delete_components_by_entity_id<AnimatedSprite>(id);
                         
                         delete_components_by_entity_id<Id>(id);
                         it->delete_entity();

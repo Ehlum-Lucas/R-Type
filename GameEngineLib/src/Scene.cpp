@@ -60,6 +60,7 @@ Scene::Scene(std::string _name, std::shared_ptr<sf::RenderWindow> window, sf::Ev
     registry->register_component<Text>();
     registry->register_component<SpawnPrefabAtRandomPosition>();
     registry->register_component<OnCollideLoadScene>();
+    registry->register_component<AnimatedSprite>();
 }
 
 /**

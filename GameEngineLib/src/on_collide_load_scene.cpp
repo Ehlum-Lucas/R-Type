@@ -13,8 +13,6 @@ std::string on_collide_load_scene_system(Registry &r)
     auto &boxcolliders = r.get_components<BoxCollider>();
     auto &positions = r.get_components<Position>();
 
-    std::cout << boxcolliders.size() << std::endl;
-
     for (size_t i = 0; i < oncollideloadcenes.size() && i < boxcolliders.size(); ++i) {
         auto &oncollideloadcene = oncollideloadcenes[i];
         auto &boxcollider1 = boxcolliders[i];

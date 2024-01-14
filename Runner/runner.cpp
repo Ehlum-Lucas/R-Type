@@ -24,6 +24,8 @@ int main()
 
     ecs.create_font("assets/fonts/BruceForeverRegular-X3jd2.ttf");
 
+    ecs.create_texture("assets/anim/PlayerAnim.png");
+
     ecs.create_texture("assets/character/Player.png");
     ecs.create_texture("assets/obstacle/barrel.png");
     ecs.create_texture("assets/obstacle/rock.png");
@@ -329,7 +331,7 @@ int main()
     ecs.scene("level1")->registry->add_component(player, Position(100, 900));
     ecs.scene("level1")->registry->add_component(player, Size(3, 3));
     ecs.scene("level1")->registry->add_component(player, Drawable());
-    ecs.scene("level1")->registry->add_component(player, Sprite("assets/character/Player.png"));
+    ecs.scene("level1")->registry->add_component(player, AnimatedSprite("assets/anim/PlayerAnim.png", 0.0, 32, 32, 0, 7, 1));
     ecs.scene("level1")->registry->add_component(player, BoxCollider("player", 70, 90, 0, 6, false, COLOR_RED_128));
     ecs.scene("level1")->registry->add_component(player, OnCollideStop("ground"));
     ecs.scene("level1")->registry->add_component(player, Gravity(8));
@@ -417,7 +419,7 @@ int main()
     ecs.scene("level2")->registry->add_component(player2, Position(100, 900));
     ecs.scene("level2")->registry->add_component(player2, Size(3, 3));
     ecs.scene("level2")->registry->add_component(player2, Drawable());
-    ecs.scene("level2")->registry->add_component(player2, Sprite("assets/character/Player.png"));
+    ecs.scene("level2")->registry->add_component(player2, AnimatedSprite("assets/anim/PlayerAnim.png", 0.0, 32, 32, 0, 7, 1));
     ecs.scene("level2")->registry->add_component(player2, BoxCollider("player", 70, 90, 0, 6, false, COLOR_RED_128));
     ecs.scene("level2")->registry->add_component(player2, OnCollideStop("ground"));
     ecs.scene("level2")->registry->add_component(player2, Gravity(8));
@@ -521,7 +523,7 @@ int main()
     ecs.scene("level3")->registry->add_component(player3, Position(100, 900));
     ecs.scene("level3")->registry->add_component(player3, Size(3, 3));
     ecs.scene("level3")->registry->add_component(player3, Drawable());
-    ecs.scene("level3")->registry->add_component(player3, Sprite("assets/character/Player.png"));
+    ecs.scene("level3")->registry->add_component(player3, AnimatedSprite("assets/anim/PlayerAnim.png", 0.0, 32, 32, 0, 7, 1));
     ecs.scene("level3")->registry->add_component(player3, BoxCollider("player", 70, 90, 0, 6, false, COLOR_RED_128));
     ecs.scene("level3")->registry->add_component(player3, OnCollideStop("ground"));
     ecs.scene("level3")->registry->add_component(player3, Gravity(8));
@@ -585,7 +587,7 @@ int main()
     ecs.scene("level4")->registry->add_component(player4, Position(100, 900));
     ecs.scene("level4")->registry->add_component(player4, Size(3, 3));
     ecs.scene("level4")->registry->add_component(player4, Drawable());
-    ecs.scene("level4")->registry->add_component(player4, Sprite("assets/character/Player.png"));
+    ecs.scene("level4")->registry->add_component(player4, AnimatedSprite("assets/anim/PlayerAnim.png", 0.0, 32, 32, 0, 7, 1));
     ecs.scene("level4")->registry->add_component(player4, BoxCollider("player", 70, 90, 0, 6, false, COLOR_RED_128));
     ecs.scene("level4")->registry->add_component(player4, OnCollideStop("ground"));
     ecs.scene("level4")->registry->add_component(player4, Gravity(8));
@@ -665,7 +667,7 @@ int main()
     ecs.scene("level5")->registry->add_component(player5, Position(100, 900));
     ecs.scene("level5")->registry->add_component(player5, Size(3, 3));
     ecs.scene("level5")->registry->add_component(player5, Drawable());
-    ecs.scene("level5")->registry->add_component(player5, Sprite("assets/character/Player.png"));
+    ecs.scene("level5")->registry->add_component(player5, AnimatedSprite("assets/anim/PlayerAnim.png", 0.0, 32, 32, 0, 7, 1));
     ecs.scene("level5")->registry->add_component(player5, BoxCollider("player", 70, 90, 0, 6, false, COLOR_RED_128));
     ecs.scene("level5")->registry->add_component(player5, OnCollideStop("ground"));
     ecs.scene("level5")->registry->add_component(player5, Gravity(8));
@@ -746,7 +748,7 @@ int main()
     ecs.scene("level6")->registry->add_component(player6, Position(100, 900));
     ecs.scene("level6")->registry->add_component(player6, Size(3, 3));
     ecs.scene("level6")->registry->add_component(player6, Drawable());
-    ecs.scene("level6")->registry->add_component(player6, Sprite("assets/character/Player.png"));
+    ecs.scene("level6")->registry->add_component(player6, AnimatedSprite("assets/anim/PlayerAnim.png", 0.0, 32, 32, 0, 7, 1));
     ecs.scene("level6")->registry->add_component(player6, BoxCollider("player", 70, 90, 0, 6, false, COLOR_RED_128));
     ecs.scene("level6")->registry->add_component(player6, OnCollideStop("ground"));
     ecs.scene("level6")->registry->add_component(player6, Gravity(8));
@@ -842,7 +844,7 @@ int main()
     ecs.scene("level7")->registry->add_component(player7, Position(100, 900));
     ecs.scene("level7")->registry->add_component(player7, Size(3, 3));
     ecs.scene("level7")->registry->add_component(player7, Drawable());
-    ecs.scene("level7")->registry->add_component(player7, Sprite("assets/character/Player.png"));
+    ecs.scene("level7")->registry->add_component(player7, AnimatedSprite("assets/anim/PlayerAnim.png", 0.0, 32, 32, 0, 7, 1));
     ecs.scene("level7")->registry->add_component(player7, BoxCollider("player", 70, 90, 0, 6, false, COLOR_RED_128));
     ecs.scene("level7")->registry->add_component(player7, OnCollideStop("ground"));
     ecs.scene("level7")->registry->add_component(player7, Gravity(8));

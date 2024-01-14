@@ -19,7 +19,6 @@ void GameEngine::add_prefab_to_a_scene(Registry& r, Entity &e, std::string prefa
             auto &sprite = std::any_cast<Sprite&>(component);
             if (is_player) {
                 std::string skin = get_available_player_skin();
-                std::cout << "skin: [" << skin << "]" << std::endl;
                 r.add_component(e, Sprite(skin, sprite.angle));
             } else {
                 r.add_component_from_prefab(e, sprite);
@@ -98,7 +97,6 @@ void GameEngine::serialize_game()
             auto &sends = current_scene->registry->get_components<Send>();
             for (size_t j = 0; j < sends.size() && j < types.size(); j++) {
                 if (types[j] && types[j].value().type == base_type.value().type && sends[j]) {
-                    std::cout << "OH UNE BALLE GARS " << std::endl;
                     force_send = true;
                     break;
                 }
@@ -384,7 +382,6 @@ void GameEngine::unserialize_game()
         // Controller
         if ((pos + 23) <= message.size() && message.substr(pos, 3) == "410") {
             if (!_host && entity_type != _type) {
-                std::cout << entity_type << " != " << _type << std::endl;
                 pos += 23;
             } else {
                 pos += 3;
@@ -823,7 +820,6 @@ void GameEngine::start_receive_host()
                         y += ".";
                         y += message.substr(pos, 7);
                         std::string prefab_name = get_prefab_name_with_id(p_id);
-                        std::cout << "000 " << std::to_string(p_id) << std::endl;
                         Entity e = current_scene->registry->create_entity();
                         current_scene->registry->add_component(e, Id(e.get_id()));
                         current_scene->registry->add_component(e, Type(e_type++));
@@ -859,7 +855,6 @@ void GameEngine::start_send_join()
         if (!ec) {
             if (!_created && !_connected) {
                 _to_send_messages.push_back("111");
-                std::cout << "SEND 111" << std::endl;
             }
             for (auto& message : _to_send_messages) {
                 _socket->send_to(asio::buffer(message), _server_endpoint);
@@ -930,7 +925,6 @@ void GameEngine::update()
                     std::string prefab_name = token;
                     std::getline(iss, token);
                     std::string ser = token;
-                    std::cout << "send -> " << "000" + std::to_string(get_prefab_id_with_name(prefab_name)) + ser << std::endl;
                     _to_send_messages.push_back("000" + std::to_string(get_prefab_id_with_name(prefab_name)) + ser);
                 }
                 controller_system(*current_scene->registry.get());
@@ -964,6 +958,7 @@ void GameEngine::update()
             addforce_system(*current_scene->registry.get());
             position_system(*current_scene->registry.get());
             parralax_system(*current_scene->registry.get());
+            animation_system(*current_scene->registry.get());
             draw_system(*current_scene->registry.get());
             boxcollider_system(*current_scene->registry.get());
             std::string scene_name = on_collide_load_scene_system(*current_scene->registry.get());

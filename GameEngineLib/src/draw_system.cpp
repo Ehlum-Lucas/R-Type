@@ -28,6 +28,7 @@ void draw_system(Registry &r)
     auto &colors = r.get_components<Color>();
     auto &sprites = r.get_components<Sprite>();
     auto &sizes = r.get_components<Size>();
+    auto &animated_sprites = r.get_components<AnimatedSprite>();
 
     // std::cout << "sprites.size() = " << sprites.size() << std::endl;
 
@@ -58,8 +59,20 @@ void draw_system(Registry &r)
         if (sprite && size && position && drawable) {
             sprite.value().sprite.setPosition(position.value().x, position.value().y);
             sprite.value().sprite.setScale(size.value().width, size.value().height);
-            // sprite.value().sprite.setTexture(sprite.value().texture);
             r._window->draw(sprite.value().sprite);
+        }
+    }
+
+    for (size_t i = 0; i < drawables.size() && i < sizes.size() && i < positions.size() && i < animated_sprites.size(); ++i) {
+        auto &size = sizes[i];
+        auto &position = positions[i];
+        auto &drawable = drawables[i];
+        auto &animated_sprite = animated_sprites[i];
+
+        if (size && position && drawable && animated_sprite) {
+            animated_sprite.value().sprite.setPosition(position.value().x, position.value().y);
+            animated_sprite.value().sprite.setScale(size.value().width, size.value().height);
+            r._window->draw(animated_sprite.value().sprite);
         }
     }
 }
