@@ -140,6 +140,8 @@ int main()
     ecs.scene("menu")->registry->add_component(Title, Text("assets/fonts/BruceForeverRegular-X3jd2.ttf", "Runner", 128));
     ecs.scene("menu")->registry->add_component(Title, Color(COLOR_WHITE));
 
+    ecs.scene("menu")->registry->add_component(Title, PlaySound("assets/sounds/Fightwave.ogg", true, 100));
+
     // Level Choose
 
     std::map<std::string, std::vector<std::string>> _choices;
@@ -352,8 +354,6 @@ int main()
     ecs.scene("level1")->registry->add_component(player, AddForce(-20, 200, "space"));
     ecs.scene("level1")->registry->add_component(player, ShowCollisionsWithInput("d"));
     ecs.scene("level1")->registry->add_component(player, OnCollideLoadScene("menu", "obstacle"));
-
-    ecs.scene("level1")->registry->add_component(player, PlaySound("assets/sounds/test.ogg", true, 100));
 
     // Parralax Level 2
 
