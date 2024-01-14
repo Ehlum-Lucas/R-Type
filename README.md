@@ -11,8 +11,39 @@ If you are a developper, you can also visit the [Wiki](https://github.com/Epitec
 
 No prerequisites.
 ## Installing
+### VCPKG
 
-The examples and advices will help you in the process.
+To install vcpkg :
+```bash
+git clone git@github.com:microsoft/vcpkg.git
+```
+
+### Linux
+```bash
+./vcpkg/bootstrap-vcpkg.sh
+export VCPKG_ROOT=/path/to/vcpkg
+source ~./bashrc
+```
+```bash
+mkdir build
+cd build
+cmake ..
+cmake --build .
+```
+
+### Windows :
+```bash
+./vcpkg/bootstrap-vcpkg.bat
+```
+- Go to advanced parameters and add the environnement variable : `VCPKG_ROOT` with the `/path/to/vcpkg`
+Restart your computer if needed
+
+```bash
+cmake ..
+cmake --build .
+```
+
+
 ## Wiki
 
 To access the wiki you can click on this [Wiki](https://github.com/EpitechPromo2026/B-CPP-500-REN-5-2-rtype-lucas.iglesia/wiki).
