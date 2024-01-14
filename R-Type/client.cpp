@@ -48,11 +48,11 @@ int main(int ac, char **av)
 
     Entity parralax = ecs.scene("game")->create_entity();
     ecs.scene("game")->registry->add_component(parralax, Position(1920, 540));
-    ecs.scene("game")->registry->add_component(parralax, Drawable());
     ecs.scene("game")->registry->add_component(parralax, Size(1, 1));
-    ecs.scene("game")->registry->add_component(parralax, Velocity(-1.0, 0.0));
+    ecs.scene("game")->registry->add_component(parralax, Drawable());
     ecs.scene("game")->registry->add_component(parralax, Sprite("assets/spaceBackground.png", 0.0));
-    ecs.scene("game")->registry->add_component(parralax, Parralax(1920, 540, -960));
+    ecs.scene("game")->registry->add_component(parralax, Parralax(1920, 540, 0));
+    ecs.scene("game")->registry->add_component(parralax, Velocity(-10, 0.0));
 
     ecs.create_prefab("player");
     ecs.create_prefab("bullet");
