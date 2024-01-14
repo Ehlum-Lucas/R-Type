@@ -610,7 +610,7 @@
             ShowCollisionsWithInput(std::string _input) {input = inputGestion.get_key(_input);};
 
             sf::Keyboard::Key input;
-            bool showed = true;
+            bool showed = false;
             bool released = true;
         private:
             InputGestion inputGestion;
@@ -680,6 +680,36 @@
             };
             std::shared_ptr<sf::Font> font;
             sf::Text text;
+    };
+
+    class SpawnPrefabAtRandomPosition {
+        public:
+            SpawnPrefabAtRandomPosition(std::string _prefab_name, float _delay, int _x_min, int _x_max, int _y_min, int _y_max) {
+                prefab_name = _prefab_name;
+                timer = _delay;
+                delay = _delay;
+                x_min = _x_min;
+                x_max = _x_max;
+                y_min = _y_min;
+                y_max = _y_max;
+            };
+            std::string prefab_name;
+            float timer;
+            float delay;
+            int x_min;
+            int x_max;
+            int y_min;
+            int y_max;
+    };
+
+    class OnCollideLoadScene {
+        public:
+            OnCollideLoadScene(std::string _scene_name, std::string _tag) {
+                scene_name = _scene_name;
+                tag = _tag;
+            };
+            std::string scene_name;
+            std::string tag;
     };
 
     // class ComponentFactory {

@@ -65,6 +65,8 @@ set(SOURCES
             ../GameEngineLib/src/addforce_system.cpp
             ../GameEngineLib/src/showcollisionswithinput_system.cpp
             ../GameEngineLib/src/text_system.cpp
+            ../GameEngineLib/src/spawn_at_random_position_system.cpp
+            ../GameEngineLib/src/on_collide_load_scene.cpp
 )
 
 # Ajoutez les fichiers source à la bibliothèque

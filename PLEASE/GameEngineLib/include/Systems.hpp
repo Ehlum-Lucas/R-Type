@@ -30,6 +30,8 @@
     void addforce_system(Registry &r);
     void showcollisionswithinput_system(Registry &r);
     void text_system(Registry &r);
+    void spawn_at_random_position_system(Registry &r);
+    std::string on_collide_load_scene_system(Registry &r);
     
 
 #endif /* !SYSTEMS_HPP_ */

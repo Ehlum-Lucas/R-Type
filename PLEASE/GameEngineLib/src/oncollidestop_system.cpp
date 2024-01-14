@@ -24,7 +24,7 @@ void oncollidestop_system(Registry &r)
             for (size_t j = 0; j < boxcolliders.size(); ++j) {
                 auto &boxcollider2 = boxcolliders[j];
 
-                if (boxcollider2 && i != j) {
+                if (boxcollider2 && i != j && oncollidestop.value().tag == boxcollider2.value().tag) {
                     if (boxcollider1.value().collider->getGlobalBounds().intersects(boxcollider2.value().collider->getGlobalBounds())) {
                         boxcollider1.value().collide = true;
                         if (gravity.value().direction == "y") {

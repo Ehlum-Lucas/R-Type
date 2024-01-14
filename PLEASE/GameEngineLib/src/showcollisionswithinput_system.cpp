@@ -16,13 +16,13 @@ void showcollisionswithinput_system(Registry &r)
         auto &show = shows[i];
 
         if (show) {
+            for (size_t j = 0; j < boxcolliders.size(); ++j) {
+                if (boxcolliders[j]) {
+                    boxcolliders[j].value().draw = show.value().showed;
+                }
+            }
             if (show.value().released && sf::Keyboard::isKeyPressed(show.value().input)) {
                 show.value().released = false;
-                for (size_t j = 0; j < boxcolliders.size(); ++j) {
-                    if (boxcolliders[j]) {
-                        boxcolliders[j].value().draw = show.value().showed;
-                    }
-                }
                 if (show.value().showed) {
                     show.value().showed = false;
                 } else {
