@@ -6,7 +6,7 @@
 */
 
 /**
- * @file Components.cpp
+ * @file Components.hpp
  * @brief This file contains the implementation of the `Components` class.
  */
 
@@ -711,52 +711,5 @@
             std::string scene_name;
             std::string tag;
     };
-
-    // class ComponentFactory {
-    //     public:
-    //         void add_any_component_to_registry(Entity e, std::any component, Registry &r)
-    //         {
-    //             if (component.type() == typeid(Sprite)) {
-    //                 auto &sprite = std::any_cast<Sprite&>(component);
-    //                 r.add_component_from_prefab(e, sprite);
-    //             } else if (component.type() == typeid(Position)) {
-    //                 auto &position = std::any_cast<Position&>(component);
-    //                 r.add_component_from_prefab(e, position);
-    //             } else if (component.type() == typeid(Velocity)) {
-    //                 auto &veclocity = std::any_cast<Velocity&>(component);
-    //                 r.add_component_from_prefab(e, veclocity);
-    //             } else if (component.type() == typeid(Size)) {
-    //                 auto &size = std::any_cast<Size&>(component);
-    //                 r.add_component_from_prefab(e, size);
-    //             } else if (component.type() == typeid(Drawable)) {
-    //                 auto &drawable = std::any_cast<Drawable&>(component);
-    //                 r.add_component_from_prefab(e, drawable);
-    //             } else if (component.type() == typeid(BoxCollider)) {
-    //                 auto &boxCollider = std::any_cast<BoxCollider&>(component);
-    //                 r.add_component_from_prefab(e, boxCollider);
-    //             } else if (component.type() == typeid(OnClickLoadScene)) {
-    //                 auto &comp = std::any_cast<OnClickLoadScene&>(component);
-    //                 r.add_component_from_prefab(e, comp);
-    //             } else if (component.type() == typeid(Speed)) {
-    //                 auto &comp = std::any_cast<Speed&>(component);
-    //                 r.add_component_from_prefab(e, comp);
-    //             } else if (component.type() == typeid(Controller)) {
-    //                 auto &comp = std::any_cast<Controller&>(component);
-    //                 r.add_component_from_prefab(e, comp);
-    //             } else if (component.type() == typeid(Gravity)) {
-    //                 auto &comp = std::any_cast<Gravity&>(component);
-    //                 r.add_component_from_prefab(e, comp);
-    //             } else if (component.type() == typeid(Color)) {
-    //                 auto &comp = std::any_cast<Color&>(component);
-    //                 r.add_component_from_prefab(e, comp);
-    //             } else if (component.type() == typeid(RectangleShape)) {
-    //                 auto &comp = std::any_cast<RectangleShape&>(component);
-    //                 r.add_component_from_prefab(e, comp);
-    //             } else if (component.type() == typeid(CircleShape)) {
-    //                 auto &comp = std::any_cast<CircleShape&>(component);
-    //                 r.add_component_from_prefab(e, comp);
-    //             }
-    //         }
-    // };
 
 #endif //COMPONENTS_HPP

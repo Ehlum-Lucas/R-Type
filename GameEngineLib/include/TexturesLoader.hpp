@@ -5,6 +5,11 @@
 ** TexturesLoader
 */
 
+/**
+ * @file TexturesLoader.hpp
+ * @brief This file contains the declaration of the `TextureLoader` class.
+ */
+
 #ifndef TEXTURESLOADER_HPP_
     #define TEXTURESLOADER_HPP_
     #include <SFML/Graphics.hpp>

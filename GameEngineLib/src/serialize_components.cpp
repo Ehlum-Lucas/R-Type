@@ -5,12 +5,12 @@
 ** serialize_components
 */
 
-#include "Systems.hpp"
-
 /**
  * @file serialize_components.cpp
  * @brief This file contains the implementation of the `serialize_components` function.
  */
+
+#include "Systems.hpp"
 
 /**
  * The function `serialize_components` takes a registry object and serializes the components of type

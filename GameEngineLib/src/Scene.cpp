@@ -5,26 +5,24 @@
 ** Scene
 */
 
-#include "Scene.hpp"
-
 /**
  * @file Scene.cpp
  * @brief This file contains the implementation of the `Scene` class.
  */
 
+#include "Scene.hpp"
+
 /**
- * The Scene constructor initializes a scene with a given name, a shared pointer to a render window,
- * and an event object, and registers various components in the scene's registry.
+ * The Scene constructor initializes a scene with a given name and registers various components in the
+ * scene's registry.
  * 
  * @param _name _name is a string that represents the name of the scene. It is used to identify the
- * scene and can be used for various purposes, such as displaying the scene name in the user interface
- * or for internal scene management.
- * @param window The `window` parameter is a `std::shared_ptr` to an `sf::RenderWindow` object. This is
- * a smart pointer that manages the lifetime of the `sf::RenderWindow` object. It is used to interact
- * with the window and render graphics.
- * @param event The "event" parameter is a reference to an sf::Event object. This object is used to
- * handle events such as keyboard input, mouse input, and window events in the SFML library. It allows
- * you to check for and respond to user input and other events that occur during the execution of your
+ * scene and differentiate it from other scenes in the game.
+ * @param window The `window` parameter is a `std::shared_ptr` to an `sf::RenderWindow` object. It
+ * represents the window in which the scene will be rendered.
+ * @param event The `event` parameter is a reference to an `sf::Event` object. `sf::Event` is a class
+ * that represents an event that has occurred in the window, such as a mouse click or a keyboard press.
+ * By passing this parameter to the `Scene` constructor, it allows the
  */
 
 Scene::Scene(std::string _name, std::shared_ptr<sf::RenderWindow> window, sf::Event &event)

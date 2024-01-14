@@ -5,6 +5,11 @@
 ** parsing
 */
 
+/**
+ * @file parsing.hpp
+ * @brief This file contains the declaration of the `parsing` functions.
+ */
+
 #ifndef PARSING_HPP_
     #define PARSING_HPP_
 

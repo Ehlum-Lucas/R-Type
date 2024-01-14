@@ -5,16 +5,15 @@
 ** draw_system
 */
 
-#include "Registry.hpp"
-
 /**
  * @file draw_system.cpp
  * @brief This file contains the implementation of the `draw_system` function.
  */
 
+#include "Registry.hpp"
+
 /**
- * The function `draw_system` iterates through components in a registry and draws rectangles and
- * sprites based on their positions, sizes, and colors.
+ * The function `draw_system` draws the entities in a game.
  * 
  * @param r The parameter `r` is of type `Registry&`, which is a reference to an object of the
  * `Registry` class.
@@ -29,8 +28,6 @@ void draw_system(Registry &r)
     auto &sprites = r.get_components<Sprite>();
     auto &sizes = r.get_components<Size>();
 
-    // std::cout << "sprites.size() = " << sprites.size() << std::endl;
-
     for (size_t i = 0; i < drawables.size() && i < positions.size() && i < rectangle_shapes.size() && i < colors.size(); ++i) {
         auto &drawable = drawables[i];
         auto &position = positions[i];
@@ -44,11 +41,6 @@ void draw_system(Registry &r)
         }
     }
 
-    // std::cout << "drawables.size() = " << drawables.size() << std::endl;
-    // std::cout << "sprites.size() = " << sprites.size() << std::endl;
-    // std::cout << "sizes.size() = " << sizes.size() << std::endl;
-    // std::cout << "positions.size() = " << positions.size() << std::endl;
-
     for (size_t i = 0; i < drawables.size() &&  i < sprites.size() && i < sizes.size() && i < positions.size(); ++i) {
         auto &sprite = sprites[i];
         auto &size = sizes[i];
@@ -58,7 +50,6 @@ void draw_system(Registry &r)
         if (sprite && size && position && drawable) {
             sprite.value().sprite.setPosition(position.value().x, position.value().y);
             sprite.value().sprite.setScale(size.value().width, size.value().height);
-            // sprite.value().sprite.setTexture(sprite.value().texture);
             r._window->draw(sprite.value().sprite);
         }
     }

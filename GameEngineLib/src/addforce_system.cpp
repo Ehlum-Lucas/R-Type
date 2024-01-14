@@ -5,7 +5,20 @@
 ** addforce_system
 */
 
+/**
+ * @file addforce_system.cpp
+ * @brief This file contains the implementation of the `addforce_system` function.
+ */
+
 #include "Systems.hpp"
+
+/**
+ * The function iterates through a collection of entities and applies a force to their positions based
+ * on certain conditions.
+ * 
+ * @param r The parameter `r` is of type `Registry&`, which is a reference to an object of the
+ * `Registry` class.
+ */
 
 void addforce_system(Registry &r)
 {
@@ -35,14 +48,6 @@ void addforce_system(Registry &r)
                     addforce.value().key_was_pressed;
                 }
             }
-            // else if (addforce.value().direction == "y" && addforce.value().force > 0 && (position.value().y + addforce.value().start_y) < addforce.value().end_point) {
-            //     position.value().y += addforce.value().force;
-            // } else if (addforce.value().direction == "x" && addforce.value().force < 0 && (position.value().x + addforce.value().start_x) > addforce.value().end_point) {
-            //     position.value().x += addforce.value().force;
-            // } else if (addforce.value().direction == "x" && addforce.value().force > 0 && (position.value().x + addforce.value().start_x) < addforce.value().end_point) {
-            //     position.value().x += addforce.value().force;
-            // }
         }
-
     }
 }

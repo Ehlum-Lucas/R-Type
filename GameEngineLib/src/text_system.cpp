@@ -5,7 +5,19 @@
 ** text_system
 */
 
+/**
+ * @file text_system.cpp
+ * @brief This file contains the implementation of the `text_system` function.
+ */
+
 #include "Systems.hpp"
+
+/**
+ * The function iterates through a collection of Text components and draws them on the screen.
+ * 
+ * @param r The parameter `r` is of type `Registry&`, which is a reference to an object of the
+ * `Registry` class.
+ */
 
 void text_system(Registry &r)
 {

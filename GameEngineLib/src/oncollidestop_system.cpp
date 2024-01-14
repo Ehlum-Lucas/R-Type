@@ -5,7 +5,21 @@
 ** oncollidestop_system
 */
 
+/**
+ * @file oncollidestop_system.cpp
+ * @brief This file contains the implementation of the `oncollidestop_system` function.
+ */
+
 #include "Systems.hpp"
+
+/**
+ * The function checks for collisions between entities with box colliders and applies gravity to the
+ * entity if a collision occurs.
+ * 
+ * @param r The parameter `r` is of type `Registry&`, which is a reference to an object of the
+ * `Registry` class. The `Registry` class is likely a container or manager class that holds and manages
+ * the components of an entity-component system.
+ */
 
 void oncollidestop_system(Registry &r)
 {

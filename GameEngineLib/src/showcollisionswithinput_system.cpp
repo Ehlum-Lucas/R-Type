@@ -5,7 +5,20 @@
 ** showcollisionswithinput_system
 */
 
+/**
+ * @file showcollisionswithinput_system.cpp
+ * @brief This file contains the implementation of the `showcollisionswithinput_system` function.
+ */
+
 #include "Systems.hpp"
+
+/**
+ * The function iterates through a collection of ShowCollisionsWithInput components and updates the
+ * visibility of associated BoxCollider components based on keyboard input.
+ * 
+ * @param r The parameter `r` is of type `Registry&`, which is a reference to an object of the
+ * `Registry` class.
+ */
 
 void showcollisionswithinput_system(Registry &r)
 {

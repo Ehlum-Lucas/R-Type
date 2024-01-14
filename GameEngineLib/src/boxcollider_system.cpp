@@ -5,7 +5,19 @@
 ** boxcollider_system
 */
 
+/**
+ * @file boxcollider_system.cpp
+ * @brief This file contains the implementation of the `boxcollider_system` function.
+ */
+
 #include "Systems.hpp"
+
+/**
+ * The function `boxcollider_system` updates the position and appearance of box colliders in a game.
+ * 
+ * @param r The parameter `r` is of type `Registry&`, which is a reference to an object of the
+ * `Registry` class.
+ */
 
 void boxcollider_system(Registry &r)
 {

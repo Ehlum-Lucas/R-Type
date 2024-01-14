@@ -5,6 +5,11 @@
 ** TexturesLoader
 */
 
+/**
+ * @file TexturesLoader.cpp
+ * @brief This file contains the implementation of the `TextureLoader` class.
+ */
+
 #include "TexturesLoader.hpp"
 
 TexturesLoader::TexturesLoader()
