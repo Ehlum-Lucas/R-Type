@@ -14,7 +14,7 @@ jobs:
       - uses: actions/checkout@v3
         with:
           fetch-depth: 0
-      - run: cp ./install.sh "${VCPKG_ROOT}" && cd "${VCPKG_ROOT}" && ./install.sh
+      - run: cp ./install.sh "${VCPKG_ROOT}" && cd "${VCPKG_ROOT}" && sudo ./install.sh
       - run: mkdir R-Type/build && cd R-Type/build && cmake .. && make
 
   push-to-repo:
