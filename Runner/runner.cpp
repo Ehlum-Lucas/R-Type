@@ -353,6 +353,8 @@ int main()
     ecs.scene("level1")->registry->add_component(player, ShowCollisionsWithInput("d"));
     ecs.scene("level1")->registry->add_component(player, OnCollideLoadScene("menu", "obstacle"));
 
+    ecs.scene("level1")->registry->add_component(player, PlaySound("assets/sounds/test.ogg", true, 100));
+
     // Parralax Level 2
 
     Entity backgroundDesert1 = ecs.scene("level2")->create_entity();

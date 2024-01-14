@@ -33,6 +33,7 @@
     void spawn_at_random_position_system(Registry &r);
     void animation_system(Registry &r);
     std::string on_collide_load_scene_system(Registry &r);
+    void sound_system(Registry &r);
     
 
 #endif /* !SYSTEMS_HPP_ */
