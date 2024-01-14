@@ -61,7 +61,6 @@ void collide_system(Registry &r)
                     col2.setPosition(pos2.value().x, pos2.value().y);
 
                     if (col1.getGlobalBounds().intersects(col2.getGlobalBounds())) {
-                        std::cout << "COLLISION" << std::endl;
                         r.delete_entity_by_id(id1.value().id);
                         r.delete_entity_by_id(id2.value().id);
                         check = true;

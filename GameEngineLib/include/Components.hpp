@@ -703,6 +703,34 @@
             float angle; /**< The angle of the sprite. */
     };
 
+
+    // animated sprite component
+    class AnimatedSprite {
+        public:
+            AnimatedSprite(std::string texture_path, float _angle = 0.0, float sprite_size_x = 0.0, float sprite_size_y = 0.0, float _start_frame = 0.0, float _max_frame = 0.0, float _speed = 1.0) : texture_path(texture_path)
+            {
+                texture = texturesLoader.get_texture(texture_path);
+                sprite.setTexture(*texture.get());
+                angle = _angle;
+                sprite.setRotation(angle);
+                sprite.setOrigin(sprite_size_x / 2, sprite_size_y / 2);
+                rect = sf::IntRect(sprite_size_x * _start_frame, 0, sprite_size_x, sprite_size_y);
+                sprite.setTextureRect(rect);
+                start_frame = _start_frame;
+                max_frame = _max_frame;
+                speed = _speed;
+            };
+            std::shared_ptr<sf::Texture> texture;
+            std::string texture_path;
+            sf::Sprite sprite;
+            sf::IntRect rect;
+            sf::Clock clock;
+            int start_frame;
+            int max_frame;
+            float speed;
+            float angle;
+    };
+
     // size component
     /**
      * @class Size

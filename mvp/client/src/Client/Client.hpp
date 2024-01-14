@@ -40,7 +40,6 @@
                     std::string message = receiveMessage();
                     if (message.substr(0, 8) == "YOU ARE ") {
                         _playerId = message.substr(8);
-                        std::cout << "OK I AM " << _playerId << std::endl;
                         // message = "OK";
                         break;
                     }
