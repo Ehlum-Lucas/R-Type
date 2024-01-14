@@ -5,7 +5,22 @@
 ** on_collide_load_scene
 */
 
+/**
+ * @file on_collide_load_scene.cpp
+ * @brief This file contains the implementation of the `on_collide_load_scene_system` function.
+ */
+
 #include "Systems.hpp"
+
+/**
+ * The function checks for collisions between box colliders and returns the name of the scene to load
+ * if a collision occurs.
+ * 
+ * @param r The parameter `r` is a reference to an object of type `Registry`. It is being used to
+ * access and manipulate the components stored in the registry.
+ * 
+ * @return a std::string.
+ */
 
 std::string on_collide_load_scene_system(Registry &r)
 {

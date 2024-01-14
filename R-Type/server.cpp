@@ -5,7 +5,22 @@
 ** server
 */
 
+/**
+ * @file server.cpp
+ * @brief This file contains the implementation of the `server` function.
+ */
+
 #include "GameEngine.hpp"
+
+/**
+ * @brief The main function of the program.
+ *
+ * This function initializes the game engine, creates textures, scenes, and prefabs,
+ * and sets up the game entities. It also hosts an online game, loads the game scene,
+ * and updates the game loop.
+ *
+ * @return 0 indicating successful execution of the program.
+ */
 
 int main()
 {

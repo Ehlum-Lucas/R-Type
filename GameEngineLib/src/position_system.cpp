@@ -5,18 +5,17 @@
 ** position_system
 */
 
-#include "Systems.hpp"
-
 /**
  * @file position_system.cpp
  * @brief This file contains the implementation of the `position_system` function.
  */
 
+#include "Systems.hpp"
+
 /**
  * The function updates the positions of entities based on their velocities.
  * 
- * @param r The parameter `r` is of type `Registry&`, which is a reference to an object of the
- * `Registry` class.
+ * @param r The parameter "r" is a reference to an object of type "Registry".
  */
 
 void position_system (Registry &r) {
@@ -31,9 +30,6 @@ void position_system (Registry &r) {
             pos.value().x += vel.value().vx;
             pos.value().y += vel.value().vy;
     
-            // if (pos.value().x < 0  && type.value().type == "e") {
-            //     r.delete_entity_by_id(id.value().id);
-            // }
         }
     }
 }

@@ -5,10 +5,34 @@
 ** GameEngine
 */
 
+/**
+ * @file GameEngine.cpp
+ * @brief This file contains the implementation of the `GameEngine` class.
+ */
+
 #include "GameEngine.hpp"
 
-
 #include <any>
+
+/**
+ * The function `add_prefab_to_a_scene` adds components from a prefab to an entity in a game scene.
+ * 
+ * @param r The parameter `r` is of type `Registry&`, which is a reference to an object of the
+ * `Registry` class.
+ * @param e The parameter `e` is of type `Entity&`, which is a reference to an entity object.
+ * @param prefab_name The `prefab_name` parameter is a string that represents the name of the prefab
+ * that you want to add to a scene.
+ * @param is_player The "is_player" parameter is a boolean flag indicating whether the entity being
+ * created is a player entity or not. If it is set to true, additional logic is executed to determine
+ * the player's skin and add a Sprite component with the corresponding skin.
+ * @param cp The parameter "cp" stands for "copy position". If it is set to true, the position of the
+ * entity will be set to the specified coordinates (x, y). If it is set to false, the position of the
+ * entity will be copied from the prefab.
+ * @param x The parameter `x` is a float that represents the x-coordinate of the position where the
+ * prefab will be added to the scene.
+ * @param y The parameter `y` in the `add_prefab_to_a_scene` function represents the y-coordinate of
+ * the position where the prefab will be added in the scene.
+ */
 
 void GameEngine::add_prefab_to_a_scene(Registry& r, Entity &e, std::string prefab_name, bool is_player, bool cp = false, float x = 0, float y = 0)
 {
@@ -70,6 +94,11 @@ void GameEngine::add_prefab_to_a_scene(Registry& r, Entity &e, std::string prefa
         }
     }
 }
+
+/**
+ * The serialize_game function serializes game elements into strings and adds them to a vector of
+ * messages to be sent.
+ */
 
 void GameEngine::serialize_game()
 {
@@ -357,6 +386,11 @@ void GameEngine::serialize_game()
     }
 }
 
+/**
+ * The function `unserialize_game()` is used to deserialize and update game entities based on received
+ * messages.
+ */
+
 void GameEngine::unserialize_game()
 {
     for (auto& message : _received_messages) {
@@ -572,7 +606,6 @@ void GameEngine::unserialize_game()
         // Sprite
         if ((pos + 23) <= message.size() && message.substr(pos, 3) == "408") {
             if (!_host) {
-                // std::cout << "CLIENT RECEIVE A SPRITE" << std::endl;
             }
             pos += 3;
             std::string texture_id = message.substr(pos, 5);
@@ -592,14 +625,12 @@ void GameEngine::unserialize_game()
             auto &types = current_scene->registry->get_components<Type>();
             for (size_t j = 0; j < sprites.size() && j < types.size(); j++) {
                 if (sprites[j] && types[j] && types[j].value().type == std::stoi(entity_type)) {
-                    // sprites[j].value().texture_path = get_texture_path(std::stoi(texture_id));
                     sprites[j].value().angle = std::stod(angle);
                     exist = true;
                     break;
                 }
             }
             if (!exist) {
-                // std::cout << "I CREATE SPRITE" << std::endl;
                 current_scene->registry->add_component(e, Sprite(get_texture_path(std::stoi(texture_id)), std::stod(angle)));
             }
         }
@@ -709,11 +740,6 @@ void GameEngine::unserialize_game()
                 auto &types = current_scene->registry->get_components<Type>();
                 for (size_t j = 0; j < swis.size() && j < types.size(); j++) {
                     if (swis[j] && types[j] && types[j].value().type == std::stoi(entity_type)) {
-                        // swis[j].value().prefab_name = get_prefab_name_with_id(std::stoi(prefab_id));
-                        // swis[j].value().input = _inputGestion.binary_to_sf_key(input);
-                        // swis[j].value().delay = std::stoi(delay);
-                        // swis[j].value().at_parent_pos = at_parent_pos;
-                        // swis[j].value().angle = std::stod(angle);
                         exist = true;
                         break;
                     }
@@ -729,6 +755,11 @@ void GameEngine::unserialize_game()
     }
 }
 
+/**
+ * The function `start_send_host()` sends game data to connected clients at a rate of 30 times per
+ * second.
+ */
+
 void GameEngine::start_send_host()
 {
     _timer->async_wait([this](std::error_code ec) {
@@ -741,7 +772,6 @@ void GameEngine::start_send_host()
                 int nb = 0;
                 for (auto& message : _to_send_messages) {
                     nb++;
-                    // std::cout << "Send to " << client.getEndpoint().address().to_string() << ":" << client.getEndpoint().port() << " : " << message << std::endl;
                     std::string e_type_ser = message.substr(0, 8);
                     auto e_check = std::find(client.entities_sended.begin(), client.entities_sended.end(), e_type_ser);
                     std::string first_comp = message.substr(8, 3);
@@ -767,26 +797,24 @@ void GameEngine::start_send_host()
     });
 }
 
+/**
+ * The function `start_receive_host()` is an asynchronous receive function that handles incoming
+ * messages from clients in a game server.
+ * 
+ * @return The function `start_receive_host()` does not have a return type.
+ */
+
 void GameEngine::start_receive_host()
 {
     _socket->async_receive_from(asio::buffer(_recv_buffer), _remote_endpoint, [this](std::error_code ec, std::size_t bytes_transferred) {
         if (!ec) {
             std::string message(_recv_buffer.data(), bytes_transferred);
-
-            // std::cout << "REICEIVED MESSAGE: " << message << std::endl;
-
-            // Check if th1e client is already in the list
             auto cl = std::find_if(_clients.begin(), _clients.end(), [this](const ServerClient& client) {
                 return client.getEndpoint() == _remote_endpoint;
             });
 
             if (cl == _clients.end()) {
                 _clients.push_back(ServerClient(_remote_endpoint));
-                // // Print all client endpoints
-                // std::cout << "Current client endpoints:\n";
-                // for (const ServerClient& client : _clients) {
-                //     std::cout << client.getEndpoint().address().to_string() << ":" << client.getEndpoint().port() << "\n";
-                // }
             }
             for (auto it = _clients.begin(); it != _clients.end();) {
                 if (it->getEndpoint() == _remote_endpoint) {
@@ -828,7 +856,6 @@ void GameEngine::start_receive_host()
                         current_scene->registry->add_component(e, Id(e.get_id()));
                         current_scene->registry->add_component(e, Type(e_type++));
                         add_prefab_to_a_scene(*current_scene->registry.get(), e, prefab_name, false, true, std::stod(x), std::stod(y));
-                        // it->entities_sended.push_back(std::to_string(e_type - 1));
                     } else if (message.size() > 10 && message[0] == '1' && is_a_component(message.substr(8, 3)) && it->created && it->connected) {
                         _received_messages.push_back(message);
                         unserialize_game();
@@ -853,6 +880,11 @@ void GameEngine::start_receive_host()
     });
 }
 
+/**
+ * The function "start_send_join" asynchronously sends messages to a server every 1/30th of a second,
+ * unless an error occurs.
+ */
+
 void GameEngine::start_send_join()
 {
     _timer->async_wait([this](std::error_code ec) {
@@ -873,6 +905,16 @@ void GameEngine::start_send_join()
     });
 }
 
+/**
+ * The function checks if a given string is equal to any of the specified values and returns true if it
+ * matches, otherwise it returns false.
+ * 
+ * @param str The parameter `str` is a constant reference to a string.
+ * 
+ * @return a boolean value. It returns true if the input string is equal to any of the specified values
+ * ("401", "402", "403", "404", "405", "406", "407", "408", "409", "410"), and false otherwise.
+ */
+
 bool GameEngine::is_a_component(std::string const &str)
 {
     if (str == "401" || str == "402" || str == "403" || str == "404" || str == "405" || str == "406" || str == "407" || str == "408" || str == "409" || str == "410") {
@@ -881,12 +923,16 @@ bool GameEngine::is_a_component(std::string const &str)
     return false;
 }
 
+/**
+ * The function `start_receive_join()` is an asynchronous receive function that listens for incoming
+ * messages and performs certain actions based on the received message.
+ */
+
 void GameEngine::start_receive_join()
 {
     _socket->async_receive_from(asio::buffer(_recv_buffer), _server_endpoint, [this](std::error_code ec, std::size_t bytes_transferred) {
         if (!ec) {
             std::string message(_recv_buffer.data(), bytes_transferred);
-            // std::cout << "Received_client: " << message << " cfrom " << _server_endpoint.address().to_string() << ":" << _server_endpoint.port() << std::endl;
 
             if (message.substr(0, 3) == "122") {
                 _to_send_messages.push_back("133");
@@ -896,13 +942,17 @@ void GameEngine::start_receive_join()
                 _game_is_running = true;
                 _received_messages.push_back(message);
             }
-            // _lastMessageTime = std::chrono::steady_clock::now();
         } else {
             std::cerr << "Error: " << ec.message() << std::endl;
         }
         start_receive_join();
     });
 }
+
+/**
+ * The function `update` is responsible for updating the game state and handling events based on
+ * whether the game is online or offline.
+ */
 
 void GameEngine::update()
 {
@@ -912,7 +962,6 @@ void GameEngine::update()
         } else {
             while (_window->isOpen()) {
                 if (_game_is_running && _received_messages.size() > 0) {
-                    // std::cout << "GAME IS RUNNING" << std::endl;
                     unserialize_game();
                 }
                 _window->clear(sf::Color::Black);

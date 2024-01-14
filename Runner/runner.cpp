@@ -5,7 +5,21 @@
 ** runner
 */
 
+/**
+ * @file runner.cpp
+ * @brief This file contains the implementation of the `main` function.
+ */
+
 #include "GameEngine.hpp"
+
+/**
+ * @brief The main function of the game.
+ * 
+ * This function initializes the game engine, sets up the window, creates the scenes, 
+ * loads the fonts and textures, and starts the game loop.
+ * 
+ * @return int Returns 0 upon successful execution.
+ */
 
 int main()
 {

@@ -5,19 +5,18 @@
 ** spawnwithinput_system
 */
 
-#include "Systems.hpp"
-
 /**
  * @file spawnwithinput_system.cpp
  * @brief This file contains the implementation of the `spawnwithinput_system` function.
  */
 
+#include "Systems.hpp"
+
 /**
- * The function `spawn_with_input_system` spawns entities based on user input and adds components to
- * them from a prefab.
+ * The function applies gravity forces to positions based on their corresponding gravity components.
  * 
- * @param r The parameter "r" is of type "Registry&", which is a reference to an object of the
- * "Registry" class.
+ * @param r The parameter `r` is of type `Registry&`, which is a reference to an object of the
+ * `Registry` class.
  */
 
 std::string spawn_with_input_system(Registry &r, bool online)
@@ -128,15 +127,6 @@ std::string spawn_with_input_system(Registry &r, bool online)
                 }
             }
             spawnwithinput.value().timer++;
-
-            //  auto &drawables = r.get_components<Drawable>();
-            // auto &positions = r.get_components<Position>();
-            // auto &sprites = r.get_components<Sprite>();
-            // auto &sizes = r.get_components<Size>();
-
-            // if (sf::Keyboard::isKeyPressed(spawnwithinput.value().input)) {
-            //     auto &components = r.get_entity_components();
-            // }
         }
     }
     return "";

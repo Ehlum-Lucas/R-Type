@@ -1,3 +1,8 @@
+/**
+ * @file Registry.hpp
+ * @brief This file contains the declaration of the `Registry` class.
+ */
+
 #ifndef REGISTRY_HPP_
     #define REGISTRY_HPP_
 

@@ -5,12 +5,12 @@
 ** gravity_system
 */
 
-#include "Registry.hpp"
-
 /**
  * @file gravity_system.cpp
  * @brief This file contains the implementation of the `gravity_system` function.
  */
+
+#include "Registry.hpp"
 
 /**
  * The function applies gravity forces to positions based on their corresponding gravity components.

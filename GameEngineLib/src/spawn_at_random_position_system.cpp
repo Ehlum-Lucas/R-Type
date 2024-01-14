@@ -5,7 +5,19 @@
 ** spawn_at_random_position_system
 */
 
+/**
+ * @file spawn_at_random_position_system.cpp
+ * @brief This file contains the implementation of the `spawn_at_random_position_system` function.
+ */
+
 #include "Systems.hpp"
+
+/**
+ * The function `spawn_at_random_position_system` spawns entities at random positions.
+ * 
+ * @param r The parameter `r` is of type `Registry&`, which is a reference to an object of the
+ * `Registry` class.
+ */
 
 void spawn_at_random_position_system(Registry &r)
 {
