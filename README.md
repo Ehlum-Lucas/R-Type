@@ -22,13 +22,12 @@ git clone git@github.com:microsoft/vcpkg.git
 ```bash
 ./vcpkg/bootstrap-vcpkg.sh
 export VCPKG_ROOT=/path/to/vcpkg
-source ~./bashrc
+source ~/.bashrc
 ```
+
+At the root of the repo
 ```bash
-mkdir build
-cd build
-cmake ..
-cmake --build .
+cp ./install.sh "${VCPKG_ROOT}" && cd "${VCPKG_ROOT}" && ./install.sh
 ```
 
 ### Windows :
@@ -38,11 +37,48 @@ cmake --build .
 - Go to advanced parameters and add the environnement variable : `VCPKG_ROOT` with the `/path/to/vcpkg`
 Restart your computer if needed
 
+At the root of the repo
 ```bash
-cmake ..
-cmake --build .
+cp ./install.bat "${VCPKG_ROOT}" && cd "${VCPKG_ROOT}" && ./install.bat
 ```
 
+
+# Play R-Type :
+
+## Start the server for the R-Type
+
+```bash
+cd R-Type
+mkdir build
+cd build
+cmake .. && make && ./server
+```
+
+## Start the client for the R-Type
+
+```bash
+cd R-Type
+mkdir build
+cd build
+cmake .. && make && ./client [IP] (IP: ipv4 of the hosting server)
+```
+
+# Play Runner :
+
+```bash
+cd Runner
+mkdir build
+cd build
+cmake .. && make && ./runner
+```
+
+# Doxygen :
+
+```bash
+doxygen Doxyfile
+cd doc/html
+firefox index.html
+```
 
 ## Wiki
 
