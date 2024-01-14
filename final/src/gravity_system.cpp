@@ -24,7 +24,7 @@ void gravity_system(Registry &r)
     auto &gravities = r.get_components<Gravity>();
     auto &positions = r.get_components<Position>();
 
-    for (size_t i = 0; i < gravities.size(); ++i) {
+    for (std::size_t i = 0; i < gravities.size(); ++i) {
         auto &gravity = gravities[i];
         auto &pos = positions[i];
 

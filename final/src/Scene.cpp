@@ -47,7 +47,7 @@ Scene::Scene(std::string _name, std::shared_ptr<sf::RenderWindow> window, sf::Ev
     registry->register_component<Sprite>();
     registry->register_component<Size>();
     registry->register_component<BoxCollider>();
-    registry->register_component<OnCollideDestroy>();
+    registry->register_component<OnCollide>();
     registry->register_component<OnClickLoadScene>();
     registry->register_component<SpawnWithInput>();
     registry->register_component<Type>();

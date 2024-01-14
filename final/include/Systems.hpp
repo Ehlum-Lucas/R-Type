@@ -21,6 +21,8 @@
     void gravity_system(Registry &r);
     void shoot_system(Registry &r);
     void collide_system(Registry &r);
+    void sound_system(Registry &r);
+    void animation_system(Registry &r);
     std::string onclickloadscene_system(Registry &r);
     std::vector<std::string> serialize_components(Registry &r);
     void spawn_with_input_system(Registry &r);

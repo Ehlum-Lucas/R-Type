@@ -12,24 +12,25 @@
 
 #ifndef COMPONENTS_HPP
     #define COMPONENTS_HPP
+    #include <SFML/Audio.hpp>
     #include <SFML/Graphics.hpp>
     #include "Registry.hpp"
     #include <any>
 
 
-    #define COLOR_RED sf::Color(255, 0, 0)
-    #define COLOR_GREEN sf::Color(0, 255, 0)
-    #define COLOR_BLUE sf::Color(0, 0, 255)
-    #define COLOR_YELLOW sf::Color(255, 255, 0)
-    #define COLOR_MAGENTA sf::Color(255, 0, 255)
-    #define COLOR_CYAN sf::Color(0, 255, 255)
-    #define COLOR_WHITE sf::Color(255, 255, 255)
-    #define COLOR_BLACK sf::Color(0, 0, 0)
-    #define COLOR_ORANGE sf::Color(255, 165, 0)
-    #define COLOR_PINK sf::Color(255, 192, 203)
-    #define COLOR_GREY sf::Color(128, 128, 128)
-    #define COLOR_BROWN sf::Color(165, 42, 42)
-    #define COLOR_TRANSPARENT sf::Color(0, 0, 0, 0)
+    #define COLOR_RED Color(255, 0, 0)
+    #define COLOR_GREEN Color(0, 255, 0)
+    #define COLOR_BLUE Color(0, 0, 255)
+    #define COLOR_YELLOW Color(255, 255, 0)
+    #define COLOR_MAGENTA Color(255, 0, 255)
+    #define COLOR_CYAN Color(0, 255, 255)
+    #define COLOR_WHITE Color(255, 255, 255)
+    #define COLOR_BLACK Color(0, 0, 0)
+    #define COLOR_ORANGE Color(255, 165, 0)
+    #define COLOR_PINK Color(255, 192, 203)
+    #define COLOR_GREY Color(128, 128, 128)
+    #define COLOR_BROWN Color(165, 42, 42)
+    #define COLOR_TRANSPARENT Color(0, 0, 0, 0)
 
     class InputGestion {
         public:
@@ -443,8 +444,11 @@
     // color component
     class Color {
         public:
-            Color(sf::Color color) : color(color) {};
-            sf::Color color;
+            Color() : r(0), g(0), b(0) {};
+            Color(std::size_t r, std::size_t g, std::size_t b) : r(r), g(g), b(b) {};
+            std::size_t r;
+            std::size_t g;
+            std::size_t b;
     };
 
     // gravity component
@@ -506,6 +510,34 @@
             float angle;
     };
 
+// sprite component
+class AnimatedSprite
+{
+public:
+    AnimatedSprite(std::string texture_path, float _angle = 0.0, float sprite_size_x = 0.0, float sprite_size_y = 0.0, float _start_frame = 0.0, float _max_frame = 0.0, float _speed = 1.0) : texture_path(texture_path)
+    {
+        texture.loadFromFile(texture_path);
+        sprite.setTexture(texture);
+        angle = _angle;
+        sprite.setRotation(angle);
+        sprite.setOrigin(sprite_size_x / 2, sprite_size_y / 2);
+        rect = sf::IntRect(sprite_size_x * _start_frame, 0, sprite_size_x, sprite_size_y);
+        sprite.setTextureRect(rect);
+        start_frame = _start_frame;
+        max_frame = _max_frame;
+        speed = _speed;
+    };
+    sf::Texture texture;
+    std::string texture_path;
+    sf::Sprite sprite;
+    sf::IntRect rect;
+    sf::Clock clock;
+    int start_frame;
+    int max_frame;
+    float speed;
+    float angle;
+};
+
     // size component
     class Size {
         public:
@@ -539,20 +571,20 @@
     // box collider component
     class BoxCollider {
         public:
-            BoxCollider(std::string _tag, bool _draw = false, sf::Color _color = COLOR_RED) {
+            BoxCollider(std::string _tag, bool _draw = false, Color _color = COLOR_RED) {
                 tag = _tag;
                 draw = _draw;
                 color = _color;
             };
             bool draw;
             std::string tag;
-            sf::Color color;
+            Color color;
     };
 
     class Id {
         public:
-            Id(size_t id) : id(id) {};
-            size_t id;
+            Id(std::size_t id) : id(id) {};
+            std::size_t id;
     };
 
     class Shootable {
@@ -560,12 +592,14 @@
             Shootable() {};
     };
 
-    class OnCollideDestroy {
+    class OnCollide {
         public:
-            OnCollideDestroy(std::string _tag) {
+            OnCollide(std::string _tag, std::string _type) {
                 tag = _tag;
+                type = _type;
             };
             std::string tag;
+            std::string type;
     };
 
     class OnClickLoadScene {
@@ -578,15 +612,63 @@
 
     class Type {
         public:
-            Type(size_t _type) {type = _type;};
-            size_t type;
+            Type(std::size_t _type) {type = _type;};
+            std::size_t type;
     };
 
-    class Sendable {
-        public:
-            Sendable() {};
-    };
+class Sendable
+{
+public:
+    Sendable(){};
+};
 
+class Sound
+{
+public:
+    Sound(std::string _sound_path, float _volume = 100.0, bool _loop = false)
+    {
+        buffer = std::make_shared<sf::SoundBuffer>();
+        sound = std::make_shared<sf::Sound>();
+        sound_path = _sound_path;
+        volume = _volume;
+        loop = _loop;
+        buffer->loadFromFile(_sound_path);
+        sound->setLoop(_loop);
+        sound->setVolume(_volume);
+        sound->setBuffer(*buffer);
+    };
+    ~Sound()
+    {
+        sound->stop();
+    };
+    std::string sound_path;
+    std::shared_ptr<sf::SoundBuffer> buffer;
+    std::shared_ptr<sf::Sound> sound;
+    bool loop;
+    float volume;
+    bool played = false;
+};
+
+class Music
+{
+public:
+    Music(std::string _music_path, float _volume = 100.0, bool _loop = false)
+    {
+        music = std::make_shared<sf::Music>();
+        music_path = _music_path;
+        volume = _volume;
+        loop = _loop;
+        music->openFromFile(_music_path);
+        music->setLoop(_loop);
+        music->setVolume(_volume);
+    };
+    ~Music(){};
+    std::string music_path;
+    std::shared_ptr<sf::Music> music;
+    bool loop;
+    float volume;
+    bool played = false;
+};
 
     // class ComponentFactory {
     //     public:
@@ -597,7 +679,7 @@
     //                 r.add_component_from_prefab(e, sprite);
     //             } else if (component.type() == typeid(Position)) {
     //                 auto &position = std::any_cast<Position&>(component);
-    //                 r.add_component_from_prefab(e, position);
+    //            Size      r.add_component_from_prefab(e, position);
     //             } else if (component.type() == typeid(Velocity)) {
     //                 auto &veclocity = std::any_cast<Velocity&>(component);
     //                 r.add_component_from_prefab(e, veclocity);

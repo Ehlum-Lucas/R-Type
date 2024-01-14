@@ -25,7 +25,7 @@ void spawn_with_input_system(Registry &r)
     auto &spawnwithinputs = r.get_components<SpawnWithInput>();
     auto &positions = r.get_components<Position>();
 
-    for (size_t i = 0; i < spawnwithinputs.size() && i < positions.size(); ++i) {
+    for (std::size_t i = 0; i < spawnwithinputs.size() && i < positions.size(); ++i) {
         auto &spawnwithinput = spawnwithinputs[i];
         auto const &pos = positions[i];
 
@@ -81,8 +81,8 @@ void spawn_with_input_system(Registry &r)
                         } else if (component.type() == typeid(CircleShape)) {
                             auto &comp = std::any_cast<CircleShape&>(component);
                             r.add_component_from_prefab(e, comp);
-                        } else if (component.type() == typeid(OnCollideDestroy)) {
-                            auto &comp = std::any_cast<OnCollideDestroy&>(component);
+                        } else if (component.type() == typeid(OnCollide)) {
+                            auto &comp = std::any_cast<OnCollide&>(component);
                             r.add_component_from_prefab(e, comp);
                         }
                     }

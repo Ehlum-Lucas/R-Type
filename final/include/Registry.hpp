@@ -50,7 +50,7 @@
                 return entities.back();
             }
 
-            void delete_entity_by_id(size_t id) {
+            void delete_entity_by_id(std::size_t id) {
                 for (auto it = entities.begin(); it != entities.end(); ++it) {
                     if (it->get_id() == id) {
                         delete_components_by_entity_id<Position>(id);
@@ -88,7 +88,7 @@
             }
 
             template <typename Component>
-            void delete_components_by_entity_id(size_t id) {
+            void delete_components_by_entity_id(std::size_t id) {
                 auto& components = get_components<Component>();
                 components.erase(id);
             }

@@ -31,7 +31,7 @@ std::vector<std::string> serialize_components(Registry &r)
 
 
     std::vector<std::string> serializables;
-    for (size_t i = 0; i < positions.size() && i < sprites.size() && i < sizes.size(); i++) {
+    for (std::size_t i = 0; i < positions.size() && i < sprites.size() && i < sizes.size(); i++) {
         auto &pos = positions[i];
         auto &sprite = sprites[i];
         auto &size = sizes[i];
