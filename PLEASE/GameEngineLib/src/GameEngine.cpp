@@ -958,12 +958,22 @@ void GameEngine::update()
                     continue;
                 }
             }
+            spawn_at_random_position_system(*current_scene->registry.get());
             spawn_with_input_system(*current_scene->registry.get(), false);
+            gravity_system(*current_scene->registry.get());
+            addforce_system(*current_scene->registry.get());
             position_system(*current_scene->registry.get());
             parralax_system(*current_scene->registry.get());
-            gravity_system(*current_scene->registry.get());
-            collide_system(*current_scene->registry.get());
             draw_system(*current_scene->registry.get());
+            boxcollider_system(*current_scene->registry.get());
+            std::string scene_name = on_collide_load_scene_system(*current_scene->registry.get());
+            if (scene_name != "") {
+                load_scene(scene_name);
+                continue;
+            }
+            oncollidestop_system(*current_scene->registry.get());
+            showcollisionswithinput_system(*current_scene->registry.get());
+            text_system(*current_scene->registry.get());
             _window->display();
         }
     }

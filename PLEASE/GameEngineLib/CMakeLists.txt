@@ -24,6 +24,13 @@ set(SOURCES
             src/TexturesLoader.cpp
             src/parralax_system.cpp
             src/parsing.cpp
+            src/boxcollider_system.cpp
+            src/oncollidestop_system.cpp
+            src/addforce_system.cpp
+            src/showcollisionswithinput_system.cpp
+            src/text_system.cpp
+            src/spawn_at_random_position_system.cpp
+            src/on_collide_load_scene.cpp
 )
 
 include_directories(include)

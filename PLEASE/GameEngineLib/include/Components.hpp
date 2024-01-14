@@ -31,6 +31,20 @@
     #define COLOR_BROWN sf::Color(165, 42, 42)
     #define COLOR_TRANSPARENT sf::Color(0, 0, 0, 0)
 
+    #define COLOR_RED_128 sf::Color(255, 0, 0, 128)
+    #define COLOR_GREEN_128 sf::Color(0, 255, 0, 128)
+    #define COLOR_BLUE_128 sf::Color(0, 0, 255)
+    #define COLOR_YELLOW_128 sf::Color(255, 255, 0, 128)
+    #define COLOR_MAGENTA_128 sf::Color(255, 0, 255)
+    #define COLOR_CYAN_128 sf::Color(0, 255, 255)
+    #define COLOR_WHITE_128 sf::Color(255, 255, 255)
+    #define COLOR_BLACK_128 sf::Color(0, 0, 0, 128)
+    #define COLOR_ORANGE_128 sf::Color(255, 165, 0, 128)
+    #define COLOR_PINK_128 sf::Color(255, 192, 203)
+    #define COLOR_GREY_128 sf::Color(128, 128, 0, 128)
+    #define COLOR_BROWN_128 sf::Color(165, 42, 42)
+    #define COLOR_TRANSPARENT_128 sf::Color(0, 0, 0, 0, 128)
+
     class InputGestion {
         public:
             sf::Keyboard::Key get_key(std::string key)
@@ -455,6 +469,28 @@
             std::string direction;
     };
 
+    // addForce component
+    class AddForce {
+        public:
+            AddForce(float _force, float _end_point, std::string _input, std::string _direction = "y") {
+                force = _force;
+                end_point = _end_point;
+                direction = _direction;
+                input = inputGestion.get_key(_input);
+            };
+            float force;
+            float end_point;
+            float start_x;
+            float start_y;
+            bool processing = false;
+            bool key_was_pressed = false;
+            std::string direction;
+            sf::Keyboard::Key input;
+
+        private:
+            InputGestion inputGestion;
+    };
+
     // controller component
     class Controller {
         public:
@@ -547,14 +583,43 @@
     // box collider component
     class BoxCollider {
         public:
-            BoxCollider(std::string _tag, bool _draw = false, sf::Color _color = COLOR_RED) {
+            BoxCollider(std::string _tag, float _width, float _height, float _origin_x = 0.0, float _origin_y = 0.0, bool _draw = false, sf::Color _color = COLOR_RED) {
                 tag = _tag;
                 draw = _draw;
                 color = _color;
+                width = _width;
+                height = _height;
+                origin_x = _origin_x;
+                origin_y = _origin_y;
+                collider = std::make_shared<sf::RectangleShape>(sf::Vector2f(width,height));
             };
             bool draw;
             std::string tag;
             sf::Color color;
+            std::shared_ptr<sf::RectangleShape> collider;
+            float width;
+            float height;
+            float origin_x;
+            float origin_y;
+            bool collide = true;
+    };
+
+    // ShowCollisionsWithInput
+    class ShowCollisionsWithInput {
+        public:
+            ShowCollisionsWithInput(std::string _input) {input = inputGestion.get_key(_input);};
+
+            sf::Keyboard::Key input;
+            bool showed = false;
+            bool released = true;
+        private:
+            InputGestion inputGestion;
+    };
+
+    class OnCollideStop {
+        public:
+            OnCollideStop(std::string _tag) {tag =_tag;};
+            std::string tag;
     };
 
     class Id {
@@ -589,7 +654,7 @@
 
     class Parralax {
         public:
-            Parralax(float _start_pos_x, float _start_pos_y, float _reset_pos = 0) {reset_pos = reset_pos; start_pos_x = _start_pos_x; start_pos_y = _start_pos_y;};
+            Parralax(float _start_pos_x, float _start_pos_y, float _reset_pos = 0) {reset_pos = _reset_pos; start_pos_x = _start_pos_x; start_pos_y = _start_pos_y;};
             float reset_pos;
             float start_pos_x;
             float start_pos_y;
@@ -599,6 +664,52 @@
         public:
             Send() {};
             bool sended = false;
+    };
+
+    class Text {
+        public:
+            Text(std::string _path, std::string _text, float _size) {
+                font = texturesLoader.get_font(_path);
+                text.setFont(*font.get());
+                text.setString(_text);
+                text.setCharacterSize(_size);
+                
+                // Set the origin of the text to the middle
+                sf::FloatRect textBounds = text.getLocalBounds();
+                text.setOrigin(textBounds.left + textBounds.width / 2, textBounds.top + textBounds.height / 2);
+            };
+            std::shared_ptr<sf::Font> font;
+            sf::Text text;
+    };
+
+    class SpawnPrefabAtRandomPosition {
+        public:
+            SpawnPrefabAtRandomPosition(std::string _prefab_name, float _delay, int _x_min, int _x_max, int _y_min, int _y_max) {
+                prefab_name = _prefab_name;
+                timer = _delay;
+                delay = _delay;
+                x_min = _x_min;
+                x_max = _x_max;
+                y_min = _y_min;
+                y_max = _y_max;
+            };
+            std::string prefab_name;
+            float timer;
+            float delay;
+            int x_min;
+            int x_max;
+            int y_min;
+            int y_max;
+    };
+
+    class OnCollideLoadScene {
+        public:
+            OnCollideLoadScene(std::string _scene_name, std::string _tag) {
+                scene_name = _scene_name;
+                tag = _tag;
+            };
+            std::string scene_name;
+            std::string tag;
     };
 
     // class ComponentFactory {

@@ -1,0 +1,4 @@
+/home/apicot/delivery/R-Type/final/CMakeFiles/gameEngineLib.dir
+/home/apicot/delivery/R-Type/final/CMakeFiles/game.dir
+/home/apicot/delivery/R-Type/final/CMakeFiles/edit_cache.dir
+/home/apicot/delivery/R-Type/final/CMakeFiles/rebuild_cache.dir
