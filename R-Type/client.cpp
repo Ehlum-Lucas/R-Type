@@ -6,18 +6,23 @@
 */
 
 /**
- * @file client.cpp
- * @brief This file contains the main function that initializes a game engine, creates entities and components,
- * sets up a player entity, joins an online game, loads a scene, and updates the game engine.
- *
- * @details The main function initializes a `GameEngine` object, sets up the game window, creates a scene,
- * creates entities and adds components to them, joins an online game, loads a scene, and updates the game engine.
- * The game engine is responsible for managing the game loop and updating the entities and components.
- *
- * @return The main function returns 0 to indicate successful execution.
+ * @file server.cpp
+ * @brief This file contains the implementation of the `server` function.
  */
 
 #include "GameEngine.hpp"
+
+/**
+ * @brief The main function of the program.
+ *
+ * This function is the entry point of the program. It initializes the game engine,
+ * creates textures, sets up the game scene, creates entities and components,
+ * joins an online game, loads the game scene, and starts the game loop.
+ *
+ * @param ac The number of command line arguments.
+ * @param av An array of command line arguments.
+ * @return An integer representing the exit status of the program.
+ */
 
 int main(int ac, char **av)
 {
