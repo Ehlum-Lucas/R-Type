@@ -1001,6 +1001,7 @@ void GameEngine::update()
                     continue;
                 }
             }
+            sound_system(*current_scene->registry.get());
             spawn_at_random_position_system(*current_scene->registry.get());
             spawn_with_input_system(*current_scene->registry.get(), false);
             gravity_system(*current_scene->registry.get());

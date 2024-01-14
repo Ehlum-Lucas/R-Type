@@ -32,6 +32,7 @@ set(SOURCES
             src/spawn_at_random_position_system.cpp
             src/on_collide_load_scene.cpp
             src/animation_system.cpp
+            src/sound_system.cpp
 )
 
 include_directories(include)

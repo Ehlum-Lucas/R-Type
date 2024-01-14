@@ -13,6 +13,7 @@
 #ifndef COMPONENTS_HPP
     #define COMPONENTS_HPP
     #include <SFML/Graphics.hpp>
+    #include <SFML/Audio.hpp>
     #include "Registry.hpp"
     #include <any>
     #include "TexturesLoader.hpp"
@@ -1072,6 +1073,30 @@
             };
             std::string scene_name; /**< The name of the scene to load. */
             std::string tag; /**< The tag of the object to collide with. */
+    };
+
+    class PlaySound {
+        public:
+            PlaySound(std::string _music_path, bool _loop, float _volume = 100.0) {
+                music_path = _music_path;
+                loop = _loop;
+                volume = _volume;
+
+                music = std::make_shared<sf::Music>();
+
+                if (!music->openFromFile(music_path)) {
+                    std::cout << "Error loading music" << std::endl;
+                } else {
+                    music->setLoop(loop);
+                    music->setVolume(volume);
+                }
+
+            };
+            std::string music_path;
+            std::shared_ptr<sf::Music> music;
+            bool played = false;
+            bool loop;
+            bool volume;
     };
 
 #endif //COMPONENTS_HPP
