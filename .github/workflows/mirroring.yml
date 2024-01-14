@@ -9,13 +9,14 @@ jobs:
   compilation:
     name: "Compilation"
     runs-on: ubuntu-latest
-    container: epitechcontent/epitest-docker:latest
+    container: mcr.microsoft.com/devcontainers/cpp
     steps:
       - uses: actions/checkout@v3
         with:
           fetch-depth: 0
-      - run: mkdir PLEASE/build
-      - run: cd PLEASE/build && cmake .. && make
+      - run: sudo apt update
+      - run: cp ./install.sh "${VCPKG_ROOT}" && cd "${VCPKG_ROOT}" && sudo ./install.sh
+      - run: mkdir R-Type/build && cd R-Type/build && cmake .. && make
 
   push-to-repo:
     name: "Push to mirror repo"
